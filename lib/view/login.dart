@@ -14,6 +14,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+
         child: ConstrainedBox(
           constraints: BoxConstraints(
             minHeight: MediaQuery.of(context).size.height,
@@ -199,7 +200,7 @@ class Login extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => Get.to(Signup()),
+                        onTap: () => Get.to(Home()),
                         child: Text(
                           "Guest",
                           style: TextStyle(
