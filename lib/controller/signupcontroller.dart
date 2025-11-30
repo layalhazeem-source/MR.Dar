@@ -14,9 +14,24 @@ class signupController extends GetxController {
   var lastNameController = TextEditingController();
   var phoneController = TextEditingController();
   var passwordController = TextEditingController();
+  var confirmPasswordController = TextEditingController();
+
+  bool isConfirmHidden = true;
+
+  void toggleConfirmPassword() {
+    isConfirmHidden = !isConfirmHidden;
+    update();
+  }
 
   final ImagePicker picker = ImagePicker();
   final formKey = GlobalKey<FormState>();
+
+  bool isPasswordHidden = true;
+
+  void togglePassword() {
+    isPasswordHidden = !isPasswordHidden;
+    update();
+  }
 
   // اختيار صورة Profile من Camera أو Gallery
   void selectProfileImage() {
@@ -29,7 +44,9 @@ class signupController extends GetxController {
             title: const Text("Gallery"),
             onTap: () async {
               Get.back();
-              final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+              final XFile? image = await picker.pickImage(
+                source: ImageSource.gallery,
+              );
               if (image != null) profileImage.value = image;
             },
           ),
@@ -38,7 +55,9 @@ class signupController extends GetxController {
             title: const Text("Camera"),
             onTap: () async {
               Get.back();
-              final XFile? image = await picker.pickImage(source: ImageSource.camera);
+              final XFile? image = await picker.pickImage(
+                source: ImageSource.camera,
+              );
               if (image != null) profileImage.value = image;
             },
           ),
@@ -59,18 +78,17 @@ class signupController extends GetxController {
     }
   }
 
-  void setUserType(String type) => userType.value = type;
-  void setBirthDate(String date) => birthDate.value = date;
+  void setUserType(String type) {
+    userType.value = type;
+    update(); // <<< مهم جداً
+  }
+
+  void setBirthDate(String date) {
+    birthDate.value = date;
+    update();
+  }
 
   bool validateSignup() {
-    if (profileImage.value == null) {
-      Get.snackbar("Error", "Profile image is required!");
-      return false;
-    }
-    if (idImage.value == null) {
-      Get.snackbar("Error", "ID image is required!");
-      return false;
-    }
     if (formKey.currentState?.validate() ?? false) return true;
     return false;
   }

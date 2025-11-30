@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../controller/signupcontroller.dart';
 import 'home.dart';
 
@@ -15,15 +14,7 @@ class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFE8E8E8),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Get.back(),
-        ),
-      ),
-
+      appBar: AppBar(backgroundColor: const Color(0xFFE8E8E8), elevation: 0),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -40,11 +31,10 @@ class Signup extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-
                   Align(
-                    alignment: Alignment.topRight,
+                    alignment: Alignment.topLeft,
                     child: Container(
-                      height: 120,
+                      height: 130,
                       margin: EdgeInsets.only(top: 0),
                       child: Image.asset(
                         "images/photo_2025-11-27_11-23-04.jpg",
@@ -53,7 +43,6 @@ class Signup extends StatelessWidget {
                     ),
                   ),
 
-
                   SizedBox(height: 9.h),
 
                   GetBuilder<signupController>(
@@ -61,7 +50,6 @@ class Signup extends StatelessWidget {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-
                           // Renter
                           Row(
                             children: [
@@ -70,8 +58,11 @@ class Signup extends StatelessWidget {
                                 child: Radio<String>(
                                   value: "renter",
                                   groupValue: ctrl.userType.value,
-                                  onChanged: (value) => ctrl.setUserType(value!),
-                                  activeColor: Color(0xFF08D9CE), // نفس لون التطبيق
+                                  onChanged: (value) =>
+                                      ctrl.setUserType(value!),
+                                  activeColor: Color(
+                                    0xFF08D9CE,
+                                  ), // نفس لون التطبيق
                                 ),
                               ),
                               Text(
@@ -95,7 +86,8 @@ class Signup extends StatelessWidget {
                                 child: Radio<String>(
                                   value: "owner",
                                   groupValue: ctrl.userType.value,
-                                  onChanged: (value) => ctrl.setUserType(value!),
+                                  onChanged: (value) =>
+                                      ctrl.setUserType(value!),
                                   activeColor: Color(0xFF08D9CE),
                                 ),
                               ),
@@ -109,12 +101,10 @@ class Signup extends StatelessWidget {
                               ),
                             ],
                           ),
-
                         ],
                       );
                     },
                   ),
-
 
                   SizedBox(height: 15.h),
 
@@ -167,8 +157,13 @@ class Signup extends StatelessWidget {
                     builder: (ctrl) {
                       return TextFormField(
                         readOnly: true,
-                        controller: TextEditingController(text: ctrl.birthDate.value),
-                        decoration: _inputDecoration("Date of Birth", suffix: Icons.calendar_today),
+                        controller: TextEditingController(
+                          text: ctrl.birthDate.value,
+                        ),
+                        decoration: _inputDecoration(
+                          "Date of Birth",
+                          suffix: Icons.calendar_today,
+                        ),
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
                             context: context,
@@ -177,14 +172,17 @@ class Signup extends StatelessWidget {
                             lastDate: DateTime.now(),
                           );
                           if (pickedDate != null) {
-                            ctrl.setBirthDate("${pickedDate.day}/${pickedDate.month}/${pickedDate.year}");
+                            ctrl.setBirthDate(
+                              "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}",
+                            );
                           }
                         },
-                        validator: (value) => ctrl.birthDate.value.isEmpty ? "Date of Birth is required!" : null,
+                        validator: (value) => ctrl.birthDate.value.isEmpty
+                            ? "Date of Birth is required!"
+                            : null,
                       );
                     },
                   ),
-
 
                   SizedBox(height: 15.h),
                   GetBuilder<signupController>(
@@ -201,21 +199,21 @@ class Signup extends StatelessWidget {
                                 ),
                                 decoration: InputDecoration(
                                   labelText: "Profile Image",
-                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                  suffixIcon: const Icon(Icons.upload_file, size: 28),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.auto,
+                                  suffixIcon: const Icon(
+                                    Icons.upload_file,
+                                    size: 28,
+                                  ),
                                   filled: true,
                                   fillColor: const Color(0xFFCFFDFA),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Colors.black26),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black26,
+                                    ),
                                   ),
                                 ),
-                                validator: (value) {
-                                  if (ctrl.profileImage.value == null) {
-                                    return "Profile image is required!";
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                           ),
@@ -232,21 +230,21 @@ class Signup extends StatelessWidget {
                                 ),
                                 decoration: InputDecoration(
                                   labelText: "ID Image",
-                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                  suffixIcon: const Icon(Icons.upload_file, size: 28),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.auto,
+                                  suffixIcon: const Icon(
+                                    Icons.upload_file,
+                                    size: 28,
+                                  ),
                                   filled: true,
                                   fillColor: const Color(0xFFCFFDFA),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Colors.black26),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black26,
+                                    ),
                                   ),
                                 ),
-                                validator: (value) {
-                                  if (ctrl.idImage.value == null) {
-                                    return "ID image is required!";
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                           ),
@@ -255,10 +253,7 @@ class Signup extends StatelessWidget {
                     },
                   ),
 
-
-
                   SizedBox(height: 10.h),
-
 
                   /// Phone
                   TextFormField(
@@ -285,12 +280,13 @@ class Signup extends StatelessWidget {
                     builder: (ctrl) {
                       return TextFormField(
                         controller: ctrl.passwordController,
-                        obscureText: true,
+                        obscureText: ctrl.isPasswordHidden,
                         maxLength: 15,
                         style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 22,
                         ),
+
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Password is required!";
@@ -300,7 +296,60 @@ class Signup extends StatelessWidget {
                           }
                           return null;
                         },
-                        decoration: _inputDecoration("Password"),
+                        decoration: _inputDecoration(
+                          "Password",
+                          suffixWidget: IconButton(
+                            icon: Icon(
+                              controller.isPasswordHidden
+                                  ? Icons.lock
+                                  : Icons.lock_open,
+                              color: Colors.black45,
+                              size: 30,
+                            ),
+                            onPressed: () => controller.togglePassword(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 10.h),
+
+                  /// Password
+                  SizedBox(height: 10),
+
+                  GetBuilder<signupController>(
+                    builder: (ctrl) {
+                      return TextFormField(
+                        controller: ctrl.confirmPasswordController,
+                        obscureText: ctrl.isConfirmHidden,
+                        maxLength: 15,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 22,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Confirm password is required!";
+                          }
+                          if (value != ctrl.passwordController.text) {
+                            return "Passwords do not match!";
+                          }
+                          return null;
+                        },
+
+                        decoration: _inputDecoration(
+                          "Confirm Password",
+                          suffixWidget: IconButton(
+                            icon: Icon(
+                              ctrl.isConfirmHidden
+                                  ? Icons.lock
+                                  : Icons.lock_open,
+                              color: Colors.black54,
+                              size: 28,
+                            ),
+                            onPressed: () => ctrl.toggleConfirmPassword(),
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -333,7 +382,7 @@ class Signup extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(height: 15.h),
+                  SizedBox(height: 25.h),
                 ],
               ),
             ),
@@ -343,7 +392,11 @@ class Signup extends StatelessWidget {
     );
   }
 
-  InputDecoration _inputDecoration(String label, {IconData? suffix}) {
+  InputDecoration _inputDecoration(
+    String label, {
+    IconData? suffix,
+    Widget? suffixWidget,
+  }) {
     return InputDecoration(
       labelText: label,
       labelStyle: const TextStyle(
@@ -351,12 +404,17 @@ class Signup extends StatelessWidget {
         color: Colors.black45,
         fontSize: 18,
       ),
-      suffixIcon: suffix != null
-          ? Icon(suffix, color: Colors.black45, size: 28)
-          : null,
+
+      // هون الأهم ↓↓↓
+      suffixIcon:
+          suffixWidget ??
+          (suffix != null
+              ? Icon(suffix, color: Colors.black45, size: 28)
+              : null),
+
       fillColor: const Color(0xFFCFFDFA),
       filled: true,
-      border: OutlineInputBorder(),
+      border: const OutlineInputBorder(),
     );
   }
 }
