@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_project/view/WelcomePage.dart';
 import 'package:new_project/view/home.dart';
 import 'package:get/get.dart';
 import 'package:new_project/view/home.dart';
@@ -21,12 +22,12 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          home: Login(),
+          home: WelcomePage(),
           getPages: [
             GetPage(name: "/home", page: () => Home()),
             GetPage(name: "/signup", page: () => Signup()),
             GetPage(name: "/login", page: () => Login()),
-            GetPage(name: "/home", page: () => Home()),
+            GetPage(name: "/welcome", page: () => WelcomePage()),
           ],
         );
       },
