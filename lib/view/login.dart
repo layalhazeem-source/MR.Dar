@@ -15,14 +15,10 @@ class Login extends StatelessWidget {
       appBar: AppBar(backgroundColor: const Color(0xFF96C6E2), elevation: 0),
       body: Stack(
         children: [
-
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
-            child: Image.asset(
-              "images/wallpaper.png",
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset("images/wallpaper.png", fit: BoxFit.cover),
           ),
 
           SingleChildScrollView(
@@ -43,7 +39,6 @@ class Login extends StatelessWidget {
                           "images/logo1.png",
                           height: 200.h,
                           width: 200.w,
-
                         ),
                       ),
                       Center(
@@ -64,7 +59,10 @@ class Login extends StatelessWidget {
                         controller: controller.phoneController,
                         keyboardType: TextInputType.number,
                         maxLength: 10,
-                        style: const TextStyle(color: Colors.black87, fontSize: 22),
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 22,
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Phone number is required!";
@@ -74,7 +72,10 @@ class Login extends StatelessWidget {
                           }
                           return null;
                         },
-                        decoration: _inputDecoration("Phone", suffix: Icons.phone),
+                        decoration: _inputDecoration(
+                          "Phone",
+                          suffix: Icons.phone,
+                        ),
                       ),
 
                       SizedBox(height: 15.h),
@@ -103,7 +104,9 @@ class Login extends StatelessWidget {
                               "Password",
                               suffixWidget: IconButton(
                                 icon: Icon(
-                                  ctrl.isPasswordHidden ? Icons.lock : Icons.lock_open,
+                                  ctrl.isPasswordHidden
+                                      ? Icons.lock
+                                      : Icons.lock_open,
                                   color: Colors.black45,
                                   size: 28,
                                 ),
@@ -130,6 +133,7 @@ class Login extends StatelessWidget {
                           ),
                           onPressed: () {
                             controller.loginUser();
+                            print("login");
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -216,10 +220,10 @@ class Login extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
-      String label, {
-        IconData? suffix,
-        Widget? suffixWidget,
-      }) {
+    String label, {
+    IconData? suffix,
+    Widget? suffixWidget,
+  }) {
     return InputDecoration(
       labelText: label,
       labelStyle: const TextStyle(
@@ -227,8 +231,12 @@ class Login extends StatelessWidget {
         color: Colors.black45,
         fontSize: 18,
       ),
-      suffixIcon: suffixWidget ?? (suffix != null ? Icon(suffix, color: Colors.black45, size: 28) : null),
-      fillColor: const Color(0xFFADD9F3),
+      suffixIcon:
+          suffixWidget ??
+          (suffix != null
+              ? Icon(suffix, color: Colors.black45, size: 28)
+              : null),
+      fillColor: const Color(0xFFDFEEF6),
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

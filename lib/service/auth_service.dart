@@ -1,40 +1,54 @@
- import 'dart:io';
-
+import 'dart:io';
 import 'package:dio/dio.dart';
 import '../core/api/api_interceptors.dart';
 import '../core/api/dio_consumer.dart';
 import '../core/errors/exceptions.dart';
+import '../core/api/end_points.dart'; // مهم جداً
 
 class AuthService {
-// 1️⃣ إعداد Dio + interceptor + apiConsumer
-final Dio dio = Dio();
-late final DioConsumer apiConsumer;
+  late final Dio dio;
+  late final DioConsumer apiConsumer;
 
-AuthService() {
-dio.interceptors.add(ApiInterceptor());
-apiConsumer = DioConsumer(dio: dio);
-}
+  AuthService() {
+    dio =
+        Dio(
+            BaseOptions(
+              baseUrl: EndPoint.baseUrl, // <<<<< غيّريه من end_points.dart
+              connectTimeout: const Duration(seconds: 5),
+              receiveTimeout: const Duration(seconds: 5),
+            ),
+          )
+          ..interceptors.add(ApiInterceptor())
+          ..interceptors.add(
+            LogInterceptor(
+              request: true,
+              requestBody: true,
+              responseBody: true,
+              error: true,
+            ),
+          );
 
-// 2️⃣ دالة login
-Future<void> login({required String phone, required String password}) async {
-try {
-final response = await apiConsumer.post(
-'/login', // غيريه للـ endpoint الصحيح في السيرفر
-data: {
-'phone': phone,
-'password': password,
-},
-);
+    apiConsumer = DioConsumer(dio: dio);
+  }
 
-print('Login success: $response');
+  // 2️⃣ دالة login
+  Future<void> login({required String phone, required String password}) async {
+    print("🔥 AuthService.login reached");
 
-// لاحقاً ممكن تخزني token أو بيانات المستخدم
-} on SereverException catch (e) {
-print('Login failed: ${e.errModel.errorMessage}');
-throw e; // ترمي الخطأ للكونترولر ليعرض للمستخدم
-}
+    try {
+      final response = await apiConsumer.post(
+        '/api/login',
+        data: {"phone": phone, "password": password},
+      );
 
-}
+      print("🔥 API Response: $response");
+    } catch (e) {
+      print("❌ ERROR in AuthService.login: $e");
+      rethrow;
+    }
+  }
+
+  // 3️⃣ دالة signup
   Future<void> signup({
     required String firstName,
     required String lastName,
@@ -48,41 +62,44 @@ throw e; // ترمي الخطأ للكونترولر ليعرض للمستخدم
     try {
       FormData formData = FormData();
 
-      // إضافة البيانات النصية
       formData.fields
-        ..add(MapEntry('firstName', firstName))
-        ..add(MapEntry('lastName', lastName))
+        ..add(MapEntry('first_name', firstName))
+        ..add(MapEntry('last_name', lastName))
         ..add(MapEntry('phone', phone))
         ..add(MapEntry('password', password))
-        ..add(MapEntry('birthDate', birthDate))
-        ..add(MapEntry('userType', userType));
+        ..add(MapEntry('date_of_birth', birthDate));
+      // ..add(MapEntry('userType', userType));
 
-      // إضافة الصور إذا موجودة
       if (profileImage != null) {
         formData.files.add(
           MapEntry(
             'profileImage',
-            await MultipartFile.fromFile(profileImage.path, filename: profileImage.path.split('/').last),
+            await MultipartFile.fromFile(
+              profileImage.path,
+              filename: profileImage.path.split('/').last,
+            ),
           ),
         );
       }
+
       if (idImage != null) {
         formData.files.add(
           MapEntry(
             'idImage',
-            await MultipartFile.fromFile(idImage.path, filename: idImage.path.split('/').last),
+            await MultipartFile.fromFile(
+              idImage.path,
+              filename: idImage.path.split('/').last,
+            ),
           ),
         );
       }
 
-      // إرسال الطلب للباك
       final response = await apiConsumer.post(
-        '/signup', // غيريه للـ endpoint الصحيح
+        '/api/register', // غيريه للـ endpoint الصحيح
         data: formData,
       );
 
       print('Signup success: $response');
-
     } on SereverException catch (e) {
       print('Signup failed: ${e.errModel.errorMessage}');
       throw e;

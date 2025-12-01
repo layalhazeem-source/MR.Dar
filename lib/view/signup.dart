@@ -18,10 +18,7 @@ class Signup extends StatelessWidget {
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
-            child: Image.asset(
-              "images/wallpaper.png",
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset("images/wallpaper.png", fit: BoxFit.cover),
           ),
           SingleChildScrollView(
             child: ConstrainedBox(
@@ -61,7 +58,8 @@ class Signup extends StatelessWidget {
                                     child: Radio<String>(
                                       value: "renter",
                                       groupValue: ctrl.userType.value,
-                                      onChanged: (value) => ctrl.setUserType(value!),
+                                      onChanged: (value) =>
+                                          ctrl.setUserType(value!),
                                       activeColor: Color(0xFF74B4DA),
                                     ),
                                   ),
@@ -83,7 +81,8 @@ class Signup extends StatelessWidget {
                                     child: Radio<String>(
                                       value: "owner",
                                       groupValue: ctrl.userType.value,
-                                      onChanged: (value) => ctrl.setUserType(value!),
+                                      onChanged: (value) =>
+                                          ctrl.setUserType(value!),
                                       activeColor: Color(0xFF74B4DA),
                                     ),
                                   ),
@@ -164,12 +163,11 @@ class Signup extends StatelessWidget {
                               );
                               if (pickedDate != null) {
                                 ctrl.birthDateController.text =
-                                "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                                    "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
                                 ctrl.update();
                               }
                             },
-                            validator: (value) =>
-                            value == null || value.isEmpty
+                            validator: (value) => value == null || value.isEmpty
                                 ? "Date of Birth is required!"
                                 : null,
                           );
@@ -188,7 +186,9 @@ class Signup extends StatelessWidget {
                                   child: AbsorbPointer(
                                     child: TextFormField(
                                       readOnly: true,
-                                      decoration: _inputDecoration("Profile Image"),
+                                      decoration: _inputDecoration(
+                                        "Profile Image",
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -217,7 +217,9 @@ class Signup extends StatelessWidget {
                         keyboardType: TextInputType.number,
                         maxLength: 10,
                         style: const TextStyle(
-                            color: Colors.black87, fontSize: 22),
+                          color: Colors.black87,
+                          fontSize: 22,
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Phone number is required!";
@@ -227,7 +229,10 @@ class Signup extends StatelessWidget {
                           }
                           return null;
                         },
-                        decoration: _inputDecoration("Phone", suffix: Icons.phone),
+                        decoration: _inputDecoration(
+                          "Phone",
+                          suffix: Icons.phone,
+                        ),
                       ),
                       SizedBox(height: 15.h),
 
@@ -351,10 +356,10 @@ class Signup extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
-      String label, {
-        IconData? suffix,
-        Widget? suffixWidget,
-      }) {
+    String label, {
+    IconData? suffix,
+    Widget? suffixWidget,
+  }) {
     return InputDecoration(
       labelText: label,
       labelStyle: const TextStyle(
@@ -362,8 +367,12 @@ class Signup extends StatelessWidget {
         color: Colors.black45,
         fontSize: 18,
       ),
-      suffixIcon: suffixWidget ?? (suffix != null ? Icon(suffix, color: Colors.black45, size: 28) : null),
-      fillColor: const Color(0xFFADD9F3),
+      suffixIcon:
+          suffixWidget ??
+          (suffix != null
+              ? Icon(suffix, color: Colors.black45, size: 28)
+              : null),
+      fillColor: const Color(0xFFDFEEF6),
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
