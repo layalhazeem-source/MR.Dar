@@ -61,6 +61,10 @@ class signupController extends GetxController {
               final XFile? image = await picker.pickImage(
                 source: ImageSource.gallery,
               );
+              if (image != null) {
+                profileImage.value = image;
+                update();
+              }
             },
           ),
           ListTile(
@@ -71,6 +75,10 @@ class signupController extends GetxController {
               final XFile? image = await picker.pickImage(
                 source: ImageSource.camera,
               );
+              if (image != null) {
+                profileImage.value = image;
+                update();
+              }
             },
           ),
         ],
@@ -112,12 +120,21 @@ class signupController extends GetxController {
           lastName: lastNameController.text.trim(),
           phone: phoneController.text.trim(),
           password: passwordController.text.trim(),
+          confirmPassword: confirmPasswordController.text.trim(), // ← هنا
+
           birthDate: birthDate.value,
           role: role.value,
+
+          //  ⬅⬅⬅  هدول السطرين يلي كنتي عم تسألي وين ينحطوا
+          profileImage: profileImage.value != null
+              ? File(profileImage.value!.path)
+              : null,
+
+          idImage: idImage.value != null ? File(idImage.value!.path) : null,
         );
 
         Get.snackbar('Success', 'Account created successfully!');
-        Get.to(() => Home());
+        Get.off(() => Home());
       } on SereverException catch (e) {
         Get.snackbar('Error', e.errModel.errorMessage);
       }

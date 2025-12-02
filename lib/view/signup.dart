@@ -162,9 +162,10 @@ class Signup extends StatelessWidget {
                                 lastDate: DateTime.now(),
                               );
                               if (pickedDate != null) {
-                                ctrl.birthDateController.text =
-                                    "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-                                ctrl.update();
+                                // هون حطي السطر:
+                                ctrl.setBirthDate(
+                                  "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}",
+                                );
                               }
                             },
                             validator: (value) => value == null || value.isEmpty
