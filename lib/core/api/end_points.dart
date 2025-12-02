@@ -4,5 +4,5 @@ class EndPoint {
 
 class ApiKey {
   static String status = "status";
-  static String errorMessage = "ErrorMessage";
+  static String errorMessage = "message"; // مو ErrorMessage
 }

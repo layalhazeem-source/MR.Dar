@@ -4,16 +4,20 @@ import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 
-class loginController extends GetxController {
+class LoginController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   bool isPasswordHidden = true;
 
+  String? phoneError;
+  String? passError;
+
   late final AuthService authService;
+
   @override
   void onInit() {
-    authService = AuthService(); // إنشاء instance من AuthService
+    authService = AuthService();
     super.onInit();
   }
 
@@ -23,24 +27,24 @@ class loginController extends GetxController {
   }
 
   Future<void> loginUser() async {
-    print("🔥 loginUser started");
+    phoneError = null;
+    passError = null;
+    update();
+
     if (formKey.currentState!.validate()) {
-      print("🔥 validation OK");
       String phone = phoneController.text.trim();
       String password = passwordController.text.trim();
-      print("🔥 calling authService.login ...");
+
       try {
         await authService.login(phone: phone, password: password);
-        print("🔥 login SUCCESS");
-        Get.snackbar('Success', 'Logged in successfully!');
 
+        Get.snackbar('Success', 'Logged in successfully!');
         Get.to(() => Home());
       } on SereverException catch (e) {
-        print("🔥 login ERROR: ${e.errModel.errorMessage}");
-        Get.snackbar('Error', e.errModel.errorMessage);
+        // سواء الرقم غلط أو الباسوورد غلط، نفس الرسالة تحت الاثنين
+        phoneError = passError = e.errModel.errorMessage;
+        update();
       }
-    } else {
-      print("❌ validation FAILED");
     }
   }
 

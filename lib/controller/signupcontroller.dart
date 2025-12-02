@@ -14,7 +14,7 @@ class signupController extends GetxController {
   Rx<XFile?> idImage = Rx<XFile?>(null);
 
   RxString birthDate = "".obs;
-  RxString userType = "renter".obs;
+  RxInt role = 2.obs;
 
   var firstNameController = TextEditingController();
   var lastNameController = TextEditingController();
@@ -61,7 +61,6 @@ class signupController extends GetxController {
               final XFile? image = await picker.pickImage(
                 source: ImageSource.gallery,
               );
-
             },
           ),
           ListTile(
@@ -72,7 +71,6 @@ class signupController extends GetxController {
               final XFile? image = await picker.pickImage(
                 source: ImageSource.camera,
               );
-
             },
           ),
         ],
@@ -95,8 +93,8 @@ class signupController extends GetxController {
     }
   }
 
-  void setUserType(String type) {
-    userType.value = type;
+  void setRole(int type) {
+    role.value = type;
     update();
   }
 
@@ -115,7 +113,7 @@ class signupController extends GetxController {
           phone: phoneController.text.trim(),
           password: passwordController.text.trim(),
           birthDate: birthDate.value,
-          userType: userType.value,
+          role: role.value,
         );
 
         Get.snackbar('Success', 'Account created successfully!');

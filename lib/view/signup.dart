@@ -55,11 +55,11 @@ class Signup extends StatelessWidget {
                                 children: [
                                   Transform.scale(
                                     scale: 1.3,
-                                    child: Radio<String>(
-                                      value: "renter",
-                                      groupValue: ctrl.userType.value,
+                                    child: Radio<int>(
+                                      value: 2, // Renter
+                                      groupValue: ctrl.role.value,
                                       onChanged: (value) =>
-                                          ctrl.setUserType(value!),
+                                          ctrl.setRole(value!),
                                       activeColor: Color(0xFF74B4DA),
                                     ),
                                   ),
@@ -78,11 +78,11 @@ class Signup extends StatelessWidget {
                                 children: [
                                   Transform.scale(
                                     scale: 1.3,
-                                    child: Radio<String>(
-                                      value: "owner",
-                                      groupValue: ctrl.userType.value,
+                                    child: Radio<int>(
+                                      value: 3,
+                                      groupValue: ctrl.role.value,
                                       onChanged: (value) =>
-                                          ctrl.setUserType(value!),
+                                          ctrl.setRole(value!),
                                       activeColor: Color(0xFF74B4DA),
                                     ),
                                   ),

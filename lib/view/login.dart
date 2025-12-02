@@ -7,7 +7,7 @@ import 'signup.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
-  final loginController controller = Get.put(loginController());
+  final LoginController controller = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,6 @@ class Login extends StatelessWidget {
             width: double.infinity,
             child: Image.asset("images/wallpaper.png", fit: BoxFit.cover),
           ),
-
           SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
@@ -51,37 +50,40 @@ class Login extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       SizedBox(height: 35.h),
 
                       // Phone
-                      TextFormField(
-                        controller: controller.phoneController,
-                        keyboardType: TextInputType.number,
-                        maxLength: 10,
-                        style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 22,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Phone number is required!";
-                          }
-                          if (value.length != 10) {
-                            return "Phone number must be 10 numbers!";
-                          }
-                          return null;
+                      GetBuilder<LoginController>(
+                        builder: (ctrl) {
+                          return TextFormField(
+                            controller: ctrl.phoneController,
+                            keyboardType: TextInputType.number,
+                            maxLength: 10,
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 22,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Phone number is required!";
+                              }
+                              if (value.length != 10) {
+                                return "Phone number must be 10 numbers!";
+                              }
+                              return null;
+                            },
+                            decoration: _inputDecoration(
+                              "Phone",
+                              suffix: Icons.phone,
+                            ).copyWith(errorText: ctrl.phoneError),
+                          );
                         },
-                        decoration: _inputDecoration(
-                          "Phone",
-                          suffix: Icons.phone,
-                        ),
                       ),
 
                       SizedBox(height: 15.h),
 
                       // Password
-                      GetBuilder<loginController>(
+                      GetBuilder<LoginController>(
                         builder: (ctrl) {
                           return TextFormField(
                             controller: ctrl.passwordController,
@@ -112,7 +114,7 @@ class Login extends StatelessWidget {
                                 ),
                                 onPressed: () => ctrl.togglePassword(),
                               ),
-                            ),
+                            ).copyWith(errorText: ctrl.passError),
                           );
                         },
                       ),
@@ -133,7 +135,6 @@ class Login extends StatelessWidget {
                           ),
                           onPressed: () {
                             controller.loginUser();
-                            print("login");
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
