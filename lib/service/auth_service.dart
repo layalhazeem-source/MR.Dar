@@ -15,7 +15,15 @@ class AuthService {
         EndPoint.logIn,
         data: {"phone": phone, "password": password},
       );
-      return response;
+      if (response == null ||
+          response["message"] != "Logged In Successfully .") {
+        throw ServerException(
+          errModel: ErrorModel(
+            errorMessage: response?["message"] ?? "Invalid Credntials",
+          ),
+        );
+      }
+      return;
     } on DioException catch (e) {
       handleDioException(e);
       rethrow;
