@@ -82,6 +82,7 @@ class DioConsumer extends ApiConsumer {
   Future post(
     String path, {
     dynamic data,
+    Options? options,
     Map<String, dynamic>? queryParameters,
     bool isFormDatta = false,
   }) async {

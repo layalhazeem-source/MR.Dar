@@ -11,22 +11,32 @@ class AuthService {
 
   Future<void> login({required String phone, required String password}) async {
     try {
-      final response = await api.post(
+      final response = await api.dio.post(
         EndPoint.logIn,
         data: {"phone": phone, "password": password},
+        options: Options(validateStatus: (status) => true),
       );
-      if (response == null ||
-          response["message"] != "Logged In Successfully .") {
-        throw ServerException(
-          errModel: ErrorModel(
-            errorMessage: response?["message"] ?? "Invalid Credntials",
-          ),
-        );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data["message"]?.toString().trim() ==
+            "User Logged In Successfully .") {
+          return;
+        } else {
+          throw ServerException(
+            errModel: ErrorModel(errorMessage: "Invalid Credentials"),
+          );
+        }
+      } else {
+        String msg = "Invalid Credentials";
+        try {
+          msg = response.data["message"] ?? "Invalid Credentials";
+        } catch (_) {}
+        throw ServerException(errModel: ErrorModel(errorMessage: msg));
       }
-      return;
     } on DioException catch (e) {
-      handleDioException(e);
-      rethrow;
+      throw ServerException(
+        errModel: ErrorModel(errorMessage: "Network error: ${e.message}"),
+      );
     }
   }
 

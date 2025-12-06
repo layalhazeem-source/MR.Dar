@@ -31,17 +31,24 @@ class LoginController extends GetxController {
     phoneError = null;
     passError = null;
     update();
-    if (formKey.currentState!.validate()) {
-      String phone = phoneController.text.trim();
-      String password = passwordController.text.trim();
-      try {
-        await api.login(phone: phone, password: password);
-        Get.snackbar('Success', 'Logged in successfully!');
-        Get.toNamed("/home");
-      } on ServerException catch (e) {
-        phoneError = passError = e.errModel.errorMessage;
-        update();
-      }
+
+    if (!formKey.currentState!.validate()) return;
+
+    try {
+      await api.login(
+        phone: phoneController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      phoneError = null;
+      passError = null;
+      update();
+
+      Get.to(() => Home());
+    } on ServerException catch (e) {
+      phoneError = e.errModel?.errorMessage ?? "Invalid Credentials";
+      passError = e.errModel?.errorMessage ?? "Invalid Credentials";
+      update();
     }
   }
 
