@@ -15,6 +15,33 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        iconSize: 35,
+        backgroundColor: Colors.white,
+        selectedItemColor: Color(0xFF274668),
+        unselectedItemColor: Colors.black45,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark_added_outlined),
+            label: "My Rents",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            label: "Favourite",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_2_outlined),
+            label: "My account",
+          ),
+        ],
+      ),
       appBar: AppBar(
         title: const Center(child: Text('MR.Dar')),
         actions: [
@@ -24,6 +51,7 @@ class Home extends StatelessWidget {
           ),
         ],
       ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

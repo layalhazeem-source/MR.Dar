@@ -22,6 +22,7 @@ class AppBindings extends Bindings {
     Get.lazyPut<LoginController>(
       () => LoginController(api: Get.find<AuthService>()),
     );
+
     Get.lazyPut<SignupController>(
       () => SignupController(api: Get.find<AuthService>()),
     );

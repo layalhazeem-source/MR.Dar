@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/logincontroller.dart';
+import '../service/auth_service.dart';
 import 'home.dart';
 import 'signup.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
-  final LoginController controller = Get.find<LoginController>();
-
+  final LoginController controller = Get.put(
+    LoginController(api: Get.find<AuthService>()),
+  );
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -43,7 +45,10 @@ class Login extends StatelessWidget {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 20,
+                ),
                 child: SingleChildScrollView(
                   child: Form(
                     key: controller.formKey,
@@ -70,14 +75,21 @@ class Login extends StatelessWidget {
                               controller: ctrl.phoneController,
                               keyboardType: TextInputType.number,
                               maxLength: 10,
-                              style: const TextStyle(color: Colors.black87, fontSize: 18),
+                              style: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 18,
+                              ),
                               validator: (value) {
-                                if (value == null || value.isEmpty) return "Phone required!";
-                                if (value.length != 10) return "Phone must be 10 digits!";
+                                if (value == null || value.isEmpty)
+                                  return "Phone required!";
+                                if (value.length != 10)
+                                  return "Phone must be 10 digits!";
                                 return null;
                               },
-                              decoration: _inputDecoration("Phone", suffix: Icons.phone)
-                                  .copyWith(errorText: ctrl.phoneError),
+                              decoration: _inputDecoration(
+                                "Phone",
+                                suffix: Icons.phone,
+                              ).copyWith(errorText: ctrl.phoneError),
                             );
                           },
                         ),
@@ -90,17 +102,24 @@ class Login extends StatelessWidget {
                               controller: ctrl.passwordController,
                               obscureText: ctrl.isPasswordHidden,
                               maxLength: 15,
-                              style: const TextStyle(color: Colors.black87, fontSize: 18),
+                              style: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 18,
+                              ),
                               validator: (value) {
-                                if (value == null || value.isEmpty) return "Password required!";
-                                if (value.length < 7) return "Min 7 characters!";
+                                if (value == null || value.isEmpty)
+                                  return "Password required!";
+                                if (value.length < 7)
+                                  return "Min 7 characters!";
                                 return null;
                               },
                               decoration: _inputDecoration(
                                 "Password",
                                 suffixWidget: IconButton(
                                   icon: Icon(
-                                    ctrl.isPasswordHidden ? Icons.lock : Icons.lock_open,
+                                    ctrl.isPasswordHidden
+                                        ? Icons.lock
+                                        : Icons.lock_open,
                                     color: Colors.black45,
                                   ),
                                   onPressed: ctrl.togglePassword,
@@ -123,20 +142,25 @@ class Login extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(25),
                                   ),
                                 ),
-                                onPressed: ctrl.isLoading ? null : controller.loginUser,
+                                onPressed: ctrl.isLoading
+                                    ? null
+                                    : controller.loginUser,
                                 child: ctrl.isLoading
                                     ? const SizedBox(
-                                  height: 25,
-                                  width: 25,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 3,
-                                    color: Colors.white,
-                                  ),
-                                )
+                                        height: 25,
+                                        width: 25,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                          color: Colors.white,
+                                        ),
+                                      )
                                     : const Text(
-                                  "Log In",
-                                  style: TextStyle(color: Colors.white, fontSize: 18),
-                                ),
+                                        "Log In",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                      ),
                               ),
                             );
                           },
@@ -148,14 +172,19 @@ class Login extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Don’t have an account? ",
-                                style: TextStyle(color: Colors.black54)),
+                            const Text(
+                              "Don’t have an account? ",
+                              style: TextStyle(color: Colors.black54),
+                            ),
                             GestureDetector(
                               onTap: () => Get.to(Signup()),
-                              child: const Text("Sign Up",
-                                  style: TextStyle(
-                                      color: Color(0xFF274668),
-                                      fontWeight: FontWeight.bold)),
+                              child: const Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  color: Color(0xFF274668),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -165,13 +194,19 @@ class Login extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Or continue as a ", style: TextStyle(color: Colors.black54)),
+                            const Text(
+                              "Or continue as a ",
+                              style: TextStyle(color: Colors.black54),
+                            ),
                             GestureDetector(
                               onTap: () => Get.to(Home()),
-                              child: const Text("Guest",
-                                  style: TextStyle(
-                                      color: Color(0xFF274668),
-                                      fontWeight: FontWeight.bold)),
+                              child: const Text(
+                                "Guest",
+                                style: TextStyle(
+                                  color: Color(0xFF274668),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -213,11 +248,20 @@ class Login extends StatelessWidget {
     );
   }
 
-  InputDecoration _inputDecoration(String label, {IconData? suffix, Widget? suffixWidget}) {
+  InputDecoration _inputDecoration(
+    String label, {
+    IconData? suffix,
+    Widget? suffixWidget,
+  }) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.black45, fontWeight: FontWeight.bold),
-      suffixIcon: suffixWidget ?? (suffix != null ? Icon(suffix, color: Colors.black45) : null),
+      labelStyle: const TextStyle(
+        color: Colors.black45,
+        fontWeight: FontWeight.bold,
+      ),
+      suffixIcon:
+          suffixWidget ??
+          (suffix != null ? Icon(suffix, color: Colors.black45) : null),
       filled: true,
       fillColor: const Color(0xFFDFEEF6),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),

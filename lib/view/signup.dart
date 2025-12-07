@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controller/signupcontroller.dart';
+import '../service/auth_service.dart';
 
 class Signup extends StatelessWidget {
   Signup({super.key});
-  final SignupController controller = Get.find<SignupController>();
+  final SignupController controller = Get.put(
+    SignupController(api: Get.find<AuthService>()),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -317,7 +320,9 @@ class Signup extends StatelessWidget {
                           return SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: ctrl.isLoading ? null : () => controller.signupUser(),
+                              onPressed: ctrl.isLoading
+                                  ? null
+                                  : () => controller.signupUser(),
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.symmetric(vertical: 15),
                                 shape: RoundedRectangleBorder(
@@ -328,27 +333,31 @@ class Signup extends StatelessWidget {
                               ),
                               child: ctrl.isLoading
                                   ? SizedBox(
-                                height: 25,
-                                width: 25,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  color: Colors.white,
-                                ),
-                              )
+                                      height: 25,
+                                      width: 25,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                        color: Colors.white,
+                                      ),
+                                    )
                                   : Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text(
-                                    "Sign Up",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Text(
+                                          "Sign Up",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: Colors.white,
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.arrow_forward, color: Colors.white),
-                                ],
-                              ),
                             ),
                           );
                         },
