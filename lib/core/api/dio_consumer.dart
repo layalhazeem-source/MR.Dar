@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:new_project/core/api/api_interceptors.dart';
 import 'package:new_project/core/api/end_points.dart';
 import 'package:new_project/core/errors/exceptions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
@@ -10,6 +11,23 @@ class DioConsumer extends ApiConsumer {
   DioConsumer({required this.dio}) {
     dio.options.baseUrl = EndPoint.baseUrl;
     dio.interceptors.add(ApiInterceptor()); //مراقبة ال request وال response
+
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final prefs = await SharedPreferences.getInstance();
+          final token = prefs.getString("token");
+
+          if (token != null) {
+            options.headers["Authorization"] = "Bearer $token";
+          }
+
+          return handler.next(options);
+        },
+      ),
+    );
+
+
     dio.interceptors.add(
       LogInterceptor(
         request: true,
@@ -50,9 +68,9 @@ class DioConsumer extends ApiConsumer {
     try {
       final response = await dio.get(
         path,
-        data: data,
         queryParameters: queryParameters,
       );
+
       return response.data;
     } on DioException catch (e) {
       handleDioException(e);

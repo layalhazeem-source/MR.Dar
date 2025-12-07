@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:new_project/view/Splash.dart';
 import 'core/api/dio_consumer.dart';
 import 'controller/logincontroller.dart';
 import 'controller/signupcontroller.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           initialBinding: AppBindings(), // ← استدعاء الـ Bindings
           debugShowCheckedModeBanner: false,
-          home: WelcomePage(),
+          home: Splash(),
           getPages: [
             GetPage(name: "/home", page: () => Home()),
             GetPage(name: "/signup", page: () => Signup()),

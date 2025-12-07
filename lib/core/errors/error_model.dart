@@ -1,5 +1,3 @@
-import '../api/end_points.dart';
-
 class ErrorModel {
   final String errorMessage;
   final Map<String, dynamic>? errors;
@@ -8,8 +6,9 @@ class ErrorModel {
 
   factory ErrorModel.fromJson(Map<String, dynamic> jsonData) {
     return ErrorModel(
-      errorMessage: jsonData[ApiKey.errorMessage],
-      errors: jsonData[ApiKey.errorsList],
+      errorMessage:
+      jsonData["message"]?.toString() ?? jsonData["error"]?.toString() ?? "Unknown error",
+      errors: jsonData["errors"],
     );
   }
 }

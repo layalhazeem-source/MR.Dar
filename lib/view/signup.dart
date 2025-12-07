@@ -312,36 +312,48 @@ class Signup extends StatelessWidget {
                       SizedBox(height: 15.h),
 
                       // Sign Up Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            controller.signupUser();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            backgroundColor: const Color(0xFF274668),
-                            elevation: 3,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                  fontSize: 18,
+                      GetBuilder<SignupController>(
+                        builder: (ctrl) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: ctrl.isLoading ? null : () => controller.signupUser(),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                backgroundColor: Color(0xFF274668),
+                                elevation: 3,
+                              ),
+                              child: ctrl.isLoading
+                                  ? SizedBox(
+                                height: 25,
+                                width: 25,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
                                   color: Colors.white,
                                 ),
+                              )
+                                  : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    "Sign Up",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.arrow_forward, color: Colors.white),
+                                ],
                               ),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward, color: Colors.white),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       ),
+
                       SizedBox(height: 15.h),
                     ],
                   ),

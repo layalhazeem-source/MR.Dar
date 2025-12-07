@@ -112,22 +112,36 @@ class Login extends StatelessWidget {
                         const SizedBox(height: 25),
 
                         // Login Button
-                        SizedBox(
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF274668),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                        GetBuilder<LoginController>(
+                          builder: (ctrl) {
+                            return SizedBox(
+                              height: 50,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF274668),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                                onPressed: ctrl.isLoading ? null : controller.loginUser,
+                                child: ctrl.isLoading
+                                    ? const SizedBox(
+                                  height: 25,
+                                  width: 25,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                    color: Colors.white,
+                                  ),
+                                )
+                                    : const Text(
+                                  "Log In",
+                                  style: TextStyle(color: Colors.white, fontSize: 18),
+                                ),
                               ),
-                            ),
-                            onPressed: controller.loginUser,
-                            child: const Text(
-                              "Log In",
-                              style: TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          ),
+                            );
+                          },
                         ),
+
                         const SizedBox(height: 15),
 
                         // Signup link

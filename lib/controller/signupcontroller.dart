@@ -2,11 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 
 class SignupController extends GetxController {
+  bool isLoading = false;
+
   final AuthService api;
   SignupController({required this.api});
 
@@ -124,13 +127,11 @@ class SignupController extends GetxController {
       Get.snackbar('Error', 'Please select a role (Renter or Owner)');
       return;
     }
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
-      barrierDismissible: false,
-    );
+    isLoading = true;
+    update();
 
     try {
-      await api.signup(
+      final response =  await api.signup(
         firstName: firstNameController.text.trim(),
         lastName: lastNameController.text.trim(),
         phone: phoneController.text.trim(),
@@ -143,36 +144,44 @@ class SignupController extends GetxController {
             : null,
         idImage: idImage.value != null ? File(idImage.value!.path) : null,
       );
-      Get.back();
+    // بعد التسجيل، احصل على التوكن من SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+    print("Token saved successfully: $token");
+    } else {
+    print("Warning: Token not found after signup!");
+    }
+      isLoading = false;
+      update();
+
       Get.snackbar(
         'Success ',
         'Account created successfully!',
-        backgroundColor: Colors.green,
         colorText: Colors.white,
-        duration: const Duration(seconds: 3),
       );
 
-      await Future.delayed(const Duration(seconds: 2));
       Get.offAll(() => Home());
     } on ServerException catch (e) {
-      Get.back();
+      isLoading = false;
+      update();
+
       Get.snackbar(
         'Error ',
         e.errModel.errorMessage,
-        backgroundColor: Colors.red,
+
         colorText: Colors.white,
-        duration: const Duration(seconds: 5),
       );
       print("Server Exception: ${e.errModel.errorMessage}");
     } catch (e) {
-      Get.back();
+      isLoading = false;
+      update();
       Get.snackbar(
         'Unexpected Error ',
         'Something went wrong: $e',
-        backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-      print("Unexpected error: $e");
     }
   }
-}
+  }
