@@ -33,7 +33,10 @@ class LoginController extends GetxController {
     update();
 
     if (!formKey.currentState!.validate()) return;
-
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
     try {
       await api.login(
         phone: phoneController.text.trim(),
@@ -44,7 +47,7 @@ class LoginController extends GetxController {
       passError = null;
       update();
 
-      Get.to(() => Home());
+      Get.offAll(() => Home());
     } on ServerException catch (e) {
       phoneError = e.errModel?.errorMessage ?? "Invalid Credentials";
       passError = e.errModel?.errorMessage ?? "Invalid Credentials";

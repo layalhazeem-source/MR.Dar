@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
-import 'package:new_project/core/api/dio_consumer.dart';
 
 class SignupController extends GetxController {
   final AuthService api;
@@ -109,30 +108,71 @@ class SignupController extends GetxController {
   }
 
   Future<void> signupUser() async {
-    if (formKey.currentState?.validate() ?? false) {
-      try {
-        await api.signup(
-          firstName: firstNameController.text.trim(),
-          lastName: lastNameController.text.trim(),
-          phone: phoneController.text.trim(),
-          password: passwordController.text.trim(),
-          confirmPassword: confirmPasswordController.text.trim(), // ← هنا
+    if (!(formKey.currentState?.validate() ?? false)) {
+      Get.snackbar('Error', 'Please fill all required fields correctly');
+      return;
+    }
+    if (passwordController.text != confirmPasswordController.text) {
+      Get.snackbar('Error', 'Passwords do not match');
+      return;
+    }
+    if (birthDate.value.isEmpty) {
+      Get.snackbar('Error', 'Please select date of birth');
+      return;
+    }
+    if (role.value == 0) {
+      Get.snackbar('Error', 'Please select a role (Renter or Owner)');
+      return;
+    }
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
 
-          birthDate: birthDate.value,
-          role: role.value,
+    try {
+      await api.signup(
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        phone: phoneController.text.trim(),
+        password: passwordController.text.trim(),
+        confirmPassword: confirmPasswordController.text.trim(),
+        birthDate: birthDate.value,
+        role: role.value,
+        profileImage: profileImage.value != null
+            ? File(profileImage.value!.path)
+            : null,
+        idImage: idImage.value != null ? File(idImage.value!.path) : null,
+      );
+      Get.back();
+      Get.snackbar(
+        'Success ',
+        'Account created successfully!',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
 
-          profileImage: profileImage.value != null
-              ? File(profileImage.value!.path)
-              : null,
-
-          idImage: idImage.value != null ? File(idImage.value!.path) : null,
-        );
-
-        Get.snackbar('Success', 'Account created successfully!');
-        Get.to(() => Home());
-      } on ServerException catch (e) {
-        Get.snackbar('Error', e.errModel.errorMessage);
-      }
+      await Future.delayed(const Duration(seconds: 2));
+      Get.offAll(() => Home());
+    } on ServerException catch (e) {
+      Get.back();
+      Get.snackbar(
+        'Error ',
+        e.errModel.errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+      );
+      print("Server Exception: ${e.errModel.errorMessage}");
+    } catch (e) {
+      Get.back();
+      Get.snackbar(
+        'Unexpected Error ',
+        'Something went wrong: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      print("Unexpected error: $e");
     }
   }
 }

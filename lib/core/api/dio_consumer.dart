@@ -87,11 +87,20 @@ class DioConsumer extends ApiConsumer {
     bool isFormDatta = false,
   }) async {
     try {
+      final payload = isFormDatta
+          ? (data is FormData
+                ? data
+                : FormData.fromMap(Map<String, dynamic>.from(data ?? {})))
+          : data;
+
       final response = await dio.post(
         path,
-        data: isFormDatta ? FormData.fromMap(data) : data,
+        data: payload,
         queryParameters: queryParameters,
+        options: options,
       );
+
+      // رجّع response كامل لو حبيت أو response.data حسب تصميمك.
       return response.data;
     } on DioException catch (e) {
       handleDioException(e);
