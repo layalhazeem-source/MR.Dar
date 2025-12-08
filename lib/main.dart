@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_project/view/Splash.dart';
-import 'package:new_project/view/WelcomePage.dart';
-import 'package:new_project/view/home.dart';
-import 'package:new_project/view/login.dart';
-import 'package:new_project/view/signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'core/bindings/app_bindings.dart';
+import 'view/Splash.dart';
+import 'view/WelcomePage.dart';
+import 'view/home.dart';
+import 'view/login.dart';
+import 'view/signup.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,9 +23,9 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       builder: (context, child) {
         return GetMaterialApp(
-          initialBinding: AppBindings(),
+          initialBinding: AppBindings(),   // 🔥 أهم سطر — تشغيل الـ Bindings
           debugShowCheckedModeBanner: false,
-          home: Splash(),
+          home: Splash(),                 // شاشة البداية
           getPages: [
             GetPage(name: "/home", page: () => Home()),
             GetPage(name: "/signup", page: () => Signup()),
