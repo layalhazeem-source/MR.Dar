@@ -15,11 +15,11 @@ class ApartmentDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 250,
+              height: 380,
               child: PageView(
                 children: apartment.houseImages.isNotEmpty
-                    ? apartment.houseImages.map((img) => Image.network(img, fit: BoxFit.cover)).toList()
-                    : [Image.network('https://via.placeholder.com/400', fit: BoxFit.cover)],
+                    ? apartment.houseImages.map((img) => Image.asset(img, fit: BoxFit.cover)).toList()
+                    : [Image.asset('images/photo_2025-11-30_12-36-36.jpg', fit: BoxFit.cover)],
               ),
             ),
             Padding(

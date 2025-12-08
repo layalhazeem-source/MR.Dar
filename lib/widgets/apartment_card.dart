@@ -22,10 +22,8 @@ class ApartmentCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Image.network(
-                    apartment.houseImages.isNotEmpty
-                        ? apartment.houseImages[0]
-                        : 'https://via.placeholder.com/400',
+                  child: Image.asset(
+                    apartment.houseImages.isNotEmpty ? apartment.houseImages[0] : 'images/photo_2025-11-30_12-36-36.jpg',
                     height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
