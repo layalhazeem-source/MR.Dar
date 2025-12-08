@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../controller/authcontroller.dart';
 import '../controller/homecontroller.dart';
+import '../controller/logincontroller.dart';
 import '../controller/my_account_controller.dart';
+import '../controller/signupcontroller.dart';
+import '../core/api/dio_consumer.dart';
+import '../main.dart';
+import '../service/auth_service.dart';
+import 'WelcomePage.dart';
 import 'homeContent.dart';
 import 'login.dart';
 import 'favourite.dart';
@@ -11,15 +18,7 @@ import 'myRent.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
-  final HomeController controller = Get.find<HomeController>();
-
-  Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    Get.delete<HomeController>();
-    Get.delete<MyAccountController>();
-    Get.offAll(() => Login());
-  }
+  final HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +62,40 @@ class Home extends StatelessWidget {
 
       // يظهر زر تسجيل الخروج فقط بصفحة الـ Home
       actions: index == 0
-          ? [IconButton(icon: const Icon(Icons.logout), onPressed: _logout)]
+          ? [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () {
+                  Get.defaultDialog(
+                    title: "Logout From App",
+                    titleStyle: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    middleText: "Are you sure you need to logout ?",
+                    middleTextStyle: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                    backgroundColor: Colors.grey,
+                    radius: 10,
+                    textCancel: "No",
+                    cancelTextColor: Colors.white,
+                    textConfirm: "Yes",
+                    confirmTextColor: Colors.white,
+                    onCancel: () {
+                      Get.back();
+                    },
+                    onConfirm: () {
+                      final auth = Get.find<AuthController>();
+                      auth.logout();
+                    },
+                    buttonColor: Color(0xFF274668),
+                  );
+                },
+              ),
+            ]
           : [],
 
       // Drawer فقط بصفحة Home

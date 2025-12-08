@@ -5,15 +5,35 @@ import '../controller/my_account_controller.dart';
 class MyAccount extends StatelessWidget {
   MyAccount({super.key});
 
-  // استدعاء الـ Controller
   final MyAccountController controller = Get.put(MyAccountController());
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
       final user = controller.user.value;
       if (user == null) {
-        return const Center(child: CircularProgressIndicator());
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.person_off, size: 60, color: Colors.grey),
+              SizedBox(height: 20),
+              Text(
+                "No user data found",
+                style: TextStyle(fontSize: 18, color: Colors.grey),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => controller.refreshUser(),
+                child: Text("Retry"),
+              ),
+            ],
+          ),
+        );
       }
 
       return SingleChildScrollView(
@@ -21,49 +41,34 @@ class MyAccount extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
+            // صورة الملف الشخصي
+            Center(
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage("assets/images/avatar.png"),
+                backgroundColor: Color(0xFF274668).withOpacity(0.1),
+                child: Icon(Icons.person, size: 60, color: Color(0xFF274668)),
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              "First Name: ${user.firstName}",
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Last Name: ${user.lastName}",
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Text("Phone: ${user.phone}", style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 8),
-            Text("Role: ${user.role}", style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 8),
-            Text(
-              "Date of Birth: ${user.dateOfBirth}",
-              style: const TextStyle(fontSize: 18),
-            ),
+
+            // معلومات المستخدم
+            _buildInfoCard("👤", "Name", "${user.firstName} ${user.lastName}"),
+            _buildInfoCard("📱", "Phone", user.phone),
+            _buildInfoCard("🎭", "Role", user.role),
+            _buildInfoCard("🎂", "Date of Birth", user.dateOfBirth),
+            _buildInfoCard("🆔", "User ID", user.id.toString()),
+
             const SizedBox(height: 30),
+
+            // زر التحديث
             Center(
               child: ElevatedButton.icon(
-                onPressed: () {
-                  // ممكن تضيفي وظيفة لتعديل الحساب أو تسجيل الخروج
-                  Get.snackbar("Edit", "Edit profile tapped!");
-                },
-                icon: const Icon(Icons.edit),
-                label: const Text("Edit Profile"),
+                onPressed: () => controller.refreshUser(),
+                icon: Icon(Icons.refresh),
+                label: Text("Refresh Data"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF274668),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  backgroundColor: Color(0xFF274668),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
               ),
             ),
@@ -73,17 +78,33 @@ class MyAccount extends StatelessWidget {
     });
   }
 
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Text(
-            "$label: ",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          Expanded(child: Text(value, style: const TextStyle(fontSize: 16))),
-        ],
+  Widget _buildInfoCard(String emoji, String label, String value) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 10),
+      child: Padding(
+        padding: EdgeInsets.all(15),
+        child: Row(
+          children: [
+            Text(emoji, style: TextStyle(fontSize: 24)),
+            SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    value.isNotEmpty ? value : "Not set",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

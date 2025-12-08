@@ -46,19 +46,34 @@ class LoginController extends GetxController {
         password: passwordController.text.trim(),
       );
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", token);
+      print("✅ Login successful, token: $token");
 
       isLoading = false;
       update();
-      Get.put(HomeController());
-      Get.put(MyAccountController());
+
       Get.offAll(() => Home());
     } on ServerException catch (e) {
       isLoading = false;
       phoneError = e.errModel?.errorMessage;
       passError = e.errModel?.errorMessage;
       update();
+
+      Get.snackbar(
+        "Error",
+        e.errModel.errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      isLoading = false;
+      update();
+
+      Get.snackbar(
+        "Error",
+        "An unexpected error occurred: $e",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

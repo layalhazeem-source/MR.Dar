@@ -26,22 +26,34 @@ class AuthService {
         final data = response.data;
 
         if (data["message"] == "User Logged In Successfully .") {
-          final token = data["data"]["access_token"]; // <-- التوكن الصحيح
+          // الوصول الصحيح للبيانات
+          final userData = data["data"]; // كل البيانات في مفتاح "data"
+          final token = userData["access_token"];
 
           if (token == null) {
             throw ServerException(
               errModel: ErrorModel(errorMessage: "Token missing from server!"),
             );
           }
-          // حفظ التوكن
+          // حفظ البيانات بشكل صحيح
           final prefs = await SharedPreferences.getInstance();
-          await prefs.setString("token", data["access_token"] ?? "");
-          await prefs.setString("id", data["id"].toString());
-          await prefs.setString("first_name", data["first_name"] ?? "");
-          await prefs.setString("last_name", data["last_name"] ?? "");
-          await prefs.setString("phone", data["phone"] ?? "");
-          await prefs.setString("role", data["role"] ?? "");
-          await prefs.setString("date_of_birth", data["date_of_birth"] ?? "");
+          await prefs.setString("token", token);
+          await prefs.setString("id", userData["id"]?.toString() ?? "");
+          await prefs.setString("first_name", userData["first_name"] ?? "");
+          await prefs.setString("last_name", userData["last_name"] ?? "");
+          await prefs.setString("phone", userData["phone"] ?? "");
+          await prefs.setString("role", userData["role"] ?? "");
+          await prefs.setString(
+            "date_of_birth",
+            userData["date_of_birth"] ?? "",
+          );
+
+          print("✅ User data saved to SharedPreferences:");
+          print("   ID: ${userData["id"]}");
+          print("   Name: ${userData["first_name"]} ${userData["last_name"]}");
+          print("   Phone: ${userData["phone"]}");
+          print("   Role: ${userData["role"]}");
+
           return token; // ⬅️ رجع التوكن
         } else {
           throw ServerException(
@@ -177,5 +189,20 @@ class AuthService {
         errModel: ErrorModel(errorMessage: "Unexpected error: ${e.toString()}"),
       );
     }
+  }
+
+  Future<void> signOut() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // مسح كل البيانات المتعلقة بالمستخدم
+    await prefs.remove("token");
+    await prefs.remove("id");
+    await prefs.remove("first_name");
+    await prefs.remove("last_name");
+    await prefs.remove("phone");
+    await prefs.remove("role");
+    await prefs.remove("date_of_birth");
+
+    print("🟢 User logged out successfully (local data cleared)");
   }
 }
