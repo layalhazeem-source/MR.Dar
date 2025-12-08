@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
+import 'homecontroller.dart';
+import 'my_account_controller.dart';
 
 class LoginController extends GetxController {
   bool isLoading = false;
@@ -49,7 +51,8 @@ class LoginController extends GetxController {
 
       isLoading = false;
       update();
-
+      Get.put(HomeController());
+      Get.put(MyAccountController());
       Get.offAll(() => Home());
     } on ServerException catch (e) {
       isLoading = false;

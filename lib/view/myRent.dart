@@ -10,12 +10,6 @@ class MyRent extends StatefulWidget {
 class _MyRentState extends State<MyRent> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Rents'),
-        backgroundColor: Color(0xFF274668),
-        foregroundColor: Colors.white,
-      ),
-    );
+    return Scaffold();
   }
 }

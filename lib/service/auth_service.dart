@@ -11,8 +11,10 @@ class AuthService {
 
   AuthService({required this.api});
 
-  Future<String> login(
-      {required String phone, required String password}) async {
+  Future<String> login({
+    required String phone,
+    required String password,
+  }) async {
     try {
       final response = await api.dio.post(
         EndPoint.logIn,
@@ -26,17 +28,21 @@ class AuthService {
         if (data["message"] == "User Logged In Successfully .") {
           final token = data["data"]["access_token"]; // <-- التوكن الصحيح
 
-
           if (token == null) {
             throw ServerException(
               errModel: ErrorModel(errorMessage: "Token missing from server!"),
             );
           }
-// حفظ التوكن
+          // حفظ التوكن
           final prefs = await SharedPreferences.getInstance();
-          await prefs.setString("token", token);
+          await prefs.setString("token", data["access_token"] ?? "");
+          await prefs.setString("id", data["id"].toString());
+          await prefs.setString("first_name", data["first_name"] ?? "");
+          await prefs.setString("last_name", data["last_name"] ?? "");
+          await prefs.setString("phone", data["phone"] ?? "");
+          await prefs.setString("role", data["role"] ?? "");
+          await prefs.setString("date_of_birth", data["date_of_birth"] ?? "");
           return token; // ⬅️ رجع التوكن
-
         } else {
           throw ServerException(
             errModel: ErrorModel(errorMessage: "Invalid Credntials"),
@@ -87,8 +93,7 @@ class AuthService {
         );
       }
       final formattedDate =
-          "${dateParts[2]}-${dateParts[1].padLeft(2, '0')}-${dateParts[0]
-          .padLeft(2, '0')}";
+          "${dateParts[2]}-${dateParts[1].padLeft(2, '0')}-${dateParts[0].padLeft(2, '0')}";
       print("Formatted date: $formattedDate");
 
       final formData = {
@@ -106,18 +111,14 @@ class AuthService {
       if (profileImage != null && profileImage.existsSync()) {
         dataToSend["profile_image"] = await MultipartFile.fromFile(
           profileImage.path,
-          filename: "profile_${DateTime
-              .now()
-              .millisecondsSinceEpoch}.jpg",
+          filename: "profile_${DateTime.now().millisecondsSinceEpoch}.jpg",
         );
       }
 
       if (idImage != null && idImage.existsSync()) {
         dataToSend["id_image"] = await MultipartFile.fromFile(
           idImage.path,
-          filename: "id_${DateTime
-              .now()
-              .millisecondsSinceEpoch}.jpg",
+          filename: "id_${DateTime.now().millisecondsSinceEpoch}.jpg",
         );
       }
 
@@ -153,8 +154,8 @@ class AuthService {
       } else {
         final errorMsg = response is Map
             ? (response["message"]?.toString() ??
-            response["error"]?.toString() ??
-            "Signup failed")
+                  response["error"]?.toString() ??
+                  "Signup failed")
             : "Signup failed - Invalid response";
         throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
@@ -163,8 +164,10 @@ class AuthService {
       if (e.response != null && e.response!.data is Map) {
         final data = e.response!.data as Map;
         errorMessage =
-            data["message"]?.toString() ?? data["error"]?.toString() ??
-                e.message ?? "Network error";
+            data["message"]?.toString() ??
+            data["error"]?.toString() ??
+            e.message ??
+            "Network error";
       }
       throw ServerException(errModel: ErrorModel(errorMessage: errorMessage));
     } catch (e, s) {
