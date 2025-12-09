@@ -18,6 +18,15 @@ class Signup extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white, // <-- خلفية بيضاء
       appBar: AppBar(
+        title: Text(
+          "Join us & find your perfect home",
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 21,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF274668),
+          ),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Color(0xFF274668)),
@@ -30,16 +39,6 @@ class Signup extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 10.h),
-                Text(
-                  "Join us and find your perfect home",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF274668),
-                  ),
-                ),
                 SizedBox(height: 20.h),
 
                 // اختيار النوع
@@ -51,12 +50,12 @@ class Signup extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () => ctrl.setRole(2),
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              padding: EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 color: ctrl.role.value == 2
                                     ? const Color(0xFF274668)
                                     : const Color(0xFFE8ECF4),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(24),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black12,
@@ -85,12 +84,12 @@ class Signup extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () => ctrl.setRole(3),
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              padding: EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 color: ctrl.role.value == 3
                                     ? const Color(0xFF274668)
                                     : const Color(0xFFE8ECF4),
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(24),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black12,
@@ -119,7 +118,7 @@ class Signup extends StatelessWidget {
                   },
                 ),
 
-                SizedBox(height: 15.h),
+                SizedBox(height: 20.h),
 
                 // First & Last Name
                 Row(
@@ -154,7 +153,7 @@ class Signup extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
 
                 // Date of Birth
                 GetBuilder<SignupController>(
@@ -187,48 +186,170 @@ class Signup extends StatelessWidget {
 
                 SizedBox(height: 15.h),
 
-                // Images
-                GetBuilder<SignupController>(
-                  builder: (ctrl) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
+                // Profile Image Field with Error
+                Row(
+                  children: [
+                    Expanded(
+                      child: GetBuilder<SignupController>(
+                        builder: (ctrl) {
+                          return GestureDetector(
                             onTap: () => ctrl.selectProfileImage(),
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                readOnly: true,
-                                decoration: _inputDecoration(
-                                  ctrl.profileImage.value == null
-                                      ? "Profile Image"
-                                      : "Image Selected ✔",
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 65, // ↔️ تحكّمي بالحجم
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF5F5F5),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color:
+                                          ctrl
+                                              .profileImageError
+                                              .value
+                                              .isNotEmpty
+                                          ? Colors.red
+                                          : Colors.transparent,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          ctrl.profileImage.value == null
+                                              ? "Profile Image"
+                                              : "Profile Image Selected",
+                                          style: TextStyle(
+                                            fontSize:
+                                                16, // ⬅️ حجم أصغر ليناسب المساحة
+                                            color:
+                                                ctrl.profileImage.value == null
+                                                ? Colors.black54
+                                                : Colors.black54,
+                                            fontWeight:
+                                                ctrl.profileImage.value == null
+                                                ? FontWeight.w500
+                                                : FontWeight.w600,
+                                          ),
+                                          maxLines: 2, // ⬅️ يسمح بسطرين
+                                          overflow: TextOverflow
+                                              .ellipsis, // ⬅️ لمنع التقطع
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.black45,
+                                        size: 22,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                                // ⬅️ عرض رسالة الخطأ تحت الحقل
+                                if (ctrl.profileImageError.value.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 4,
+                                      top: 4,
+                                    ),
+                                    child: Text(
+                                      ctrl.profileImageError.value,
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Expanded(
-                          child: GestureDetector(
+                          );
+                        },
+                      ),
+                    ),
+
+                    SizedBox(width: 10.h),
+
+                    Expanded(
+                      child: GetBuilder<SignupController>(
+                        builder: (ctrl) {
+                          return GestureDetector(
                             onTap: () => ctrl.pickIdImage(),
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                readOnly: true,
-                                decoration: _inputDecoration(
-                                  ctrl.idImage.value == null
-                                      ? "ID Image"
-                                      : "Image Selected ✔",
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 65, // نفس الارتفاع
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF5F5F5),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: ctrl.idImageError.value.isNotEmpty
+                                          ? Colors.red
+                                          : Colors.transparent,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          ctrl.idImage.value == null
+                                              ? "ID Image"
+                                              : "ID Image Selected",
+                                          style: TextStyle(
+                                            fontSize: 16, // نفس حجم الخط
+                                            color: ctrl.idImage.value == null
+                                                ? Colors.black54
+                                                : Colors.black54,
+                                            fontWeight:
+                                                ctrl.idImage.value == null
+                                                ? FontWeight.w500
+                                                : FontWeight.w600,
+                                          ),
+                                          maxLines: 2, // ⬅️ يسمح بسطرين
+                                          overflow: TextOverflow
+                                              .ellipsis, // ⬅️ لمنع التقطع
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.photo,
+                                        color: Colors.black45,
+                                        size: 22,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                                // ⬅️ عرض رسالة الخطأ تحت الحقل
+                                if (ctrl.idImageError.value.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 4,
+                                      top: 4,
+                                    ),
+                                    child: Text(
+                                      ctrl.idImageError.value,
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
 
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
 
                 // Phone
                 TextFormField(
@@ -244,7 +365,7 @@ class Signup extends StatelessWidget {
                   decoration: _inputDecoration("Phone", suffix: Icons.phone),
                 ),
 
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
 
                 // Password
                 GetBuilder<SignupController>(
@@ -278,7 +399,7 @@ class Signup extends StatelessWidget {
                   },
                 ),
 
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
 
                 // Confirm Password
                 GetBuilder<SignupController>(
@@ -367,6 +488,7 @@ class Signup extends StatelessWidget {
         fontWeight: FontWeight.bold,
         color: Colors.black45,
         fontSize: 18,
+        overflow: TextOverflow.visible,
       ),
       suffixIcon:
           suffixWidget ??

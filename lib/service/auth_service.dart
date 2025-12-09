@@ -152,14 +152,42 @@ class AuthService {
               response["status"] == "success")) {
         print("Signup successful!");
 
-        // حفظ التوكن بنفس طريقة login
-        final token = response["data"]?["access_token"];
+        // ⬅️⬅️⬅️ **هنا المشكلة والحل** ⬅️⬅️⬅️
+        // نحتاج حفظ بيانات المستخدم بنفس طريقة login
+        final userData = response["data"] ?? response;
+        final token = userData["access_token"];
+
         if (token != null) {
           final prefs = await SharedPreferences.getInstance();
+
+          // 1. حفظ التوكن
           await prefs.setString("token", token);
-          print("Token saved successfully");
+
+          // 2. حفظ بيانات المستخدم **مثل ما يعمل الـ login بالضبط**
+          await prefs.setString("id", userData["id"]?.toString() ?? "");
+          await prefs.setString(
+            "first_name",
+            userData["first_name"] ?? firstName,
+          );
+          await prefs.setString("last_name", userData["last_name"] ?? lastName);
+          await prefs.setString("phone", userData["phone"] ?? phone);
+          await prefs.setString("role", userData["role"] ?? role.toString());
+          await prefs.setString(
+            "date_of_birth",
+            userData["date_of_birth"] ?? formattedDate,
+          );
+
+          print("✅ User data saved to SharedPreferences after signup:");
+          print("   ID: ${prefs.getString("id")}");
+          print(
+            "   Name: ${prefs.getString("first_name")} ${prefs.getString("last_name")}",
+          );
+          print("   Phone: ${prefs.getString("phone")}");
+          print("   Role: ${prefs.getString("role")}");
+          print("   Date of Birth: ${prefs.getString("date_of_birth")}");
+          print("   Token saved: ${token.substring(0, 20)}...");
         } else {
-          print("No token returned from signup");
+          print("Warning: No token returned from signup");
         }
 
         return;

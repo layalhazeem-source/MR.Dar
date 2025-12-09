@@ -25,4 +25,16 @@ class UserModel {
       dateOfBirth: prefs["date_of_birth"] ?? "",
     );
   }
+
+  // من JSON
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: int.tryParse(json["id"]?.toString() ?? "0") ?? 0,
+      firstName: json["first_name"]?.toString() ?? "",
+      lastName: json["last_name"]?.toString() ?? "",
+      phone: json["phone"]?.toString() ?? "",
+      role: json["role"]?.toString() ?? "",
+      dateOfBirth: json["date_of_birth"]?.toString() ?? "",
+    );
+  }
 }

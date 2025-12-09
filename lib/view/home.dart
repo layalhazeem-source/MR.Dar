@@ -146,7 +146,30 @@ class Home extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
-              Get.offAllNamed('/login');
+              Get.defaultDialog(
+                title: "Logout From App",
+                titleStyle: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                middleText: "Are you sure you need to logout ?",
+                middleTextStyle: TextStyle(fontSize: 18, color: Colors.black),
+                backgroundColor: Colors.grey,
+                radius: 10,
+                textCancel: "No",
+                cancelTextColor: Colors.white,
+                textConfirm: "Yes",
+                confirmTextColor: Colors.white,
+                onCancel: () {
+                  Get.back();
+                },
+                onConfirm: () {
+                  final auth = Get.find<AuthController>();
+                  auth.logout();
+                },
+                buttonColor: Color(0xFF274668),
+              );
             },
           ),
         ],
