@@ -1,54 +1,75 @@
 import 'package:flutter/material.dart';
-
 import '../model/apartment_model.dart';
 
 class ApartmentCard extends StatelessWidget {
   final Apartment apartment;
   final VoidCallback onTap;
 
-  const ApartmentCard({super.key, required this.apartment, required this.onTap});
+  const ApartmentCard({
+    super.key,
+    required this.apartment,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Image.asset(
-                    apartment.houseImages.isNotEmpty ? apartment.houseImages[0] : 'images/photo_2025-11-30_12-36-36.jpg',
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Icon(Icons.favorite_border, color: Colors.red, size: 28),
-                ),
-              ],
+            // IMAGE
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              child: apartment.houseImages.isNotEmpty
+                  ? Image.network(
+                apartment.houseImages[0],
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
+                  : Image.asset(
+                "images/photo_2025-11-30_12-36-36.jpg",
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
+
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('\$${apartment.rentValue}/night', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(
+                    apartment.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+
                   const SizedBox(height: 4),
-                  Text('${apartment.street}, ${apartment.cityId}', style: const TextStyle(color: Colors.grey)),
+
+                  Text(
+                    "\$${apartment.rentValue} / night",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[700]),
+                  ),
+
                   const SizedBox(height: 4),
-                  Text('${apartment.rooms} Beds · ${apartment.space} m²', style: const TextStyle(color: Colors.grey)),
+
+                  Text(
+                    "${apartment.rooms} Beds • ${apartment.space} m²",
+                    style: const TextStyle(color: Colors.grey),
+                  ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),

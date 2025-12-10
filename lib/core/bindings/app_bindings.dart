@@ -44,7 +44,7 @@ class AppBindings extends Bindings {
       AuthController(authService: Get.find<AuthService>()),
       permanent: true,
     );
-    Get.lazyPut(() => ApartmentService(api: DioConsumer(dio: dio)));
+    Get.lazyPut(() => ApartmentService(api: Get.find<DioConsumer>()));
     Get.lazyPut(() => ApartmentController(service: Get.find()));
   }
 }
