@@ -60,7 +60,23 @@ class Apartment {
       }
       return 0.0;
     }
+    List<String> parseImages(dynamic imagesData) {
+      final List<String> images = [];
 
+      if (imagesData != null && imagesData is List) {
+        for (var item in imagesData) {
+          if (item is Map && item['url'] != null) {
+            // استخراج الـ URL من object
+            images.add(item['url'].toString());
+          } else if (item is String) {
+            // إذا كان string مباشرة
+            images.add(item);
+          }
+        }
+      }
+
+      return images;
+    }
     return Apartment(
       id: safeParseInt(json["id"]),
       title: json["title"]?.toString() ?? "",
@@ -75,9 +91,8 @@ class Apartment {
       flatNumber: json["flat_number"]?.toString() ?? "",
       longitude: safeParseDouble(json["longitude"]),
       latitude: safeParseDouble(json["latitude"]),
-      houseImages: json["house_images"] != null
-          ? List<String>.from(json["house_images"].map((x) => x.toString()))
-          : [],
+      houseImages: parseImages(json["images"]), // ⬅️ استخدام الـ parser الجديد
+
     );
   }
 }
