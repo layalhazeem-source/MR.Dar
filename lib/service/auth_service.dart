@@ -47,30 +47,7 @@ class AuthService {
             "date_of_birth",
             userData["date_of_birth"] ?? "",
           );
-          // ⬅️⬅️⬅️ **إضافة حفظ روابط الصور هنا أيضاً** ⬅️⬅️⬅️
-          if (userData["profile_image_url"] != null) {
-            await prefs.setString(
-              "profile_image_url",
-              userData["profile_image_url"].toString(),
-            );
-          } else if (userData["profile_image"] != null) {
-            await prefs.setString(
-              "profile_image_url",
-              userData["profile_image"].toString(),
-            );
-          }
 
-          if (userData["id_image_url"] != null) {
-            await prefs.setString(
-              "id_image_url",
-              userData["id_image_url"].toString(),
-            );
-          } else if (userData["id_image"] != null) {
-            await prefs.setString(
-              "id_image_url",
-              userData["id_image"].toString(),
-            );
-          }
           print("✅ User data saved to SharedPreferences:");
           print("   ID: ${userData["id"]}");
           print("   Name: ${userData["first_name"]} ${userData["last_name"]}");
@@ -200,37 +177,6 @@ class AuthService {
             userData["date_of_birth"] ?? formattedDate,
           );
 
-          // 3. ⬅️⬅️⬅️ **حفظ روابط الصور من الاستجابة** ⬅️⬅️⬅️
-          if (userData["profile_image_url"] != null) {
-            await prefs.setString(
-              "profile_image_url",
-              userData["profile_image_url"].toString(),
-            );
-            print(
-              "✅ Profile image URL saved: ${userData["profile_image_url"]}",
-            );
-          } else if (userData["profile_image"] != null) {
-            await prefs.setString(
-              "profile_image_url",
-              userData["profile_image"].toString(),
-            );
-            print("✅ Profile image URL saved: ${userData["profile_image"]}");
-          }
-
-          if (userData["id_image_url"] != null) {
-            await prefs.setString(
-              "id_image_url",
-              userData["id_image_url"].toString(),
-            );
-            print("✅ ID image URL saved: ${userData["id_image_url"]}");
-          } else if (userData["id_image"] != null) {
-            await prefs.setString(
-              "id_image_url",
-              userData["id_image"].toString(),
-            );
-            print("✅ ID image URL saved: ${userData["id_image"]}");
-          }
-
           print("✅ User data saved to SharedPreferences after signup:");
           print("   ID: ${prefs.getString("id")}");
           print(
@@ -240,7 +186,6 @@ class AuthService {
           print("   Role: ${prefs.getString("role")}");
           print("   Date of Birth: ${prefs.getString("date_of_birth")}");
           print("   Token saved: ${token.substring(0, 20)}...");
-          print("Full signup response: $response");
         } else {
           print("Warning: No token returned from signup");
         }

@@ -5,8 +5,8 @@ class UserModel {
   final String phone;
   final String role;
   final String dateOfBirth;
-  final String? profileImageUrl; // ⬅️ تغيير الاسم لتوضيح أنه رابط
-  final String? idImageUrl;
+  final String? profileImage; // رابط/مسار صورة الملف الشخصي
+  final String? idImage;
 
   UserModel({
     required this.id,
@@ -15,8 +15,8 @@ class UserModel {
     required this.phone,
     required this.role,
     required this.dateOfBirth,
-    required this.profileImageUrl,
-    required this.idImageUrl,
+    required this.profileImage,
+    required this.idImage,
   });
 
   factory UserModel.fromPrefs(Map<String, String> prefs) {
@@ -27,9 +27,8 @@ class UserModel {
       phone: prefs["phone"] ?? "",
       role: prefs["role"] ?? "",
       dateOfBirth: prefs["date_of_birth"] ?? "",
-      profileImageUrl:
-          prefs["profile_image_url"] ?? prefs["profile_image"], // ⬅️
-      idImageUrl: prefs["id_image_url"] ?? prefs["id_image"], // ⬅️
+      profileImage: prefs["profile_image"],
+      idImage: prefs["id_image"],
     );
   }
 
@@ -42,12 +41,8 @@ class UserModel {
       phone: json["phone"]?.toString() ?? "",
       role: json["role"]?.toString() ?? "",
       dateOfBirth: json["date_of_birth"]?.toString() ?? "",
-      profileImageUrl:
-          json["profile_image_url"]?.toString() ??
-          json["profile_image"]?.toString(), // ⬅️
-      idImageUrl:
-          json["id_image_url"]?.toString() ??
-          json["id_image"]?.toString(), // ⬅️
+      profileImage: json["profile_image"]?.toString(),
+      idImage: json["id_image"]?.toString(),
     );
   }
 }

@@ -29,7 +29,6 @@ class SignupController extends GetxController {
   bool isPasswordHidden = true;
   bool isConfirmHidden = true;
 
-
   void toggleConfirmPassword() {
     isConfirmHidden = !isConfirmHidden;
     update();

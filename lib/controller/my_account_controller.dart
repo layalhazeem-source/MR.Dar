@@ -19,16 +19,14 @@ class MyAccountController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
 
       // طباعة كل البيانات المخزنة للتشخيص
-      print("📱 SharedPreferences Data (MyAccount):");
-      final allKeys = prefs.getKeys();
-      for (var key in allKeys) {
-        if (key != "token") {
-          print("   $key: ${prefs.getString(key)}");
-        } else {
-          final token = prefs.getString("token");
-          print("   token: ${token?.substring(0, 20)}...");
-        }
-      }
+      print("📱 SharedPreferences Data:");
+      print("   id: ${prefs.getString("id")}");
+      print("   first_name: ${prefs.getString("first_name")}");
+      print("   last_name: ${prefs.getString("last_name")}");
+      print("   phone: ${prefs.getString("phone")}");
+      print("   role: ${prefs.getString("role")}");
+      print("   date_of_birth: ${prefs.getString("date_of_birth")}");
+      print("   token: ${prefs.getString("token")?.substring(0, 20)}...");
 
       final userData = {
         "id": prefs.getString("id") ?? "0",
@@ -37,16 +35,14 @@ class MyAccountController extends GetxController {
         "phone": prefs.getString("phone") ?? "",
         "role": prefs.getString("role") ?? "renter",
         "date_of_birth": prefs.getString("date_of_birth") ?? "",
-        "profile_image_url": prefs.getString("profile_image_url") ?? "",
-        "id_image_url": prefs.getString("id_image_url") ?? "",
+        "profileImage": prefs.getString("profile_image") ?? "",
+        "idImage": prefs.getString("id_image") ?? "",
       };
 
       user.value = UserModel.fromPrefs(userData);
       isLoading.value = false;
 
       print("✅ User loaded: ${user.value?.firstName} ${user.value?.lastName}");
-      print("✅ Profile Image URL: ${user.value?.profileImageUrl}");
-      print("✅ ID Image URL: ${user.value?.idImageUrl}");
     } catch (e) {
       isLoading.value = false;
       print("❌ Error loading user: $e");

@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
-
 import '../../controller/ApartmentController.dart';
 import '../../controller/authcontroller.dart';
 import '../../controller/homecontroller.dart';
@@ -33,7 +32,7 @@ class AppBindings extends Bindings {
     );
 
     // Controllers
-    Get.lazyPut<HomeController>(() => HomeController());
+    Get.put<HomeController>(HomeController(), permanent: true);
     Get.lazyPut<MyAccountController>(() => MyAccountController());
     Get.lazyPut<LoginController>(
       () => LoginController(api: Get.find<AuthService>()),
@@ -48,5 +47,6 @@ class AppBindings extends Bindings {
     Get.put<ApartmentController>(
       ApartmentController(service: Get.find<ApartmentService>()),
     );
+    Get.put<MyAccountController>(MyAccountController(), permanent: true);
   }
 }

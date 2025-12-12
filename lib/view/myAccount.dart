@@ -47,97 +47,35 @@ class MyAccount extends StatelessWidget {
                 radius: 50,
                 backgroundColor: Color(0xFF274668).withOpacity(0.1),
                 backgroundImage:
-                    (user.profileImageUrl != null &&
-                        user.profileImageUrl!.isNotEmpty &&
-                        user.profileImageUrl!.startsWith('http'))
-                    ? NetworkImage(user.profileImageUrl!)
+                    (user.profileImage != null && user.profileImage!.isNotEmpty)
+                    ? NetworkImage(user.profileImage!)
                     : null,
-                child:
-                    (user.profileImageUrl == null ||
-                        user.profileImageUrl!.isEmpty)
+                child: (user.profileImage == null || user.profileImage!.isEmpty)
                     ? Icon(Icons.person, size: 60, color: Color(0xFF274668))
                     : null,
               ),
             ),
-            SizedBox(height: 10),
-
+            const SizedBox(height: 20),
             // صورة الهوية
             Text(
               "ID Image",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-
-            if (user.idImageUrl != null && user.idImageUrl!.isNotEmpty)
-              Column(
-                children: [
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
+            (user.idImage != null && user.idImage!.isNotEmpty)
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      user.idImage!,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: user.idImageUrl!.startsWith('http')
-                          ? Image.network(
-                              user.idImageUrl!,
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value:
-                                            loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.error, color: Colors.red),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        "Failed to load",
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          : Center(
-                              child: Text(
-                                "Invalid image URL",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                    ),
+                  )
+                : Text(
+                    "No ID image uploaded",
+                    style: TextStyle(color: Colors.grey),
                   ),
-                  SizedBox(height: 5),
-                  Text(
-                    "ID Image URL: ${user.idImageUrl!.substring(0, 50)}...",
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              )
-            else
-              Text(
-                "No ID image uploaded",
-                style: TextStyle(color: Colors.grey),
-              ),
 
             const SizedBox(height: 30),
             // معلومات المستخدم
