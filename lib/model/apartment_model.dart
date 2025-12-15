@@ -6,12 +6,17 @@ class Apartment {
   final int rooms;
   final double space;
   final String notes;
+
   final int cityId;
+  final String cityName;
   final int governorateId;
+  final String governorateName;
+
   final String street;
   final String flatNumber;
   final double longitude;
   final double latitude;
+
   final List<String> houseImages;
 
   Apartment({
@@ -23,7 +28,9 @@ class Apartment {
     required this.space,
     required this.notes,
     required this.cityId,
+    required this.cityName,
     required this.governorateId,
+    required this.governorateName,
     required this.street,
     required this.flatNumber,
     required this.longitude,
@@ -32,68 +39,46 @@ class Apartment {
   });
 
   factory Apartment.fromJson(Map<String, dynamic> json) {
-    // دالة مساعدة للتحويل الآمن
-    int safeParseInt(dynamic value) {
-      if (value == null) return 0;
-      if (value is int) return value;
-      if (value is String) {
-        try {
-          return int.parse(value);
-        } catch (e) {
-          return 0;
-        }
+    int safeInt(dynamic v) =>
+        v == null ? 0 : int.tryParse(v.toString()) ?? 0;
+
+    double safeDouble(dynamic v) =>
+        v == null ? 0.0 : double.tryParse(v.toString()) ?? 0.0;
+
+    List<String> parseImages(dynamic images) {
+      if (images is List) {
+        return images
+            .where((e) => e is Map && e['url'] != null)
+            .map((e) => e['url'].toString())
+            .toList();
       }
-      if (value is double) return value.toInt();
-      return 0;
+      return [];
     }
 
-    double safeParseDouble(dynamic value) {
-      if (value == null) return 0.0;
-      if (value is double) return value;
-      if (value is int) return value.toDouble();
-      if (value is String) {
-        try {
-          return double.parse(value);
-        } catch (e) {
-          return 0.0;
-        }
-      }
-      return 0.0;
-    }
-    List<String> parseImages(dynamic imagesData) {
-      final List<String> images = [];
+    final address = json['address'] ?? {};
+    final city = address['city'] ?? {};
+    final governorate = city['governorate'] ?? {};
 
-      if (imagesData != null && imagesData is List) {
-        for (var item in imagesData) {
-          if (item is Map && item['url'] != null) {
-            // استخراج الـ URL من object
-            images.add(item['url'].toString());
-          } else if (item is String) {
-            // إذا كان string مباشرة
-            images.add(item);
-          }
-        }
-      }
-
-      return images;
-    }
     return Apartment(
-      id: safeParseInt(json["id"]),
-      title: json["title"]?.toString() ?? "",
-      description: json["description"]?.toString() ?? "",
-      rentValue: safeParseDouble(json["rent_value"]),
-      rooms: safeParseInt(json["rooms"]),
-      space: safeParseDouble(json["space"]),
-      notes: json["notes"]?.toString() ?? "",
-      cityId: safeParseInt(json["address"]["city"]["id"]
-      ),
-      governorateId: safeParseInt(json['address']?['city']?['governorate']?['id']),
-      street: json["street"]?.toString() ?? "",
-      flatNumber: json["flat_number"]?.toString() ?? "",
-      longitude: safeParseDouble(json["longitude"]),
-      latitude: safeParseDouble(json["latitude"]),
-      houseImages: parseImages(json["images"]), // ⬅️ استخدام الـ parser الجديد
+      id: safeInt(json['id']),
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      rentValue: safeDouble(json['rent_value']),
+      rooms: safeInt(json['rooms']),
+      space: safeDouble(json['space']),
+      notes: json['notes'] ?? '',
 
+      cityId: safeInt(city['id']),
+      cityName: city['name'] ?? '',
+      governorateId: safeInt(governorate['id']),
+      governorateName: governorate['name'] ?? '',
+
+      street: address['street'] ?? '',
+      flatNumber: address['flat_number']?.toString() ?? '',
+      longitude: safeDouble(address['longitude']),
+      latitude: safeDouble(address['latitude']),
+
+      houseImages: parseImages(json['images']),
     );
   }
 }

@@ -67,7 +67,7 @@ class HomeContent extends StatelessWidget {
                     return Container(
                       width: 220,
                       margin: EdgeInsets.only(right: 16),
-                      child: FeaturedApartmentCard(
+                      child: ApartmentCard(
                         apartment: apt,
                         onTap: () {
                           Get.to(() => ApartmentDetailsPage(apartment: apt));
@@ -106,7 +106,7 @@ class HomeContent extends StatelessWidget {
                     return Container(
                       width: 220,
                       margin: EdgeInsets.only(right: 16),
-                      child: FeaturedApartmentCard(
+                      child: ApartmentCard(
                         apartment: apt,
                         onTap: () {
                           Get.to(() => ApartmentDetailsPage(apartment: apt));
@@ -120,9 +120,6 @@ class HomeContent extends StatelessWidget {
           );
         }),
 
-
-        const SizedBox(height: 30),
-
          ],
         ),
       ),
@@ -130,99 +127,5 @@ class HomeContent extends StatelessWidget {
   }
 }
 
+
 // كارد خاص للأقسام الأفقية
-class FeaturedApartmentCard extends StatelessWidget {
-  final Apartment apartment;
-  final VoidCallback onTap;
-
-  const FeaturedApartmentCard({
-    super.key,
-    required this.apartment,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // الصورة
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              child: apartment.houseImages.isNotEmpty
-                  ? Image.network(
-                apartment.houseImages[0],
-                height: 100,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              )
-                  : Container(
-                height: 100,
-                color: Colors.grey[200],
-                child: Center(
-                  child: Icon(Icons.home, size: 50, color: Colors.grey),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    apartment.title.length > 25
-                        ? apartment.title.substring(0, 25) + "..."
-                        : apartment.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, size: 16, color: Colors.grey),
-                      SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          "City ${apartment.cityId}",
-                          style: TextStyle(color: Colors.grey, fontSize: 13),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Text(
-                    "\$${apartment.rentValue} / night",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.green[700],
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

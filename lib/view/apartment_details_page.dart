@@ -79,24 +79,18 @@ class ApartmentDetailsPage extends StatelessWidget {
                     ],
                   ),
 
-                  Text(
-                    "/ night",
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
-                  ),
 
                   SizedBox(height: 16),
 
                   // الموقع
                   Row(
                     children: [
-                      Icon(Icons.location_on, color: Color(0xFF274668)),
+                      Icon(Icons.location_on_outlined, color: Color(0xFF274668)),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          apartment.street.isNotEmpty
-                              ? "${apartment.street}, City ${apartment.cityId}"
-                              : "City ${apartment.cityId}",
-                          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                            "${apartment.street}, ${apartment.cityName}, ${apartment.governorateName}",
+                            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                         ),
                       ),
                     ],
@@ -117,6 +111,8 @@ class ApartmentDetailsPage extends StatelessWidget {
                         _specsItem(Icons.bed, "${apartment.rooms} Bedrooms"),
                         _specsItem(Icons.square_foot, "${apartment.space} m²"),
                         _specsItem(Icons.apartment, "Apartment"),
+                        _specsItem(Icons.wifi, "wifi"),
+
                       ],
                     ),
                   ),
@@ -142,32 +138,26 @@ class ApartmentDetailsPage extends StatelessWidget {
                       height: 1.5,
                     ),
                   ),
+                  SizedBox(height: 10),
+
+                  Text(
+                    "Flat Num",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+
                   if (apartment.flatNumber.isNotEmpty)
                     Text(
-                      "Flat No: ${apartment.flatNumber}",
-                      style: TextStyle(color: Colors.grey[700]),
+                      apartment.flatNumber,
+                      style: TextStyle( fontSize: 16,
+                        color: Colors.grey[700],
+                        height: 1.5,),
                     ),
 
-                  // الملاحظات
-                  if (apartment.notes.isNotEmpty) ...[
-                    SizedBox(height: 24),
-                    Text(
-                      "Notes",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      apartment.notes,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[700],
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
+
 
                   SizedBox(height: 80), // مساحة للزر الأسفل
                 ],

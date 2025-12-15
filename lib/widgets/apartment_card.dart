@@ -30,7 +30,7 @@ class ApartmentCard extends StatelessWidget {
                   child: apartment.houseImages.isNotEmpty
                       ? Image.network(
                     apartment.houseImages.first,
-                    height: 140,
+                    height: 130,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   )
@@ -75,27 +75,26 @@ class ApartmentCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height: 4),
+                  const SizedBox(height:10),
 
                   // Location
                   Text(
-                    apartment.street.isNotEmpty
-                        ? apartment.street
-                        : "City ${apartment.cityId}",
+                    "${apartment.street}, ${apartment.cityName}",
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height: 6),
+
+                  const SizedBox(height: 9),
 
                   // Price
                   Text(
-                    "\$${apartment.rentValue} / night",
+                    "\$${apartment.rentValue} / month",
                     style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF274668)),
+                        color: Color(0xFF000000)),
                   ),
                 ],
               ),
