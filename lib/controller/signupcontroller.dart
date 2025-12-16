@@ -19,6 +19,8 @@ class SignupController extends GetxController {
   RxInt role = 0.obs;
   RxString profileImageError = RxString("");
   RxString idImageError = RxString("");
+  String roleError = "";
+  String phoneError = "";
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -136,6 +138,7 @@ class SignupController extends GetxController {
 
   void setRole(int type) {
     role.value = type;
+    roleError = ""; // مسح الخطأ أول ما يختار
     update();
   }
 
@@ -176,10 +179,11 @@ class SignupController extends GetxController {
       isValid = false;
     }
 
-    // التحقق من اختيار الدور
     if (role.value == 0) {
-      Get.snackbar('Error', 'Please select a role (Renter or Owner)');
+      roleError = "Please select a role (Renter or Owner)";
       isValid = false;
+    } else {
+      roleError = "";
     }
 
     // التحقق من تطابق كلمات المرور
@@ -189,6 +193,19 @@ class SignupController extends GetxController {
     }
 
     return isValid;
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    // Listener لمسح رسالة الخطأ بس لما المستخدم يبلش يكتب
+    phoneController.addListener(() {
+      if (phoneError.isNotEmpty) {
+        phoneError = "";
+        update();
+      }
+    });
   }
 
   Future<void> signupUser() async {
@@ -243,13 +260,33 @@ class SignupController extends GetxController {
       isLoading = false;
       update();
 
-      Get.snackbar(
-        'Error',
-        e.errModel.errorMessage,
-        colorText: Colors.white,
-        backgroundColor: Colors.red,
-      );
-      print("Server Exception: ${e.errModel.errorMessage}");
+      // إذا كان الخطأ موجود عند الهاتف
+      if (e.errModel.errors != null && e.errModel.errors!['phone'] != null) {
+        phoneError = e.errModel.errors!['phone'][0].toString();
+        update();
+
+        // نظهر رسالة Snackbar للمستخدم
+        Get.snackbar(
+          "Account exists",
+          phoneError,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        // إذا كان الخطأ عام
+        Get.snackbar(
+          "Signup failed",
+          e.errModel.errorMessage,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+
+      // طباعة الأخطاء للdebug
+      print("❌ ServerException message: ${e.errModel.errorMessage}");
+      print("❌ ServerException errors: ${e.errModel.errors}");
     } catch (e) {
       isLoading = false;
       update();
@@ -257,6 +294,7 @@ class SignupController extends GetxController {
         'Unexpected Error',
         'Something went wrong: $e',
         colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
       );
     }
   }

@@ -1,17 +1,11 @@
-// Updated Signup screen with white background design similar to Login
-// Paste this file in place of your current signup.dart
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controller/signupcontroller.dart';
-import '../service/auth_service.dart';
 
 class Signup extends StatelessWidget {
   Signup({super.key});
-  final SignupController controller = Get.put(
-    SignupController(api: Get.find<AuthService>()),
-  );
+  final SignupController controller = Get.find<SignupController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,78 +35,99 @@ class Signup extends StatelessWidget {
               children: [
                 SizedBox(height: 20.h),
 
-                // اختيار النوع
                 GetBuilder<SignupController>(
                   builder: (ctrl) {
-                    return Row(
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => ctrl.setRole(2),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                color: ctrl.role.value == 2
-                                    ? const Color(0xFF274668)
-                                    : const Color(0xFFE8ECF4),
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => ctrl.setRole(2),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 10,
                                   ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Renter",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                  decoration: BoxDecoration(
                                     color: ctrl.role.value == 2
-                                        ? Colors.white
-                                        : const Color(0xFF274668),
+                                        ? const Color(0xFF274668)
+                                        : const Color(0xFFE8ECF4),
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Renter",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: ctrl.role.value == 2
+                                            ? Colors.white
+                                            : const Color(0xFF274668),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => ctrl.setRole(3),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                color: ctrl.role.value == 3
-                                    ? const Color(0xFF274668)
-                                    : const Color(0xFFE8ECF4),
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => ctrl.setRole(3),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 10,
                                   ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Owner",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                  decoration: BoxDecoration(
                                     color: ctrl.role.value == 3
-                                        ? Colors.white
-                                        : const Color(0xFF274668),
+                                        ? const Color(0xFF274668)
+                                        : const Color(0xFFE8ECF4),
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Owner",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: ctrl.role.value == 3
+                                            ? Colors.white
+                                            : const Color(0xFF274668),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
+
+                        // 🔴 رسالة الخطأ تحت الخيارات
+                        if (ctrl.roleError.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6, left: 8),
+                            child: Text(
+                              ctrl.roleError,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
                       ],
                     );
                   },
@@ -352,17 +367,46 @@ class Signup extends StatelessWidget {
                 SizedBox(height: 10.h),
 
                 // Phone
-                TextFormField(
-                  controller: controller.phoneController,
-                  keyboardType: TextInputType.number,
-                  maxLength: 10,
-                  style: const TextStyle(color: Colors.black87, fontSize: 22),
-                  validator: (v) {
-                    if (v == null || v.isEmpty) return "Phone is required";
-                    if (v.length != 10) return "Phone must be 10 digits";
-                    return null;
+                GetBuilder<SignupController>(
+                  builder: (ctrl) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: ctrl.phoneController,
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 22,
+                          ),
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return "Phone is required";
+                            if (v.length != 10)
+                              return "Phone must be 10 digits";
+                            return null;
+                          },
+                          decoration: _inputDecoration(
+                            "Phone",
+                            suffix: Icons.phone,
+                          ),
+                        ),
+
+                        if (ctrl.phoneError.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, top: 4),
+                            child: Text(
+                              ctrl.phoneError,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
                   },
-                  decoration: _inputDecoration("Phone", suffix: Icons.phone),
                 ),
 
                 SizedBox(height: 10.h),
