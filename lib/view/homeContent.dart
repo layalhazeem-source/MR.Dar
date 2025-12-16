@@ -55,8 +55,7 @@ class HomeContent extends StatelessWidget {
               Text(
                 "Featured Apartments",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 12),
+              ), SizedBox(height: 12),
               SizedBox(
                 height: 260,
                 child: ListView.builder(
