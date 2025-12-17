@@ -80,7 +80,7 @@ class MyAccount extends StatelessWidget {
             const SizedBox(height: 30),
             _buildInfoCard("👤", "Name", "${user.firstName} ${user.lastName}"),
             _buildInfoCard("📱", "Phone", user.phone),
-            _buildInfoCard("🎭", "Role", user.role as String),
+            _buildInfoCard("🎭", "Role", user.role.toString()),
             _buildInfoCard("🎂", "Date of Birth", user.dateOfBirth),
             _buildInfoCard("🆔", "User ID", user.id.toString()),
 

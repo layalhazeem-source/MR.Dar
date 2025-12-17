@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controller/UserController.dart';
 import '../model/apartment_model.dart';
 
 class ApartmentDetailsPage extends StatelessWidget {
   final Apartment apartment;
-  const ApartmentDetailsPage({super.key, required this.apartment});
+  final user = Get.find<UserController>();
+
+   ApartmentDetailsPage({super.key, required this.apartment});
 
   @override
   Widget build(BuildContext context) {
@@ -169,21 +172,22 @@ class ApartmentDetailsPage extends StatelessWidget {
 
       // ---------- زر الحجز ----------
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
+      floatingActionButton: !user.isOwner // يظهر فقط إذا المستخدم مستأجر
+          ? Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF274668),
-            padding: EdgeInsets.symmetric(vertical: 16),
+            backgroundColor: const Color(0xFF274668),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           onPressed: () {
-          //  Get.to(() => BookingPage(apartment: apartment));
+            // Get.to(() => BookingPage(apartment: apartment));
           },
-          child: Text(
+          child: const Text(
             "Book Now",
             style: TextStyle(
               fontSize: 18,
@@ -192,7 +196,9 @@ class ApartmentDetailsPage extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      )
+          : null,
+
     );
   }
   Widget _circleIcon(IconData icon, VoidCallback onTap) {

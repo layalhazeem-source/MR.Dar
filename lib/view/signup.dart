@@ -1,16 +1,20 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controller/signupcontroller.dart';
+import '../service/auth_service.dart';
 
 class Signup extends StatelessWidget {
   Signup({super.key});
-  final SignupController controller = Get.find<SignupController>();
+  final SignupController controller = Get.put(
+    SignupController(api: Get.find<AuthService>()),
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // <-- خلفية بيضاء
       appBar: AppBar(
         title: Text(
           "Join us & find your perfect home",
@@ -35,98 +39,78 @@ class Signup extends StatelessWidget {
               children: [
                 SizedBox(height: 20.h),
 
+                // اختيار النوع
                 GetBuilder<SignupController>(
                   builder: (ctrl) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    return Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () => ctrl.setRole(2),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 10,
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => ctrl.setRole(2),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: ctrl.role.value == 2
+                                    ? const Color(0xFF274668)
+                                    : const Color(0xFFE8ECF4),
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
                                   ),
-                                  decoration: BoxDecoration(
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Renter",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                     color: ctrl.role.value == 2
-                                        ? const Color(0xFF274668)
-                                        : const Color(0xFFE8ECF4),
-                                    borderRadius: BorderRadius.circular(24),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 4,
-                                        offset: Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Renter",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: ctrl.role.value == 2
-                                            ? Colors.white
-                                            : const Color(0xFF274668),
-                                      ),
-                                    ),
+                                        ? Colors.white
+                                        : const Color(0xFF274668),
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () => ctrl.setRole(3),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: ctrl.role.value == 3
-                                        ? const Color(0xFF274668)
-                                        : const Color(0xFFE8ECF4),
-                                    borderRadius: BorderRadius.circular(24),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 4,
-                                        offset: Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Owner",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: ctrl.role.value == 3
-                                            ? Colors.white
-                                            : const Color(0xFF274668),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        if (ctrl.roleError.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 6, left: 8),
-                            child: Text(
-                              ctrl.roleError,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
                               ),
                             ),
                           ),
+                        ),
+                        SizedBox(width: 15),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => ctrl.setRole(3),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: ctrl.role.value == 3
+                                    ? const Color(0xFF274668)
+                                    : const Color(0xFFE8ECF4),
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Owner",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: ctrl.role.value == 3
+                                        ? Colors.white
+                                        : const Color(0xFF274668),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     );
                   },
@@ -146,7 +130,7 @@ class Signup extends StatelessWidget {
                           fontSize: 22,
                         ),
                         validator: (v) =>
-                            v!.isEmpty ? "First name is required!" : null,
+                        v!.isEmpty ? "First name is required!" : null,
                         decoration: _inputDecoration("First name"),
                       ),
                     ),
@@ -160,7 +144,7 @@ class Signup extends StatelessWidget {
                           fontSize: 22,
                         ),
                         validator: (v) =>
-                            v!.isEmpty ? "Last name is required!" : null,
+                        v!.isEmpty ? "Last name is required!" : null,
                         decoration: _inputDecoration("Last name"),
                       ),
                     ),
@@ -193,7 +177,7 @@ class Signup extends StatelessWidget {
                         }
                       },
                       validator: (v) =>
-                          v!.isEmpty ? "Date of Birth is required" : null,
+                      v!.isEmpty ? "Date of Birth is required" : null,
                     );
                   },
                 ),
@@ -212,17 +196,17 @@ class Signup extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: 65,
+                                  height: 65, // ↔️ تحكّمي بالحجم
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF5F5F5),
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                       color:
-                                          ctrl
-                                              .profileImageError
-                                              .value
-                                              .isNotEmpty
+                                      ctrl
+                                          .profileImageError
+                                          .value
+                                          .isNotEmpty
                                           ? Colors.red
                                           : Colors.transparent,
                                       width: 1.5,
@@ -230,7 +214,7 @@ class Signup extends StatelessWidget {
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -238,18 +222,20 @@ class Signup extends StatelessWidget {
                                               ? "Profile Image"
                                               : "Profile Image Selected",
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize:
+                                            16, // ⬅️ حجم أصغر ليناسب المساحة
                                             color:
-                                                ctrl.profileImage.value == null
+                                            ctrl.profileImage.value == null
                                                 ? Colors.black54
                                                 : Colors.black54,
                                             fontWeight:
-                                                ctrl.profileImage.value == null
+                                            ctrl.profileImage.value == null
                                                 ? FontWeight.w500
                                                 : FontWeight.w600,
                                           ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2, // ⬅️ يسمح بسطرين
+                                          overflow: TextOverflow
+                                              .ellipsis, // ⬅️ لمنع التقطع
                                         ),
                                       ),
                                       Icon(
@@ -260,6 +246,7 @@ class Signup extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+                                // ⬅️ عرض رسالة الخطأ تحت الحقل
                                 if (ctrl.profileImageError.value.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -292,7 +279,7 @@ class Signup extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: 65,
+                                  height: 65, // نفس الارتفاع
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF5F5F5),
@@ -306,7 +293,7 @@ class Signup extends StatelessWidget {
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -314,17 +301,18 @@ class Signup extends StatelessWidget {
                                               ? "ID Image"
                                               : "ID Image Selected",
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 16, // نفس حجم الخط
                                             color: ctrl.idImage.value == null
                                                 ? Colors.black54
                                                 : Colors.black54,
                                             fontWeight:
-                                                ctrl.idImage.value == null
+                                            ctrl.idImage.value == null
                                                 ? FontWeight.w500
                                                 : FontWeight.w600,
                                           ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2, // ⬅️ يسمح بسطرين
+                                          overflow: TextOverflow
+                                              .ellipsis, // ⬅️ لمنع التقطع
                                         ),
                                       ),
                                       Icon(
@@ -335,6 +323,7 @@ class Signup extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+                                // ⬅️ عرض رسالة الخطأ تحت الحقل
                                 if (ctrl.idImageError.value.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -361,46 +350,17 @@ class Signup extends StatelessWidget {
                 SizedBox(height: 10.h),
 
                 // Phone
-                GetBuilder<SignupController>(
-                  builder: (ctrl) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFormField(
-                          controller: ctrl.phoneController,
-                          keyboardType: TextInputType.number,
-                          maxLength: 10,
-                          style: const TextStyle(
-                            color: Colors.black87,
-                            fontSize: 22,
-                          ),
-                          validator: (v) {
-                            if (v == null || v.isEmpty)
-                              return "Phone is required";
-                            if (v.length != 10)
-                              return "Phone must be 10 digits";
-                            return null;
-                          },
-                          decoration: _inputDecoration(
-                            "Phone",
-                            suffix: Icons.phone,
-                          ),
-                        ),
-
-                        if (ctrl.phoneError.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, top: 4),
-                            child: Text(
-                              ctrl.phoneError,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                      ],
-                    );
+                TextFormField(
+                  controller: controller.phoneController,
+                  keyboardType: TextInputType.number,
+                  maxLength: 10,
+                  style: const TextStyle(color: Colors.black87, fontSize: 22),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return "Phone is required";
+                    if (v.length != 10) return "Phone must be 10 digits";
+                    return null;
                   },
+                  decoration: _inputDecoration("Phone", suffix: Icons.phone),
                 ),
 
                 SizedBox(height: 10.h),
@@ -489,20 +449,20 @@ class Signup extends StatelessWidget {
                       ),
                       child: ctrl.isLoading
                           ? const SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 3,
-                              ),
-                            )
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3,
+                        ),
+                      )
                           : const Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -517,10 +477,10 @@ class Signup extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
-    String label, {
-    IconData? suffix,
-    Widget? suffixWidget,
-  }) {
+      String label, {
+        IconData? suffix,
+        Widget? suffixWidget,
+      }) {
     return InputDecoration(
       labelText: label,
       labelStyle: const TextStyle(
@@ -530,7 +490,7 @@ class Signup extends StatelessWidget {
         overflow: TextOverflow.visible,
       ),
       suffixIcon:
-          suffixWidget ??
+      suffixWidget ??
           (suffix != null ? Icon(suffix, color: Colors.black45) : null),
       fillColor: const Color(0xFFF5F5F5),
       filled: true,

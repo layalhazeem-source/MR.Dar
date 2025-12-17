@@ -26,7 +26,7 @@ class AuthService {
         final data = response.data;
 
         if (data["message"] == "User Logged In Successfully .") {
-          final userData = data["data"];
+          final userData = data["data"]; // كل البيانات في مفتاح "data"
           final token = userData["access_token"];
 
           if (token == null) {
@@ -34,19 +34,26 @@ class AuthService {
               errModel: ErrorModel(errorMessage: "Token missing from server!"),
             );
           }
+          // حفظ البيانات بشكل صحيح
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString("token", token);
           await prefs.setString("id", userData["id"]?.toString() ?? "");
           await prefs.setString("first_name", userData["first_name"] ?? "");
           await prefs.setString("last_name", userData["last_name"] ?? "");
           await prefs.setString("phone", userData["phone"] ?? "");
-          await prefs.setInt("role", userData["role"]);
+          await prefs.setString("role", userData["role"] ?? "");
           await prefs.setString(
             "date_of_birth",
             userData["date_of_birth"] ?? "",
           );
 
-          return token;
+          print("✅ User data saved to SharedPreferences:");
+          print("   ID: ${userData["id"]}");
+          print("   Name: ${userData["first_name"]} ${userData["last_name"]}");
+          print("   Phone: ${userData["phone"]}");
+          print("   Role: ${userData["role"]}");
+
+          return token; // ⬅️ رجع التوكن
         } else {
           throw ServerException(
             errModel: ErrorModel(errorMessage: "Invalid Credntials"),
@@ -80,6 +87,7 @@ class AuthService {
     try {
       print("Starting signup process...");
 
+      // التحقق من تاريخ الميلاد
       if (!birthDate.contains('/')) {
         throw ServerException(
           errModel: ErrorModel(
@@ -97,6 +105,7 @@ class AuthService {
       }
       final formattedDate =
           "${dateParts[2]}-${dateParts[1].padLeft(2, '0')}-${dateParts[0].padLeft(2, '0')}";
+      print("Formatted date: $formattedDate");
 
       final formData = {
         "first_name": firstName,
@@ -140,14 +149,20 @@ class AuthService {
           response is Map &&
           (response["message"]?.toString().contains("Successfully") == true ||
               response["status"] == "success")) {
+        print("Signup successful!");
+
+        // ⬅️⬅️⬅️ **هنا المشكلة والحل** ⬅️⬅️⬅️
+        // نحتاج حفظ بيانات المستخدم بنفس طريقة login
         final userData = response["data"] ?? response;
         final token = userData["access_token"];
 
         if (token != null) {
           final prefs = await SharedPreferences.getInstance();
 
+          // 1. حفظ التوكن
           await prefs.setString("token", token);
 
+          // 2. حفظ بيانات المستخدم **مثل ما يعمل الـ login بالضبط**
           await prefs.setString("id", userData["id"]?.toString() ?? "");
           await prefs.setString(
             "first_name",
@@ -155,7 +170,12 @@ class AuthService {
           );
           await prefs.setString("last_name", userData["last_name"] ?? lastName);
           await prefs.setString("phone", userData["phone"] ?? phone);
-          await prefs.setString("role", userData["role"] ?? role.toString());
+          String roleString;
+          if (userData["role"] != null) {
+            roleString = userData["role"].toString() == '3' ? 'owner' : 'renter';
+          } else {
+            roleString = role == 3 ? 'owner' : 'renter';
+          }
           await prefs.setString(
             "date_of_birth",
             userData["date_of_birth"] ?? formattedDate,
@@ -177,17 +197,11 @@ class AuthService {
         return;
       } else {
         final errorMsg = response is Map
-            ? (response["errors"]?["phone"] != null
-                  ? response["errors"]["phone"][0].toString()
-                  : response["message"]?.toString() ?? "Signup failed")
+            ? (response["message"]?.toString() ??
+            response["error"]?.toString() ??
+            "Signup failed")
             : "Signup failed - Invalid response";
-
-        throw ServerException(
-          errModel: ErrorModel(
-            errorMessage: errorMsg,
-            errors: response["errors"],
-          ),
-        );
+        throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
     } on DioException catch (e) {
       String errorMessage = "Network error";
@@ -195,9 +209,9 @@ class AuthService {
         final data = e.response!.data as Map;
         errorMessage =
             data["message"]?.toString() ??
-            data["error"]?.toString() ??
-            e.message ??
-            "Network error";
+                data["error"]?.toString() ??
+                e.message ??
+                "Network error";
       }
       throw ServerException(errModel: ErrorModel(errorMessage: errorMessage));
     } catch (e, s) {
@@ -212,6 +226,7 @@ class AuthService {
   Future<void> signOut() async {
     final prefs = await SharedPreferences.getInstance();
 
+    // مسح كل البيانات المتعلقة بالمستخدم
     await prefs.remove("token");
     await prefs.remove("id");
     await prefs.remove("first_name");

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/logincontroller.dart';
@@ -27,6 +28,10 @@ class Login extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 40),
+
+                /// ---------------------------
+                ///           LOGO
+                /// ---------------------------
                 SizedBox(
                   height: 220,
                   width: 120,
@@ -35,6 +40,10 @@ class Login extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 30),
+
+                /// ---------------------------
+                ///      Welcome Text
+                /// ---------------------------
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
@@ -46,6 +55,9 @@ class Login extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
+                /// ---------------------------
+                ///     Centered Form
+                /// ---------------------------
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 28),
                   child: Form(
@@ -132,20 +144,20 @@ class Login extends StatelessWidget {
                                     : controller.loginUser,
                                 child: ctrl.isLoading
                                     ? const SizedBox(
-                                        height: 25,
-                                        width: 25,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 3,
-                                        ),
-                                      )
+                                  height: 25,
+                                  width: 25,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 3,
+                                  ),
+                                )
                                     : const Text(
-                                        "Log In",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
+                                  "Log In",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
                               ),
                             );
                           },
@@ -173,23 +185,23 @@ class Login extends StatelessWidget {
 
                         const SizedBox(height: 10),
 
-                        // // GUEST LINK
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     const Text("Continue as "),
-                        //     GestureDetector(
-                        //       onTap: () => Get.to(Home()),
-                        //       child: const Text(
-                        //         "Guest",
-                        //         style: TextStyle(
-                        //           color: Color(0xFF274668),
-                        //           fontWeight: FontWeight.bold,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
+                        // GUEST LINK
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Continue as "),
+                            GestureDetector(
+                              onTap: () => Get.to(Home()),
+                              child: const Text(
+                                "Guest",
+                                style: TextStyle(
+                                  color: Color(0xFF274668),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -203,10 +215,10 @@ class Login extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
-    String label, {
-    IconData? suffix,
-    Widget? suffixWidget,
-  }) {
+      String label, {
+        IconData? suffix,
+        Widget? suffixWidget,
+      }) {
     return InputDecoration(
       labelText: label,
       filled: true,
@@ -216,7 +228,7 @@ class Login extends StatelessWidget {
         fontWeight: FontWeight.bold,
       ),
       suffixIcon:
-          suffixWidget ??
+      suffixWidget ??
           (suffix != null ? Icon(suffix, color: Colors.black45) : null),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
       focusedBorder: OutlineInputBorder(

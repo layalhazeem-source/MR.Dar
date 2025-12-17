@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../controller/ApartmentController.dart';
+import '../../controller/UserController.dart';
 import '../../controller/authcontroller.dart';
 import '../../controller/homecontroller.dart';
 import '../../controller/my_account_controller.dart';
@@ -41,6 +42,8 @@ class AppBindings extends Bindings {
       AuthController(authService: Get.find<AuthService>()),
       permanent: true,
     );
+    Get.put<UserController>(UserController(), permanent: true);
+
     Get.put<ApartmentController>(
       ApartmentController(service: Get.find<ApartmentService>()),
     );

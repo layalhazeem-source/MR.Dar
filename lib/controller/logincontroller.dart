@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
+import 'UserController.dart';
 
 class LoginController extends GetxController {
   bool isLoading = false;
@@ -17,6 +17,7 @@ class LoginController extends GetxController {
   bool isPasswordHidden = true;
   String? phoneError;
   String? passError;
+
 
   void togglePassword() {
     isPasswordHidden = !isPasswordHidden;
@@ -37,28 +38,33 @@ class LoginController extends GetxController {
         password: passwordController.text.trim(),
       );
 
-      final prefs = await SharedPreferences.getInstance();
-      final int? role = prefs.getInt("role");
+      print("✅ Login successful, token: $token");
 
       isLoading = false;
       update();
-
-      if (role == 1) {
+      final userCtrl = Get.put(UserController());
+      await userCtrl.loadUserRole();
+      if (userCtrl.isAdmin) {
         Get.defaultDialog(
           title: "Admin Account",
-          middleText: "Welcome Admin.\nAdmin panel is under development.",
+          middleText: "Admin dashboard is under development.\nPlease use a regular user account.",
           textConfirm: "OK",
           confirmTextColor: Colors.white,
+          buttonColor: const Color(0xFF274668),
           onConfirm: () {
-            Get.back(); // يسكر الديالوج
+            Get.back();
+            // تنظيف الحقول
+            phoneController.clear();
+            passwordController.clear();
+            update();
           },
+          barrierDismissible: false, // ما يقدر يغلق الديالوغ بالضغط برا
         );
-        return; // 🔴 مهم جدًا حتى ما يكمل
+        return; // ما نروح عال Home
       }
 
-// غير الأدمن
+      // ✅ إذا مش admin، نروح عال Home
       Get.offAll(() => Home());
-
     } on ServerException catch (e) {
       isLoading = false;
       phoneError = e.errModel.errorMessage;
@@ -74,16 +80,13 @@ class LoginController extends GetxController {
     } catch (e) {
       isLoading = false;
       update();
-      Get.defaultDialog(
-        title: "Admin Account",
-        middleText: "Welcome Admin.\nAdmin panel is under development.",
-        textConfirm: "OK",
-        confirmTextColor: Colors.white,
-        onConfirm: () {
-          Get.back(); // يسكر الديالوج
-        },
-      );
 
+      Get.snackbar(
+        "Error",
+        "An unexpected error occurred: $e",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
