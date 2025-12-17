@@ -32,14 +32,13 @@ class MyAccountController extends GetxController {
       user.value = UserModel.fromPrefs(userData);
       isLoading.value = false;
 
-      print("✅ User loaded: ${user.value?.firstName} ${user.value?.lastName}");
+      print(" User loaded: ${user.value?.firstName} ${user.value?.lastName}");
     } catch (e) {
       isLoading.value = false;
-      print("❌ Error loading user: $e");
+      print(" Error loading user: $e");
     }
   }
 
-  // دالة للتحديث
   Future<void> refreshUser() async {
     await loadUser();
   }

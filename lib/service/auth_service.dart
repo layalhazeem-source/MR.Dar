@@ -26,7 +26,7 @@ class AuthService {
         final data = response.data;
 
         if (data["message"] == "User Logged In Successfully .") {
-          final userData = data["data"]; // كل البيانات في مفتاح "data"
+          final userData = data["data"];
           final token = userData["access_token"];
 
           if (token == null) {
@@ -34,7 +34,7 @@ class AuthService {
               errModel: ErrorModel(errorMessage: "Token missing from server!"),
             );
           }
-          // حفظ البيانات بشكل صحيح
+          // save data
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString("token", token);
           await prefs.setString("id", userData["id"]?.toString() ?? "");
@@ -47,13 +47,12 @@ class AuthService {
             userData["date_of_birth"] ?? "",
           );
 
-          print("✅ User data saved to SharedPreferences:");
           print("   ID: ${userData["id"]}");
           print("   Name: ${userData["first_name"]} ${userData["last_name"]}");
           print("   Phone: ${userData["phone"]}");
           print("   Role: ${userData["role"]}");
 
-          return token; // ⬅️ رجع التوكن
+          return token;
         } else {
           throw ServerException(
             errModel: ErrorModel(errorMessage: "Invalid Credntials"),
@@ -87,7 +86,6 @@ class AuthService {
     try {
       print("Starting signup process...");
 
-      // التحقق من تاريخ الميلاد
       if (!birthDate.contains('/')) {
         throw ServerException(
           errModel: ErrorModel(
@@ -151,18 +149,15 @@ class AuthService {
               response["status"] == "success")) {
         print("Signup successful!");
 
-        // ⬅️⬅️⬅️ **هنا المشكلة والحل** ⬅️⬅️⬅️
-        // نحتاج حفظ بيانات المستخدم بنفس طريقة login
         final userData = response["data"] ?? response;
         final token = userData["access_token"];
 
         if (token != null) {
           final prefs = await SharedPreferences.getInstance();
 
-          // 1. حفظ التوكن
+
           await prefs.setString("token", token);
 
-          // 2. حفظ بيانات المستخدم **مثل ما يعمل الـ login بالضبط**
           await prefs.setString("id", userData["id"]?.toString() ?? "");
           await prefs.setString(
             "first_name",
@@ -181,7 +176,6 @@ class AuthService {
             userData["date_of_birth"] ?? formattedDate,
           );
 
-          print("✅ User data saved to SharedPreferences after signup:");
           print("   ID: ${prefs.getString("id")}");
           print(
             "   Name: ${prefs.getString("first_name")} ${prefs.getString("last_name")}",
@@ -226,7 +220,6 @@ class AuthService {
   Future<void> signOut() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // مسح كل البيانات المتعلقة بالمستخدم
     await prefs.remove("token");
     await prefs.remove("id");
     await prefs.remove("first_name");

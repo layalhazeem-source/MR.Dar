@@ -53,17 +53,16 @@ class LoginController extends GetxController {
           buttonColor: const Color(0xFF274668),
           onConfirm: () {
             Get.back();
-            // تنظيف الحقول
+            //clear
             phoneController.clear();
             passwordController.clear();
             update();
           },
-          barrierDismissible: false, // ما يقدر يغلق الديالوغ بالضغط برا
+          barrierDismissible: false,
         );
-        return; // ما نروح عال Home
+        return;
       }
 
-      // ✅ إذا مش admin، نروح عال Home
       Get.offAll(() => Home());
     } on ServerException catch (e) {
       isLoading = false;
