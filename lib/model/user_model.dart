@@ -3,7 +3,7 @@ class UserModel {
   final String firstName;
   final String lastName;
   final String phone;
-  final String role;
+  final int role;
   final String dateOfBirth;
   final String? profileImage; // رابط/مسار صورة الملف الشخصي
   final String? idImage;
@@ -25,8 +25,8 @@ class UserModel {
       firstName: prefs["first_name"] ?? "",
       lastName: prefs["last_name"] ?? "",
       phone: prefs["phone"] ?? "",
-      role: prefs["role"] ?? "",
-      dateOfBirth: prefs["date_of_birth"] ?? "",
+      role:int.tryParse( prefs["role"] ??"0")?? 0,
+        dateOfBirth: prefs["date_of_birth"] ?? "",
       profileImage: prefs["profile_image"],
       idImage: prefs["id_image"],
     );
@@ -39,8 +39,9 @@ class UserModel {
       firstName: json["first_name"]?.toString() ?? "",
       lastName: json["last_name"]?.toString() ?? "",
       phone: json["phone"]?.toString() ?? "",
-      role: json["role"]?.toString() ?? "",
-      dateOfBirth: json["date_of_birth"]?.toString() ?? "",
+      role: json["role"] is int
+          ? json["role"]
+          : int.tryParse(json["role"]?.toString() ?? "0") ?? 0,      dateOfBirth: json["date_of_birth"]?.toString() ?? "",
       profileImage: json["profile_image"]?.toString(),
       idImage: json["id_image"]?.toString(),
     );

@@ -12,7 +12,7 @@ class ApartmentService {
 
   ApartmentService({required this.api});
 
-  // ========================= Get All Apartments =========================
+  // Get All Apartments
   Future<List<Apartment>> getAllApartments() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -26,8 +26,8 @@ class ApartmentService {
         ),
       );
 
-      print("📍 Response status: ${response.statusCode}");
-      print("📍 Response data: ${response.data}");
+      print(" Response status: ${response.statusCode}");
+      print(" Response data: ${response.data}");
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -81,7 +81,7 @@ class ApartmentService {
     }
   }
 
-  // ========================= Create New Apartment =========================
+  //Create New Apartment
   Future<Map<String, dynamic>> createApartment({
     required String title,
     required String description,
@@ -101,10 +101,10 @@ class ApartmentService {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString("token") ?? "";
 
-      // إنشاء FormData
+      //  FormData
       final formData = FormData();
 
-      // إضافة الحقول النصية
+
       formData.fields.add(MapEntry('title', title));
       formData.fields.add(MapEntry('description', description));
       formData.fields.add(MapEntry('rent_value', rentValue.toString()));
@@ -117,7 +117,7 @@ class ApartmentService {
       formData.fields.add(MapEntry('street', street));
       formData.fields.add(MapEntry('flat_number', flatNumber.toString()));
 
-      // الحقول الاختيارية (nullable)
+
 
 
       if (longitude != null) {
@@ -128,7 +128,7 @@ class ApartmentService {
         formData.fields.add(MapEntry('latitude', latitude.toString()));
       }
 
-      // إضافة ملفات الصور
+
       for (int i = 0; i < houseImages.length; i++) {
         final image = houseImages[i];
         formData.files.add(
@@ -142,9 +142,9 @@ class ApartmentService {
         );
       }
 
-      // إرسال الطلب
+
       final response = await api.dio.post(
-        EndPoint.createApartment, // تأكد من إضافة هذا الـ endpoint
+        EndPoint.createApartment,
         data: formData,
         options: Options(
           headers: {
@@ -155,8 +155,8 @@ class ApartmentService {
         ),
       );
 
-      print("📍 Create apartment response: ${response.statusCode}");
-      print("📍 Response data: ${response.data}");
+      print(" Create apartment response: ${response.statusCode}");
+      print(" Response data: ${response.data}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data;
@@ -173,6 +173,5 @@ class ApartmentService {
     }
   }
 
-  // ========================= Search =========================
 
 }

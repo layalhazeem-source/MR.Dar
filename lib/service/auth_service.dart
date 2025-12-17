@@ -40,7 +40,7 @@ class AuthService {
           await prefs.setString("first_name", userData["first_name"] ?? "");
           await prefs.setString("last_name", userData["last_name"] ?? "");
           await prefs.setString("phone", userData["phone"] ?? "");
-          await prefs.setString("role", userData["role"] ?? "");
+          await prefs.setInt("role", userData["role"]);
           await prefs.setString(
             "date_of_birth",
             userData["date_of_birth"] ?? "",

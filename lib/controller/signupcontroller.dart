@@ -251,13 +251,19 @@ class SignupController extends GetxController {
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {
-        Get.snackbar(
-          "Signup failed",
-          e.errModel.errorMessage,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
+        Get.defaultDialog(
+          title: "Account already exists",
+          middleText:
+          "This phone number is already registered.\nDo you want to log in instead?",
+          textCancel: "Cancel",
+          textConfirm: "Go to Login",
+          confirmTextColor: Colors.white,
+          onConfirm: () {
+            Get.back();
+            Get.offAllNamed('/login'); // أو Get.to(() => Login())
+          },
         );
+
       }
 
       print(" ServerException message: ${e.errModel.errorMessage}");

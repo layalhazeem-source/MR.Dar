@@ -8,19 +8,19 @@ class ApartmentController extends GetxController {
 
   ApartmentController({required this.service});
 
-  // البيانات
+  // data
   RxList<Apartment> allApartments = <Apartment>[].obs;
   RxList<Apartment> featuredApartments = <Apartment>[].obs;
   RxList<Apartment> topRatedApartments = <Apartment>[].obs;
 
-  // حالات الواجهة
-  RxBool isLoading = false.obs;
-  RxBool isCreating = false.obs; // حالة إنشاء شقة جديدة
-  RxString errorMessage = ''.obs;
-  RxString createMessage = ''.obs; // رسالة نتيجة الإنشاء
 
-  // ========================= تحميل كل الشقق =========================
-  Future<void> loadApartments() async {
+  RxBool isLoading = false.obs;
+  RxBool isCreating = false.obs;
+  RxString errorMessage = ''.obs;
+  RxString createMessage = ''.obs;
+
+//load apartments
+   Future<void> loadApartments() async {
     try {
       isLoading.value = true;
       errorMessage.value = "";
@@ -45,7 +45,7 @@ class ApartmentController extends GetxController {
   }
 //------------
 
-  // ========================= إنشاء شقة جديدة =========================
+  //createApartment
   Future<bool> createApartment({
     required String title,
     required String description,
@@ -81,14 +81,14 @@ class ApartmentController extends GetxController {
         houseImages: houseImages,
       );
 
-      // تحديث القائمة بعد الإضافة الناجحة
+      // refresh
       await loadApartments();
 
-      createMessage.value = "تم إنشاء الشقة بنجاح!";
+      createMessage.value = "apartment added successfully";
       return true;
 
     } catch (e) {
-      createMessage.value = "خطأ في إنشاء الشقة: $e";
+      createMessage.value = "failed to add apartment: $e";
       return false;
     } finally {
       isCreating.value = false;

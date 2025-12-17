@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
@@ -36,10 +37,28 @@ class LoginController extends GetxController {
         password: passwordController.text.trim(),
       );
 
+      final prefs = await SharedPreferences.getInstance();
+      final int? role = prefs.getInt("role");
+
       isLoading = false;
       update();
 
+      if (role == 1) {
+        Get.defaultDialog(
+          title: "Admin Account",
+          middleText: "Welcome Admin.\nAdmin panel is under development.",
+          textConfirm: "OK",
+          confirmTextColor: Colors.white,
+          onConfirm: () {
+            Get.back(); // يسكر الديالوج
+          },
+        );
+        return; // 🔴 مهم جدًا حتى ما يكمل
+      }
+
+// غير الأدمن
       Get.offAll(() => Home());
+
     } on ServerException catch (e) {
       isLoading = false;
       phoneError = e.errModel.errorMessage;
@@ -55,13 +74,16 @@ class LoginController extends GetxController {
     } catch (e) {
       isLoading = false;
       update();
-
-      Get.snackbar(
-        "Error",
-        "An unexpected error occurred: $e",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+      Get.defaultDialog(
+        title: "Admin Account",
+        middleText: "Welcome Admin.\nAdmin panel is under development.",
+        textConfirm: "OK",
+        confirmTextColor: Colors.white,
+        onConfirm: () {
+          Get.back(); // يسكر الديالوج
+        },
       );
+
     }
   }
 
