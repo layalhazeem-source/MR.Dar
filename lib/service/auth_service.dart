@@ -41,7 +41,15 @@ class AuthService {
           await prefs.setString("first_name", userData["first_name"] ?? "");
           await prefs.setString("last_name", userData["last_name"] ?? "");
           await prefs.setString("phone", userData["phone"] ?? "");
-          await prefs.setString("role", userData["role"] ?? "");
+          String roleString;
+          if (userData["role"].toString() == '3' || userData["role"] == 'owner') {
+            roleString = 'owner';
+          } else if (userData["role"].toString() == '2' || userData["role"] == 'renter') {
+            roleString = 'renter';
+          } else {
+            roleString = 'admin';
+          }
+          await prefs.setString("role", roleString);
           await prefs.setString(
             "date_of_birth",
             userData["date_of_birth"] ?? "",
@@ -81,7 +89,7 @@ class AuthService {
     required String birthDate,
     File? profileImage,
     File? idImage,
-    required int role,
+    required String role,
   }) async {
     try {
       print("Starting signup process...");
@@ -103,7 +111,7 @@ class AuthService {
       }
       final formattedDate =
           "${dateParts[2]}-${dateParts[1].padLeft(2, '0')}-${dateParts[0].padLeft(2, '0')}";
-      print("Formatted date: $formattedDate");
+      final roleNumber = role == 'owner' ? 3 : 2;
 
       final formData = {
         "first_name": firstName,
@@ -111,7 +119,7 @@ class AuthService {
         "phone": phone,
         "password": password,
         "password_confirmation": confirmPassword,
-        "role": role.toString(),
+        "role": roleNumber.toString(),
         "date_of_birth": formattedDate,
       };
 
@@ -165,12 +173,8 @@ class AuthService {
           );
           await prefs.setString("last_name", userData["last_name"] ?? lastName);
           await prefs.setString("phone", userData["phone"] ?? phone);
-          String roleString;
-          if (userData["role"] != null) {
-            roleString = userData["role"].toString() == '3' ? 'owner' : 'renter';
-          } else {
-            roleString = role == 3 ? 'owner' : 'renter';
-          }
+          await prefs.setString("role", role); // owner | renter
+
           await prefs.setString(
             "date_of_birth",
             userData["date_of_birth"] ?? formattedDate,

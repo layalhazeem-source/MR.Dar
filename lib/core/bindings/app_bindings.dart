@@ -43,6 +43,8 @@ class AppBindings extends Bindings {
       permanent: true,
     );
     Get.put<UserController>(UserController(), permanent: true);
+    final userCtrl = Get.find<UserController>();
+    userCtrl.loadUserRole();
 
     Get.put<ApartmentController>(
       ApartmentController(service: Get.find<ApartmentService>()),

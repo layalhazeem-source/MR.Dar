@@ -29,7 +29,8 @@ class Home extends StatelessWidget {
         bottomNavigationBar: _buildBottomNavigationBar(),
 
         // ➕ زر إضافة شقة (Owner فقط)
-        floatingActionButton: user.isOwner
+        floatingActionButton:
+        user.isOwner && controller.currentIndex.value == 0
             ? FloatingActionButton(
           backgroundColor: const Color(0xFF274668),
           onPressed: () {
@@ -38,6 +39,7 @@ class Home extends StatelessWidget {
           child: const Icon(Icons.add),
         )
             : null,
+
         floatingActionButtonLocation:
         FloatingActionButtonLocation.centerDocked,
       );

@@ -162,7 +162,7 @@ class ApartmentDetailsPage extends StatelessWidget {
 
 
 
-                  SizedBox(height: 80), // مساحة للزر الأسفل
+                  SizedBox(height: 80),
                 ],
               ),
             ),
@@ -170,9 +170,9 @@ class ApartmentDetailsPage extends StatelessWidget {
         ),
       ),
 
-      // ---------- زر الحجز ----------
+      // ---------- زر book ----------
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: !user.isOwner // يظهر فقط إذا المستخدم مستأجر
+      floatingActionButton: !user.isOwner
           ? Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         width: double.infinity,

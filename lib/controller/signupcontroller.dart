@@ -17,7 +17,7 @@ class SignupController extends GetxController {
   Rx<XFile?> profileImage = Rx<XFile?>(null);
   Rx<XFile?> idImage = Rx<XFile?>(null);
   RxString birthDate = "".obs;
-  RxInt role = 0.obs;
+  RxString role = ''.obs; // owner | renter
   RxString profileImageError = RxString("");
   RxString idImageError = RxString("");
 
@@ -133,10 +133,11 @@ class SignupController extends GetxController {
     );
   }
 
-  void setRole(int type) {
-    role.value = type;
+  void setRole(String type) {
+    role.value = type; // 'owner' أو 'renter'
     update();
   }
+
 
   void setBirthDate(String date) {
     birthDate.value = date;
@@ -170,10 +171,11 @@ class SignupController extends GetxController {
       isValid = false;
     }
 
-    if (role.value == 0) {
-      Get.snackbar('Error', 'Please select a role (Renter or Owner)');
+    if (role.value.isEmpty) {
+      Get.snackbar('Error', 'Please select a role');
       isValid = false;
     }
+
 
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar('Error', 'Passwords do not match');
@@ -200,7 +202,7 @@ class SignupController extends GetxController {
         password: passwordController.text.trim(),
         confirmPassword: confirmPasswordController.text.trim(),
         birthDate: birthDate.value,
-        role: role.value,
+        role:role.value,
         profileImage: profileImage.value != null
             ? File(profileImage.value!.path)
             : null,

@@ -186,22 +186,22 @@ class Login extends StatelessWidget {
                         const SizedBox(height: 10),
 
                         // GUEST LINK
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Continue as "),
-                            GestureDetector(
-                              onTap: () => Get.to(Home()),
-                              child: const Text(
-                                "Guest",
-                                style: TextStyle(
-                                  color: Color(0xFF274668),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     const Text("Continue as "),
+                        //     GestureDetector(
+                        //       onTap: () => Get.to(Home()),
+                        //       child: const Text(
+                        //         "Guest",
+                        //         style: TextStyle(
+                        //           color: Color(0xFF274668),
+                        //           fontWeight: FontWeight.bold,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

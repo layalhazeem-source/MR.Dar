@@ -47,7 +47,6 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // ---------------- قسم: الشقق المميزة (أفقي) ----------------
             Obx(() {
               if (controller.featuredApartments.isEmpty) return SizedBox();
 
@@ -87,7 +86,6 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // ---------------- قسم: الأعلى تقييماً (أفقي) ----------------
             Obx(() {
               if (controller.topRatedApartments.isEmpty) return SizedBox();
 
