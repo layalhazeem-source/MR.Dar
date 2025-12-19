@@ -6,6 +6,7 @@ import '../../controller/authcontroller.dart';
 import '../../controller/homecontroller.dart';
 import '../../controller/my_account_controller.dart';
 import '../../service/ApartmentService.dart';
+import '../../service/userService.dart';
 import '../api/dio_consumer.dart';
 import '../../controller/logincontroller.dart';
 import '../../controller/signupcontroller.dart';
@@ -28,10 +29,10 @@ class AppBindings extends Bindings {
       ApartmentService(api: Get.find<DioConsumer>()),
       permanent: true,
     );
+    Get.put<UserService>(UserService(Get.find()), permanent: true);
 
     // Controllers
     Get.put<HomeController>(HomeController(), permanent: true);
-    Get.lazyPut<MyAccountController>(() => MyAccountController());
     Get.lazyPut<LoginController>(
       () => LoginController(api: Get.find<AuthService>()),
     );
@@ -42,13 +43,18 @@ class AppBindings extends Bindings {
       AuthController(authService: Get.find<AuthService>()),
       permanent: true,
     );
-    Get.put<UserController>(UserController(), permanent: true);
-    final userCtrl = Get.find<UserController>();
-    userCtrl.loadUserRole();
+    Get.lazyPut<UserController>(() {
+      final controller = UserController();
+      controller.loadUserRole(); // ⬅️ هون نستدعيها
+      return controller;
+    }, fenix: true);
 
     Get.put<ApartmentController>(
       ApartmentController(service: Get.find<ApartmentService>()),
     );
-    Get.put<MyAccountController>(MyAccountController(), permanent: true);
+    Get.put<MyAccountController>(
+      MyAccountController(Get.find()),
+      permanent: true,
+    );
   }
 }

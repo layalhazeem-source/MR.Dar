@@ -37,29 +37,39 @@ class AuthService {
           // save data
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString("token", token);
-          await prefs.setString("id", userData["id"]?.toString() ?? "");
-          await prefs.setString("first_name", userData["first_name"] ?? "");
-          await prefs.setString("last_name", userData["last_name"] ?? "");
-          await prefs.setString("phone", userData["phone"] ?? "");
           String roleString;
-          if (userData["role"].toString() == '3' || userData["role"] == 'owner') {
+          if (userData["role"].toString() == '3' ||
+              userData["role"] == 'owner') {
             roleString = 'owner';
-          } else if (userData["role"].toString() == '2' || userData["role"] == 'renter') {
+          } else if (userData["role"].toString() == '2' ||
+              userData["role"] == 'renter') {
             roleString = 'renter';
           } else {
             roleString = 'admin';
           }
           await prefs.setString("role", roleString);
+          await prefs.setString("id", userData["id"]?.toString() ?? "");
+          await prefs.setString("first_name", userData["first_name"] ?? "");
+          await prefs.setString("last_name", userData["last_name"] ?? "");
+          await prefs.setString("phone", userData["phone"] ?? "");
           await prefs.setString(
             "date_of_birth",
             userData["date_of_birth"] ?? "",
           );
 
-          print("   ID: ${userData["id"]}");
-          print("   Name: ${userData["first_name"]} ${userData["last_name"]}");
-          print("   Phone: ${userData["phone"]}");
-          print("   Role: ${userData["role"]}");
-
+          // تخزين روابط الصور
+          if (userData["profile_image"] != null) {
+            await prefs.setString(
+              "profile_image",
+              userData["profile_image"]["url"]?.toString() ?? "",
+            );
+          }
+          if (userData["id_image"] != null) {
+            await prefs.setString(
+              "id_image",
+              userData["id_image"]["url"]?.toString() ?? "",
+            );
+          }
           return token;
         } else {
           throw ServerException(
@@ -162,32 +172,27 @@ class AuthService {
 
         if (token != null) {
           final prefs = await SharedPreferences.getInstance();
-
-
           await prefs.setString("token", token);
-
-          await prefs.setString("id", userData["id"]?.toString() ?? "");
-          await prefs.setString(
-            "first_name",
-            userData["first_name"] ?? firstName,
-          );
-          await prefs.setString("last_name", userData["last_name"] ?? lastName);
-          await prefs.setString("phone", userData["phone"] ?? phone);
           await prefs.setString("role", role); // owner | renter
+          await prefs.setString("id", userData["id"]?.toString() ?? "");
+          await prefs.setString("first_name", firstName);
+          await prefs.setString("last_name", lastName);
+          await prefs.setString("phone", phone);
+          await prefs.setString("date_of_birth", formattedDate);
 
-          await prefs.setString(
-            "date_of_birth",
-            userData["date_of_birth"] ?? formattedDate,
-          );
-
-          print("   ID: ${prefs.getString("id")}");
-          print(
-            "   Name: ${prefs.getString("first_name")} ${prefs.getString("last_name")}",
-          );
-          print("   Phone: ${prefs.getString("phone")}");
-          print("   Role: ${prefs.getString("role")}");
-          print("   Date of Birth: ${prefs.getString("date_of_birth")}");
-          print("   Token saved: ${token.substring(0, 20)}...");
+          // حفظ روابط الصور إذا موجودة
+          if (userData["profile_image"] != null) {
+            await prefs.setString(
+              "profile_image",
+              userData["profile_image"]["url"]?.toString() ?? "",
+            );
+          }
+          if (userData["id_image"] != null) {
+            await prefs.setString(
+              "id_image",
+              userData["id_image"]["url"]?.toString() ?? "",
+            );
+          }
         } else {
           print("Warning: No token returned from signup");
         }
@@ -196,8 +201,8 @@ class AuthService {
       } else {
         final errorMsg = response is Map
             ? (response["message"]?.toString() ??
-            response["error"]?.toString() ??
-            "Signup failed")
+                  response["error"]?.toString() ??
+                  "Signup failed")
             : "Signup failed - Invalid response";
         throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
@@ -207,9 +212,9 @@ class AuthService {
         final data = e.response!.data as Map;
         errorMessage =
             data["message"]?.toString() ??
-                data["error"]?.toString() ??
-                e.message ??
-                "Network error";
+            data["error"]?.toString() ??
+            e.message ??
+            "Network error";
       }
       throw ServerException(errModel: ErrorModel(errorMessage: errorMessage));
     } catch (e, s) {

@@ -4,6 +4,7 @@ import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 import 'UserController.dart';
+import 'my_account_controller.dart';
 
 class LoginController extends GetxController {
   bool isLoading = false;
@@ -17,7 +18,6 @@ class LoginController extends GetxController {
   bool isPasswordHidden = true;
   String? phoneError;
   String? passError;
-
 
   void togglePassword() {
     isPasswordHidden = !isPasswordHidden;
@@ -47,7 +47,8 @@ class LoginController extends GetxController {
       if (userCtrl.isAdmin) {
         Get.defaultDialog(
           title: "Admin Account",
-          middleText: "Admin dashboard is under development.\nPlease use a regular user account.",
+          middleText:
+              "Admin dashboard is under development.\nPlease use a regular user account.",
           textConfirm: "OK",
           confirmTextColor: Colors.white,
           buttonColor: const Color(0xFF274668),

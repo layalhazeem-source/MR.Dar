@@ -138,7 +138,6 @@ class SignupController extends GetxController {
     update();
   }
 
-
   void setBirthDate(String date) {
     birthDate.value = date;
     birthDateController.text = date;
@@ -176,7 +175,6 @@ class SignupController extends GetxController {
       isValid = false;
     }
 
-
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar('Error', 'Passwords do not match');
       isValid = false;
@@ -202,7 +200,7 @@ class SignupController extends GetxController {
         password: passwordController.text.trim(),
         confirmPassword: confirmPasswordController.text.trim(),
         birthDate: birthDate.value,
-        role:role.value,
+        role: role.value,
         profileImage: profileImage.value != null
             ? File(profileImage.value!.path)
             : null,
@@ -230,7 +228,6 @@ class SignupController extends GetxController {
       final userCtrl = Get.put(UserController());
       await userCtrl.loadUserRole();
       Get.offAll(() => Home());
-
     } on ServerException catch (e) {
       isLoading = false;
       update();
