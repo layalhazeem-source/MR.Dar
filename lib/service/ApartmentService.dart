@@ -6,35 +6,70 @@ import '../core/api/end_points.dart';
 import '../core/errors/error_model.dart';
 import '../core/errors/exceptions.dart';
 import '../model/apartment_model.dart';
+import '../model/filter_model.dart';
 
 class ApartmentService {
   final DioConsumer api;
 
   ApartmentService({required this.api});
 
-  // Get All Apartments
-  Future<List<Apartment>> getAllApartments() async {
+  // Get All Apartments with Pagination and Filtering
+  Future<Map<String, dynamic>> getApartments({
+    FilterModel? filter,
+    int page = 1,
+    int limit = 10,
+    bool refresh = true,
+  }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString("token") ?? "";
 
+      // بناء query parameters
+      Map<String, dynamic> queryParams = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+      };
+
+      // إضافة الفلاتر إذا كانت موجودة
+      if (filter != null) {
+        queryParams.addAll(filter.toQuery());
+      }
+
+      print("Query Parameters: $queryParams");
+
       final response = await api.dio.get(
         EndPoint.getApartments,
+        queryParameters: queryParams,
         options: Options(
           headers: {"Authorization": "Bearer $token"},
           validateStatus: (status) => true,
         ),
       );
 
-      print(" Response status: ${response.statusCode}");
-      print(" Response data: ${response.data}");
+      print("Response status: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final data = response.data;
 
         if (data is Map && data.containsKey("data")) {
+          // تحويل البيانات إلى قائمة شقق
           final List list = data["data"];
-          return list.map((e) => Apartment.fromJson(e)).toList();
+          final List<Apartment> apartments =
+          list.map((e) => Apartment.fromJson(e)).toList();
+
+          // استخراج بيانات الـ pagination
+          final int currentPage = data["current_page"] ?? 1;
+          final int totalPages = data["last_page"] ?? 1;
+          final int totalItems = data["total"] ?? apartments.length;
+          final bool hasMore = currentPage < totalPages;
+
+          return {
+            'apartments': apartments,
+            'current_page': currentPage,
+            'total_pages': totalPages,
+            'total_items': totalItems,
+            'has_more': hasMore,
+          };
         } else {
           throw ServerException(
             errModel: ErrorModel(errorMessage: "Invalid data format from server"),
@@ -48,40 +83,60 @@ class ApartmentService {
         );
       }
     } on DioException catch (e) {
+      print("Dio Error: ${e.message}");
       throw ServerException(
         errModel: ErrorModel(errorMessage: "Network error: ${e.message}"),
       );
     }
   }
-//-------
-  Future<List<Apartment>> getApartmentsByQuery({
-    int? maxPrice,
-    String? orderBy,
-  }) async {
+
+  // Get Featured Apartments (مثال: الإيجار أقل من 200)
+  Future<List<Apartment>> getFeaturedApartments() async {
     try {
-      final response = await api.dio.get(
-        EndPoint.getApartments,
-        queryParameters: {
-          if (maxPrice != null) 'max_price': maxPrice,
-          if (orderBy != null) 'order_by': orderBy,
-        },
-        options: Options(
-          validateStatus: (status) => true,
-        ),
+      final response = await getApartments(
+        filter: FilterModel(maxRent: 200),
+        limit: 5,
       );
-
-      if (response.statusCode == 200) {
-        final List list = response.data['data'];
-        return list.map((e) => Apartment.fromJson(e)).toList();
-      }
-
-      return [];
-    } on DioException {
+      return response['apartments'] as List<Apartment>;
+    } catch (e) {
       return [];
     }
   }
 
-  //Create New Apartment
+  // Get Top Rated Apartments
+  Future<List<Apartment>> getTopRatedApartments() async {
+    try {
+      final response = await getApartments(
+        filter: FilterModel(sortBy: 'rate', sortDir: 'desc'),
+        limit: 5,
+      );
+      return response['apartments'] as List<Apartment>;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // Search Apartments
+  Future<Map<String, dynamic>> searchApartments(String query, {int page = 1}) async {
+    try {
+      final response = await getApartments(
+        filter: FilterModel(search: query),
+        page: page,
+        limit: 10,
+      );
+      return response;
+    } catch (e) {
+      return {
+        'apartments': [],
+        'current_page': 1,
+        'total_pages': 1,
+        'total_items': 0,
+        'has_more': false,
+      };
+    }
+  }
+
+  // باقي الدوال كما هي...
   Future<Map<String, dynamic>> createApartment({
     required String title,
     required String description,
@@ -101,9 +156,8 @@ class ApartmentService {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString("token") ?? "";
 
-      //  FormData
+      // FormData
       final formData = FormData();
-
 
       formData.fields.add(MapEntry('title', title));
       formData.fields.add(MapEntry('description', description));
@@ -112,13 +166,9 @@ class ApartmentService {
       formData.fields.add(MapEntry('space', space.toString()));
       formData.fields.add(MapEntry('notes', notes));
       formData.fields.add(MapEntry('city_id', cityId.toString()));
-
       formData.fields.add(MapEntry('governorate_id', governorateId.toString()));
       formData.fields.add(MapEntry('street', street));
       formData.fields.add(MapEntry('flat_number', flatNumber.toString()));
-
-
-
 
       if (longitude != null) {
         formData.fields.add(MapEntry('longitude', longitude.toString()));
@@ -127,7 +177,6 @@ class ApartmentService {
       if (latitude != null) {
         formData.fields.add(MapEntry('latitude', latitude.toString()));
       }
-
 
       for (int i = 0; i < houseImages.length; i++) {
         final image = houseImages[i];
@@ -142,7 +191,6 @@ class ApartmentService {
         );
       }
 
-
       final response = await api.dio.post(
         EndPoint.createApartment,
         data: formData,
@@ -155,8 +203,8 @@ class ApartmentService {
         ),
       );
 
-      print(" Create apartment response: ${response.statusCode}");
-      print(" Response data: ${response.data}");
+      print("Create apartment response: ${response.statusCode}");
+      print("Response data: ${response.data}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data;
@@ -172,6 +220,4 @@ class ApartmentService {
       );
     }
   }
-
-
 }

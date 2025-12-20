@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../controller/ApartmentController.dart';
+import '../../controller/FilterController.dart';
 import '../../controller/UserController.dart';
 import '../../controller/authcontroller.dart';
 import '../../controller/homecontroller.dart';
@@ -18,45 +19,62 @@ class AppBindings extends Bindings {
   void dependencies() {
     final dio = Dio();
 
-    Get.put<Dio>(Dio(), permanent: true);
+    // 1. Register Dio and DioConsumer (مرة واحدة فقط)
+    Get.put<Dio>(dio, permanent: true);
+    final dioConsumer = DioConsumer(dio: dio);
+    Get.put<DioConsumer>(dioConsumer, permanent: true);
 
-    Get.put<DioConsumer>(DioConsumer(dio: Get.find<Dio>()), permanent: true);
+    // 2. Register Services (مرة واحدة فقط)
+    final authService = AuthService(api: dioConsumer);
+    Get.put<AuthService>(authService, permanent: true);
 
-    Get.put<AuthService>(
-      AuthService(api: Get.find<DioConsumer>()),
-      permanent: true,
-    );
-    Get.put<ApartmentService>(
-      ApartmentService(api: Get.find<DioConsumer>()),
-      permanent: true,
-    );
-    Get.put<UserService>(UserService(Get.find()), permanent: true);
+    final apartmentService = ApartmentService(api: dioConsumer);
+    Get.put<ApartmentService>(apartmentService, permanent: true);
+
+    final userService = UserService(dioConsumer); // ✅ تمرير الـ api
+    Get.put<UserService>(userService, permanent: true);
+
     Get.put<UserLocalService>(UserLocalService(), permanent: true);
 
-    // Controllers
+    // 3. Register Controllers
     Get.put<HomeController>(HomeController(), permanent: true);
+
     Get.lazyPut<LoginController>(
-      () => LoginController(api: Get.find<AuthService>()),
+          () => LoginController(api: authService),
+      fenix: true,
     );
+
     Get.lazyPut<SignupController>(
-      () => SignupController(api: Get.find<AuthService>()),
+          () => SignupController(api: authService),
+      fenix: true,
     );
+
     Get.put<AuthController>(
-      AuthController(authService: Get.find<AuthService>()),
+      AuthController(authService: authService),
       permanent: true,
     );
+
     Get.lazyPut<UserController>(() {
       final controller = UserController();
-      controller.loadUserRole(); // ⬅️ هون نستدعيها
+      controller.loadUserRole();
       return controller;
     }, fenix: true);
 
-    Get.put<ApartmentController>(
-      ApartmentController(service: Get.find<ApartmentService>()),
+    Get.lazyPut<ApartmentController>(
+          () => ApartmentController(service: apartmentService),
+      fenix: true,
     );
-    Get.put<MyAccountController>(
-      MyAccountController(Get.find()),
-      permanent: true,
+
+    // ✅ تأكد من أن MyAccountController يحتوي على constructor يأخذ userService
+    Get.lazyPut<MyAccountController>(
+          () => MyAccountController(service: userService), // ✅ تأكد من اسم المعلمة
+      fenix: true,
+    );
+
+    // 4. Register FilterController (مرة واحدة فقط)
+    Get.lazyPut<FilterController>(
+          () => FilterController(),
+      fenix: true,
     );
   }
 }

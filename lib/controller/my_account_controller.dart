@@ -8,7 +8,7 @@ class MyAccountController extends GetxController {
   final UserService service;
   final UserLocalService localService = UserLocalService();
 
-  MyAccountController(this.service);
+  MyAccountController({required this.service});
 
   final user = Rxn<UserModel>();
   final isLoading = false.obs;
