@@ -1,95 +1,123 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_model.dart';
+import '../service/UserLocalService.dart';
 import '../service/userService.dart';
-import '../view/WelcomePage.dart';
 
 class MyAccountController extends GetxController {
   final UserService service;
+  final UserLocalService localService = UserLocalService();
+
   MyAccountController(this.service);
 
-  var user = Rxn<UserModel>();
-  var isLoading = false.obs;
+  final user = Rxn<UserModel>();
+  final isLoading = false.obs;
+  final isDataFromLocal = false.obs;
 
   @override
   void onInit() {
-    fetchProfile();
     super.onInit();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadProfile();
+    });
   }
 
-  Future<void> fetchProfile() async {
-    print("🔄 [MY ACCOUNT] fetchProfile() started");
-
+  Future<void> loadProfile() async {
     try {
       isLoading.value = true;
-      update(); // ⬅️ مهم لتحديث UI
+      update();
 
-      print("📡 [MY ACCOUNT] Calling service.getProfile()");
+      // محاولة تحميل البيانات من الذاكرة المحلية أولاً
+      final localData = await localService.getUserData();
+      if (localData['token'] != null && localData['id'] != null) {
+        user.value = _createUserFromLocalData(localData);
+        isDataFromLocal.value = true;
+      }
 
-      // 1. أولاً حاول تجلب من API
-      final UserModel fetchedUser = await service.getProfile();
-      print("✅ [MY ACCOUNT] User fetched from API:");
-      print("   ID: ${fetchedUser.id}");
-      print("   Name: ${fetchedUser.firstName} ${fetchedUser.lastName}");
-      print("   Role: ${fetchedUser.role}");
-      print("   Profile Image: ${fetchedUser.profileImage}");
-      print("   ID Image: ${fetchedUser.idImage}");
+      // ثم محاولة تحديث البيانات من API
+      try {
+        final apiUser = await service.getProfile();
+        user.value = apiUser;
+        isDataFromLocal.value = false;
 
-      user.value = fetchedUser;
+        // تحديث البيانات المحلية
+        await _updateLocalData(apiUser);
+      } catch (e) {
+        print("Failed to fetch from API: $e");
+        // إذا فشل الاتصال بالAPI، نستخدم البيانات المحلية
+        if (user.value == null) {
+          throw Exception("No data available");
+        }
+      }
     } catch (e) {
-      print("❌ [MY ACCOUNT] API Error: $e");
-
-      // 2. إذا فشل API، جلب من SharedPreferences
-      print("🔄 [MY ACCOUNT] Falling back to SharedPreferences...");
-      await _loadUserFromPrefs();
+      print("Error loading profile: $e");
+      // إذا لم توجد بيانات محلية أيضاً
+      if (user.value == null) {
+        user.value = null;
+      }
     } finally {
       isLoading.value = false;
       update();
-      print("🔚 [MY ACCOUNT] fetchProfile() completed");
     }
   }
 
-  Future<void> _loadUserFromPrefs() async {
-    try {
-      print("🔍 [MY ACCOUNT] Loading from SharedPreferences...");
-      final prefs = await SharedPreferences.getInstance();
+  // في lib/controller/my_account_controller.dart
+  String _fixImageUrl(String? url) {
+    if (url == null || url.isEmpty) return '';
 
-      // طباعة كل البيانات المخزنة للتأكد
-      print("📊 [MY ACCOUNT] All stored data:");
-      prefs.getKeys().forEach((key) {
-        if (key.startsWith('token') || key.contains('image')) {
-          print("   $key: ${prefs.get(key)?.toString().substring(0, 30)}...");
-        } else {
-          print("   $key: ${prefs.get(key)}");
-        }
-      });
-
-      final userModel = UserModel(
-        id: int.tryParse(prefs.getString("id") ?? "0") ?? 0,
-        firstName: prefs.getString("first_name") ?? "Unknown",
-        lastName: prefs.getString("last_name") ?? "User",
-        phone: prefs.getString("phone") ?? "Not set",
-        role: prefs.getString("role") ?? "guest",
-        dateOfBirth: prefs.getString("date_of_birth") ?? "Not set",
-        profileImage: prefs.getString("profile_image"),
-        idImage: prefs.getString("id_image"),
-      );
-
-      if (userModel.id > 0 || userModel.firstName != "Unknown") {
-        user.value = userModel;
-        print("✅ [MY ACCOUNT] Loaded from SharedPreferences");
-      } else {
-        print("⚠️ [MY ACCOUNT] No valid data in SharedPreferences");
-      }
-    } catch (e) {
-      print("💥 [MY ACCOUNT] Error loading from prefs: $e");
+    // إذا كان الرابط يبدأ بـ storage/ وغير كامل
+    if (url.startsWith('storage/')) {
+      return 'http://10.0.2.2:8000/storage/${url.substring(8)}';
     }
+
+    // إذا كان الرابط نسبي
+    if (url.startsWith('/storage/')) {
+      return 'http://10.0.2.2:8000$url';
+    }
+
+    // إذا كان الرابط يحتوي على localhost، استبدله بـ 10.0.2.2
+    if (url.contains('localhost:8000')) {
+      return url.replaceAll('localhost:8000', '10.0.2.2:8000');
+    }
+
+    if (url.contains('127.0.0.1:8000')) {
+      return url.replaceAll('127.0.0.1:8000', '10.0.2.2:8000');
+    }
+
+    return url;
   }
 
-  Future<void> logout() async {
-    await service.logout();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Get.offAll(() => WelcomePage());
+  UserModel _createUserFromLocalData(Map<String, dynamic> data) {
+    return UserModel(
+      id: int.tryParse(data['id'] ?? '0') ?? 0,
+      firstName: data['first_name'] ?? '',
+      lastName: data['last_name'] ?? '',
+      phone: data['phone'] ?? '',
+      role: data['role'] ?? 'renter',
+      dateOfBirth: data['date_of_birth'] ?? '',
+      profileImage: _fixImageUrl(data['profile_image']),
+      idImage: _fixImageUrl(data['id_image']),
+    );
+  }
+
+  Future<void> _updateLocalData(UserModel user) async {
+    await localService.saveUserData({
+      'id': user.id.toString(),
+      'first_name': user.firstName,
+      'last_name': user.lastName,
+      'phone': user.phone,
+      'role': user.role,
+      'date_of_birth': user.dateOfBirth,
+      'profile_image': user.profileImage,
+      'id_image': user.idImage,
+    });
+  }
+
+  // دالة لتحديث بيانات المستخدم بعد التسجيل
+  Future<void> updateUserAfterSignup(Map<String, dynamic> userData) async {
+    await localService.saveUserData(userData);
+    user.value = _createUserFromLocalData(userData);
+    isDataFromLocal.value = true;
+    update();
   }
 }

@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../controller/my_account_controller.dart';
 import '../core/api/dio_consumer.dart';
 import '../core/errors/error_model.dart';
 import '../core/errors/exceptions.dart';
@@ -123,36 +126,47 @@ class AuthService {
           "${dateParts[2]}-${dateParts[1].padLeft(2, '0')}-${dateParts[0].padLeft(2, '0')}";
       final roleNumber = role == 'owner' ? 3 : 2;
 
-      final formData = {
-        "first_name": firstName,
-        "last_name": lastName,
-        "phone": phone,
-        "password": password,
-        "password_confirmation": confirmPassword,
-        "role": roleNumber.toString(),
-        "date_of_birth": formattedDate,
-      };
+      final formData = FormData();
 
-      final Map<String, dynamic> dataToSend = Map.from(formData);
+      // إضافة البيانات النصية
+      formData.fields.addAll([
+        MapEntry('first_name', firstName),
+        MapEntry('last_name', lastName),
+        MapEntry('phone', phone),
+        MapEntry('password', password),
+        MapEntry('password_confirmation', confirmPassword),
+        MapEntry('role', roleNumber.toString()),
+        MapEntry('date_of_birth', formattedDate),
+      ]);
 
+      // إضافة ملفات الصور إذا كانت موجودة
       if (profileImage != null && profileImage.existsSync()) {
-        dataToSend["profile_image"] = await MultipartFile.fromFile(
-          profileImage.path,
-          filename: "profile_${DateTime.now().millisecondsSinceEpoch}.jpg",
+        formData.files.add(
+          MapEntry(
+            'profile_image',
+            await MultipartFile.fromFile(
+              profileImage.path,
+              filename: "profile_${DateTime.now().millisecondsSinceEpoch}.jpg",
+            ),
+          ),
         );
       }
 
       if (idImage != null && idImage.existsSync()) {
-        dataToSend["id_image"] = await MultipartFile.fromFile(
-          idImage.path,
-          filename: "id_${DateTime.now().millisecondsSinceEpoch}.jpg",
+        formData.files.add(
+          MapEntry(
+            'id_image',
+            await MultipartFile.fromFile(
+              idImage.path,
+              filename: "id_${DateTime.now().millisecondsSinceEpoch}.jpg",
+            ),
+          ),
         );
       }
 
       final response = await api.post(
         EndPoint.signUp,
-        data: FormData.fromMap(dataToSend),
-        isFormDatta: true,
+        data: formData,
         options: Options(
           contentType: 'multipart/form-data',
           validateStatus: (status) => status! < 500,
@@ -179,19 +193,67 @@ class AuthService {
           await prefs.setString("last_name", lastName);
           await prefs.setString("phone", phone);
           await prefs.setString("date_of_birth", formattedDate);
+          // ✅ حل مشكلة الصور: التحقق بشكل أفضل من وجود الصور
+          String profileImageUrl = "";
+          String idImageUrl = "";
 
-          // حفظ روابط الصور إذا موجودة
           if (userData["profile_image"] != null) {
-            await prefs.setString(
-              "profile_image",
-              userData["profile_image"]["url"]?.toString() ?? "",
-            );
+            if (userData["profile_image"] is Map) {
+              profileImageUrl =
+                  userData["profile_image"]["url"]?.toString() ?? "";
+            } else if (userData["profile_image"] is String) {
+              profileImageUrl = userData["profile_image"];
+              // ✅ إصلاح الرابط إذا كان نسبياً
+              if (profileImageUrl.startsWith('/storage/')) {
+                profileImageUrl = 'http://10.0.2.2:8000$profileImageUrl';
+              } else if (profileImageUrl.startsWith('storage/')) {
+                profileImageUrl =
+                    'http://10.0.2.2:8000/storage/$profileImageUrl';
+              }
+            }
+
+            if (profileImageUrl.isNotEmpty) {
+              await prefs.setString("profile_image", profileImageUrl);
+              print("✅ Profile image saved: $profileImageUrl");
+            }
           }
+
           if (userData["id_image"] != null) {
-            await prefs.setString(
-              "id_image",
-              userData["id_image"]["url"]?.toString() ?? "",
-            );
+            if (userData["id_image"] is Map) {
+              idImageUrl = userData["id_image"]["url"]?.toString() ?? "";
+            } else if (userData["id_image"] is String) {
+              idImageUrl = userData["id_image"];
+              // ✅ إصلاح الرابط إذا كان نسبياً
+              if (idImageUrl.startsWith('/storage/')) {
+                idImageUrl = 'http://10.0.2.2:8000$idImageUrl';
+              } else if (idImageUrl.startsWith('storage/')) {
+                idImageUrl = 'http://10.0.2.2:8000/storage/$idImageUrl';
+              }
+            }
+
+            if (idImageUrl.isNotEmpty) {
+              await prefs.setString("id_image", idImageUrl);
+              print("✅ ID image saved: $idImageUrl");
+            }
+          }
+
+          // تحديث MyAccountController مباشرة بعد التسجيل
+          try {
+            if (Get.isRegistered<MyAccountController>()) {
+              await Get.find<MyAccountController>().updateUserAfterSignup({
+                'id': userData["id"]?.toString() ?? "",
+                'first_name': firstName,
+                'last_name': lastName,
+                'phone': phone,
+                'role': role,
+                'date_of_birth': formattedDate,
+                'profile_image': profileImageUrl,
+                'id_image': idImageUrl,
+                'token': token,
+              });
+            }
+          } catch (e) {
+            print("Could not update MyAccountController: $e");
           }
         } else {
           print("Warning: No token returned from signup");

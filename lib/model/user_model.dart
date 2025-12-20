@@ -5,8 +5,8 @@ class UserModel {
   final String phone;
   final String role;
   final String dateOfBirth;
-  final String? profileImage;
-  final String? idImage;
+  final String profileImage;
+  final String idImage;
 
   UserModel({
     required this.id,
@@ -22,20 +22,22 @@ class UserModel {
   // من JSON
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    String parseImages(dynamic image) {
+      if (image is Map && image['url'] != null) {
+        return image['url'].toString();
+      }
+      return " ";
+    }
+
     return UserModel(
-      id: int.parse(json['id'].toString()),
-      firstName: json['first_name'] ?? '',
-      lastName: json['last_name'] ?? '',
-      phone: json['phone'] ?? '',
-      role: json['role'].toString(),
-      dateOfBirth: json['date_of_birth'] ?? '',
-      profileImage:
-          (json["profile_image"] != null && json["profile_image"] is Map)
-          ? json["profile_image"]["url"]?.toString()
-          : null,
-      idImage: (json["id_image"] != null && json["id_image"] is Map)
-          ? json["id_image"]["url"]?.toString()
-          : null,
+      id: json["id"],
+      firstName: json["first_name"],
+      lastName: json["last_name"],
+      phone: json["phone"],
+      role: json["role"],
+      dateOfBirth: json["date_of_birth"],
+      profileImage: parseImages(json['profile_image']),
+      idImage: parseImages(json['id_image']),
     );
   }
 }

@@ -7,6 +7,7 @@ import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 import 'UserController.dart';
+import 'my_account_controller.dart';
 
 class SignupController extends GetxController {
   bool isLoading = false;
@@ -193,7 +194,7 @@ class SignupController extends GetxController {
     update();
 
     try {
-      final response = await api.signup(
+      await api.signup(
         firstName: firstNameController.text.trim(),
         lastName: lastNameController.text.trim(),
         phone: phoneController.text.trim(),
@@ -207,16 +208,6 @@ class SignupController extends GetxController {
         idImage: idImage.value != null ? File(idImage.value!.path) : null,
       );
 
-      final prefs = await SharedPreferences.getInstance();
-
-      print("   id: ${prefs.getString("id")}");
-      print("   first_name: ${prefs.getString("first_name")}");
-      print("   last_name: ${prefs.getString("last_name")}");
-      print("   phone: ${prefs.getString("phone")}");
-      print("   role: ${prefs.getString("role")}");
-      print("   date_of_birth: ${prefs.getString("date_of_birth")}");
-      print("   token: ${prefs.getString("token")?.substring(0, 20)}...");
-
       isLoading = false;
       update();
 
@@ -224,9 +215,19 @@ class SignupController extends GetxController {
         'Success',
         'Account created successfully!',
         colorText: Colors.white,
+        backgroundColor: Colors.green,
       );
       final userCtrl = Get.put(UserController());
       await userCtrl.loadUserRole();
+      await Future.delayed(Duration(milliseconds: 300));
+
+      // ✅ تحميل الملف الشخصي مباشرة
+      try {
+        await Get.find<MyAccountController>().loadProfile();
+      } catch (e) {
+        print("Could not load profile immediately: $e");
+      }
+
       Get.offAll(() => Home());
     } on ServerException catch (e) {
       isLoading = false;
@@ -246,6 +247,7 @@ class SignupController extends GetxController {
         'Unexpected Error',
         'Something went wrong: $e',
         colorText: Colors.white,
+        backgroundColor: Colors.red,
       );
     }
   }

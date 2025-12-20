@@ -6,6 +6,7 @@ import '../../controller/authcontroller.dart';
 import '../../controller/homecontroller.dart';
 import '../../controller/my_account_controller.dart';
 import '../../service/ApartmentService.dart';
+import '../../service/UserLocalService.dart';
 import '../../service/userService.dart';
 import '../api/dio_consumer.dart';
 import '../../controller/logincontroller.dart';
@@ -30,6 +31,7 @@ class AppBindings extends Bindings {
       permanent: true,
     );
     Get.put<UserService>(UserService(Get.find()), permanent: true);
+    Get.put<UserLocalService>(UserLocalService(), permanent: true);
 
     // Controllers
     Get.put<HomeController>(HomeController(), permanent: true);

@@ -24,24 +24,21 @@ class Home extends StatelessWidget {
 
       return Scaffold(
         appBar: _buildAppBar(currentIndex),
-        drawer: currentIndex == 0 ? _buildDrawer() : null,
         body: _buildIndexedStack(),
         bottomNavigationBar: _buildBottomNavigationBar(),
 
         // ➕ زر إضافة شقة (Owner فقط)
-        floatingActionButton:
-        user.isOwner && controller.currentIndex.value == 0
+        floatingActionButton: user.isOwner && controller.currentIndex.value == 0
             ? FloatingActionButton(
-          backgroundColor: const Color(0xFF274668),
-          onPressed: () {
-            // TODO: صفحة إضافة شقة
-          },
-          child: const Icon(Icons.add),
-        )
+                backgroundColor: const Color(0xFF274668),
+                onPressed: () {
+                  // TODO: صفحة إضافة شقة
+                },
+                child: const Icon(Icons.add),
+              )
             : null,
 
-        floatingActionButtonLocation:
-        FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       );
     });
   }
@@ -61,86 +58,31 @@ class Home extends StatelessWidget {
     }
 
     return AppBar(
-      title: Text(
-        title,
-        style: const TextStyle(fontSize: 27),
-      ),
+      title: Text(title, style: const TextStyle(fontSize: 27)),
       backgroundColor: const Color(0xFF274668),
       foregroundColor: Colors.white,
       actions: index == 0
           ? [
-        Obx(() {
-          final isDark = themeService.rxIsDark.value;
-          return IconButton(
-            onPressed: themeService.toggleTheme,
-            icon: Icon(
-              isDark ? Icons.dark_mode : Icons.light_mode,
-              size: 22,
-            ),
-          );
-        }),
-      ]
+              Obx(() {
+                final isDark = themeService.rxIsDark.value;
+                return IconButton(
+                  onPressed: themeService.toggleTheme,
+                  icon: Icon(
+                    isDark ? Icons.dark_mode : Icons.light_mode,
+                    size: 22,
+                  ),
+                );
+              }),
+            ]
           : [],
       leading: index == 0
           ? Builder(
-        builder: (context) => IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
-      )
-          : null,
-    );
-  }
-
-  // ========================= Drawer =========================
-  Drawer _buildDrawer() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF274668)),
-            child: Center(
-              child: Text(
-                'Drawer Header',
-                style: TextStyle(color: Colors.white),
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => Scaffold.of(context).openDrawer(),
               ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.person_pin),
-            title: const Text('Profile Settings'),
-            onTap: Get.back,
-          ),
-          ListTile(
-            leading: const Icon(Icons.language),
-            title: const Text('Language'),
-            onTap: Get.back,
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: const Text('Help & Support'),
-            onTap: Get.back,
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () {
-              Get.defaultDialog(
-                title: "Logout",
-                middleText: "Are you sure?",
-                textCancel: "No",
-                textConfirm: "Yes",
-                confirmTextColor: Colors.white,
-                buttonColor: const Color(0xFF274668),
-                onConfirm: () {
-                  Get.find<AuthController>().logout();
-                },
-              );
-            },
-          ),
-        ],
-      ),
+            )
+          : null,
     );
   }
 
@@ -150,18 +92,8 @@ class Home extends StatelessWidget {
       return IndexedStack(
         index: controller.currentIndex.value,
         children: user.isOwner
-            ? [
-          HomeContent(),
-          MyBooking(),
-          Favourite(),
-          MyAccount(),
-        ]
-            : [
-          HomeContent(),
-          MyRent(),
-          Favourite(),
-          MyAccount(),
-        ],
+            ? [HomeContent(), MyBooking(), Favourite(), MyAccount()]
+            : [HomeContent(), MyRent(), Favourite(), MyAccount()],
       );
     });
   }
@@ -211,7 +143,8 @@ class Home extends StatelessWidget {
       label: "Home",
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.list_alt),
+      icon: Icon(Icons.book_outlined),
+      activeIcon: Icon(Icons.book_rounded),
       label: "My Booking",
     ),
     BottomNavigationBarItem(
