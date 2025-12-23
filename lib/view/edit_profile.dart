@@ -245,292 +245,114 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   Widget _buildPasswordSection() {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: controller.passwordFormKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Change Password',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF274668),
-                ),
-              ),
+    return Obx(() {
+      controller.passwordTextTrigger.value;
 
-              Obx(() {
-                controller.passwordTextTrigger.value;
-                if (controller.hasPasswordOnlyChanges) {
-                  final isValid = controller.isPasswordChangeValid();
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      final hasPasswordChanges = controller.hasPasswordOnlyChanges;
+      final isValid = controller.isPasswordChangeValid();
+
+      return Card(
+        elevation: 2,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Form(
+            key: controller.passwordFormKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Change Password',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF274668),
+                  ),
+                ),
+
+                if (hasPasswordChanges)
+                  Container(
+                    margin: EdgeInsets.only(top: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: isValid
                           ? Colors.green.shade50
                           : Colors.orange.shade50,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isValid
-                            ? Colors.green.shade200
-                            : Colors.orange.shade200,
+                    ),
+                    child: Text(
+                      isValid ? 'Ready' : 'Incomplete',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isValid ? Colors.green.shade800 : Colors.orange,
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween, // ✅ هذا المفتاح
-                      children: [
-                        Icon(
-                          isValid ? Icons.lock_open : Icons.lock,
-                          size: 14,
-                          color: isValid ? Colors.green : Colors.orange,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          isValid ? 'Ready' : 'Incomplete',
-                          style: TextStyle(
-                            color: isValid
-                                ? Colors.green.shade800
-                                : Colors.orange.shade800,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return SizedBox();
-              }),
-
-              SizedBox(height: 20),
-
-              // Current Password
-              Obx(() {
-                controller.passwordTextTrigger.value;
-                final hasValue =
-                    controller.currentPasswordController.text.isNotEmpty;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: controller.currentPasswordController,
-                      obscureText: !controller.showCurrentPassword.value,
-                      decoration: InputDecoration(
-                        labelText: 'Current Password',
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (hasValue)
-                              Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.blue,
-                                  size: 16,
-                                ),
-                              ),
-                            IconButton(
-                              icon: Icon(
-                                controller.showCurrentPassword.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: controller.showCurrentPassword.toggle,
-                            ),
-                          ],
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    if (hasValue &&
-                        controller.currentPasswordController.text.length < 8)
-                      Padding(
-                        padding: EdgeInsets.only(top: 4, left: 4),
-                        child: Text(
-                          '⚠️ Password seems too short',
-                          style: TextStyle(color: Colors.orange, fontSize: 11),
-                        ),
-                      ),
-                  ],
-                );
-              }),
-
-              SizedBox(height: 16),
-
-              // New Password
-              Obx(() {
-                controller.passwordTextTrigger.value;
-                final hasValue =
-                    controller.newPasswordController.text.isNotEmpty;
-                final isValid =
-                    hasValue &&
-                    controller.newPasswordController.text.length >= 8;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: controller.newPasswordController,
-                      obscureText: !controller.showNewPassword.value,
-                      onChanged: (value) => controller.update(),
-                      decoration: InputDecoration(
-                        labelText: 'New Password',
-                        prefixIcon: Icon(Icons.lock_outline),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (hasValue)
-                              Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  isValid ? Icons.check : Icons.error,
-                                  color: isValid ? Colors.green : Colors.red,
-                                  size: 16,
-                                ),
-                              ),
-                            IconButton(
-                              icon: Icon(
-                                controller.showNewPassword.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: controller.showNewPassword.toggle,
-                            ),
-                          ],
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    if (hasValue)
-                      Padding(
-                        padding: EdgeInsets.only(top: 4, left: 4),
-                        child: Text(
-                          isValid
-                              ? '✓ Strong password'
-                              : '⚠️ Must be at least 8 characters',
-                          style: TextStyle(
-                            color: isValid ? Colors.green : Colors.orange,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              }),
-
-              SizedBox(height: 16),
-
-              // Confirm Password
-              Obx(() {
-                final hasValue =
-                    controller.confirmPasswordController.text.isNotEmpty;
-                final matches =
-                    hasValue &&
-                    controller.newPasswordController.text ==
-                        controller.confirmPasswordController.text;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: controller.confirmPasswordController,
-                      obscureText: !controller.showConfirmPassword.value,
-                      onChanged: (value) => controller.update(),
-                      decoration: InputDecoration(
-                        labelText: 'Confirm New Password',
-                        prefixIcon: Icon(Icons.lock_reset),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (hasValue)
-                              Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  matches ? Icons.check : Icons.close,
-                                  color: matches ? Colors.green : Colors.red,
-                                  size: 16,
-                                ),
-                              ),
-                            IconButton(
-                              icon: Icon(
-                                controller.showConfirmPassword.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: controller.showConfirmPassword.toggle,
-                            ),
-                          ],
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    if (hasValue)
-                      Padding(
-                        padding: EdgeInsets.only(top: 4, left: 4),
-                        child: Text(
-                          matches
-                              ? '✓ Passwords match'
-                              : '✗ Passwords do not match',
-                          style: TextStyle(
-                            color: matches ? Colors.green : Colors.red,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              }),
-
-              SizedBox(height: 16),
-
-              // Note مع تحسين
-              Obx(() {
-                if (controller.hasPasswordOnlyChanges) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Password change checklist:',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      _buildChecklistItem(
-                        'Current password entered',
-                        controller.currentPasswordController.text.isNotEmpty,
-                      ),
-                      _buildChecklistItem(
-                        'New password (min 8 characters)',
-                        controller.newPasswordController.text.length >= 8,
-                      ),
-                      _buildChecklistItem(
-                        'Passwords match',
-                        controller.newPasswordController.text ==
-                            controller.confirmPasswordController.text,
-                      ),
-                    ],
-                  );
-                }
-                return Text(
-                  'Note: Fill current password only if you want to change it',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                    fontStyle: FontStyle.italic,
                   ),
-                );
-              }),
-            ],
+
+                SizedBox(height: 20),
+
+                // Current Password
+                TextFormField(
+                  controller: controller.currentPasswordController,
+                  obscureText: !controller.showCurrentPassword.value,
+                  decoration: InputDecoration(
+                    labelText: 'Current Password',
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.showCurrentPassword.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: controller.showCurrentPassword.toggle,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 16),
+
+                // New Password
+                TextFormField(
+                  controller: controller.newPasswordController,
+                  obscureText: !controller.showNewPassword.value,
+                  decoration: InputDecoration(
+                    labelText: 'New Password',
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.showNewPassword.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: controller.showNewPassword.toggle,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 16),
+
+                // Confirm Password
+                TextFormField(
+                  controller: controller.confirmPasswordController,
+                  obscureText: !controller.showConfirmPassword.value,
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.showConfirmPassword.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: controller.showConfirmPassword.toggle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   // ✅ دالة مساعدة لعرض قائمة التحقق
