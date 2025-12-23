@@ -7,11 +7,103 @@ import '../core/errors/error_model.dart';
 import '../core/errors/exceptions.dart';
 import '../model/apartment_model.dart';
 import '../model/filter_model.dart';
+import '../model/governorate_model.dart';
 
 class ApartmentService {
   final DioConsumer api;
 
   ApartmentService({required this.api});
+
+  // Get All Apartments
+  Future<List<Apartment>> getAllApartments() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("token") ?? "";
+
+      final response = await api.dio.get(
+        EndPoint.getApartments,
+        options: Options(
+          headers: {"Authorization": "Bearer $token"},
+          validateStatus: (status) => true,
+        ),
+      );
+
+      print(" Response status: ${response.statusCode}");
+      print(" Response data: ${response.data}");
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data is Map && data.containsKey("data")) {
+          final List list = data["data"];
+          return list.map((e) => Apartment.fromJson(e)).toList();
+        } else {
+          throw ServerException(
+            errModel: ErrorModel(errorMessage: "Invalid data format from server"),
+          );
+        }
+      } else {
+        final errorMsg =
+            response.data["message"] ?? "Failed to fetch apartments";
+        throw ServerException(
+          errModel: ErrorModel(errorMessage: errorMsg),
+        );
+      }
+    } on DioException catch (e) {
+      throw ServerException(
+        errModel: ErrorModel(errorMessage: "Network error: ${e.message}"),
+      );
+    }
+  }
+//-------
+  Future<List<Apartment>> getApartmentsByQuery({
+    int? maxPrice,
+    String? orderBy,
+  }) async {
+    try {
+      final response = await api.dio.get(
+        EndPoint.getApartments,
+        queryParameters: {
+          if (maxPrice != null) 'max_price': maxPrice,
+          if (orderBy != null) 'order_by': orderBy,
+        },
+        options: Options(
+          validateStatus: (status) => true,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final List list = response.data['data'];
+        return list.map((e) => Apartment.fromJson(e)).toList();
+      }
+
+      return [];
+    } on DioException {
+      return [];
+    }
+  }
+// ApartmentService.dart
+
+  Future<List<GovernorateModel>> getGovernorates() async {
+    try {
+      final response = await api.dio.get(
+        EndPoint.getGovernorates,
+        options: Options(
+          validateStatus: (status) => true,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final List list = response.data['data'];
+        return list.map((e) => GovernorateModel.fromJson(e)).toList();
+      } else {
+        throw Exception("Failed to load governorates");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 
   // Get All Apartments with Pagination and Filtering
   Future<Map<String, dynamic>> getApartments({

@@ -5,6 +5,7 @@ import '../controller/authcontroller.dart';
 import '../controller/homecontroller.dart';
 import '../core/theme/theme_service.dart';
 import 'MyBooking.dart';
+import 'add_apartment_page.dart';
 import 'homeContent.dart';
 import 'favourite.dart';
 import 'myAccount.dart';
@@ -32,7 +33,8 @@ class Home extends StatelessWidget {
             ? FloatingActionButton(
                 backgroundColor: const Color(0xFF274668),
                 onPressed: () {
-                  // TODO: صفحة إضافة شقة
+                  Get.to(() => AddApartmentPage());
+
                 },
                 child: const Icon(Icons.add),
               )

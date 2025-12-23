@@ -6,6 +6,8 @@ class EndPoint {
   static String logout = "logout";
   static const String getApartments = "houses";
   static const String createApartment = "houses";
+  static const String getGovernorates = "governorates";
+
   static String getAccount = "profile";
   static String updateAccount = "profile";
   static String deleteAccount = "profile";

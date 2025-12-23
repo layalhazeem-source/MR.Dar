@@ -25,7 +25,8 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Column(
+        child: SingleChildScrollView(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ---------------- Search Bar ----------------
@@ -383,6 +384,6 @@ class HomeContent extends StatelessWidget {
           const SizedBox(height: 20),
         ],
       ),
-    );
+    ),);
   }
 }

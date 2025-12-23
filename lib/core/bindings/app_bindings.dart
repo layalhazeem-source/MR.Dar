@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../../controller/ApartmentController.dart';
 import '../../controller/FilterController.dart';
 import '../../controller/UserController.dart';
+import '../../controller/add_apartment_controller.dart';
 import '../../controller/authcontroller.dart';
 import '../../controller/edit_profile_controller.dart';
 import '../../controller/homecontroller.dart';
@@ -65,6 +66,13 @@ class AppBindings extends Bindings {
       () => ApartmentController(service: apartmentService),
       fenix: true,
     );
+    Get.lazyPut<AddApartmentController>(
+          () => AddApartmentController(
+        service: Get.find<ApartmentService>(),
+      ),
+      fenix: true,
+    );
+
 
     // ✅ تأكد من أن MyAccountController يحتوي على constructor يأخذ userService
     Get.lazyPut<MyAccountController>(

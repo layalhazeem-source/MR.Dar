@@ -1,16 +1,23 @@
+import 'city_model.dart';
+
 class GovernorateModel {
   final int id;
-  final String nameEn;
-  final String nameAr;
+  final String name;
+  final List<CityModel> cities;
 
-  GovernorateModel({required this.id, required this.nameEn, required this.nameAr});
+  GovernorateModel({
+    required this.id,
+    required this.name,
+    required this.cities,
+  });
 
   factory GovernorateModel.fromJson(Map<String, dynamic> json) {
-    final name = json['name'] ?? {};
     return GovernorateModel(
       id: json['id'],
-      nameEn: name['en'] ?? '',
-      nameAr: name['ar'] ?? '',
+      name: json['name'],
+      cities: (json['cities'] as List)
+          .map((e) => CityModel.fromJson(e))
+          .toList(),
     );
   }
 }

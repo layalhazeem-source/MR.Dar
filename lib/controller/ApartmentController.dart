@@ -35,9 +35,11 @@ class ApartmentController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
-    loadInitialData();
+    super.onInit();   // استدعاء الدالة الأصلية أولاً
+    loadApartments(); // دالة تحميل الشقق
+    loadInitialData(); // دالة تحميل البيانات الابتدائية
   }
+
 
   // تحميل البيانات الأولية
   Future<void> loadInitialData() async {
@@ -52,6 +54,31 @@ class ApartmentController extends GetxController {
 
     } catch (e) {
       errorMessage.value = "Failed to load initial data: ${e.toString()}";
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+//load apartments
+  Future<void> loadApartments() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = "";
+
+      allApartments.assignAll(
+        await service.getAllApartments(),
+      );
+
+      featuredApartments.assignAll(
+        await service.getApartmentsByQuery(maxPrice: 200),
+      );
+
+      topRatedApartments.assignAll(
+        await service.getApartmentsByQuery(orderBy: 'rate'),
+      );
+
+    } catch (e) {
+      errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
     }
