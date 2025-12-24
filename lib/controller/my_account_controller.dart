@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../model/user_model.dart';
+import 'package:dio/dio.dart' as dio;
 import '../service/UserLocalService.dart';
 import '../service/userService.dart';
+import 'authcontroller.dart';
 
 class MyAccountController extends GetxController {
   final UserService service;
   final UserLocalService localService = UserLocalService();
-
+  final isDeleting = false.obs;
+  final deletePasswordController = TextEditingController();
   MyAccountController({required this.service});
 
   final user = Rxn<UserModel>();
@@ -119,5 +123,65 @@ class MyAccountController extends GetxController {
     user.value = _createUserFromLocalData(userData);
     isDataFromLocal.value = true;
     update();
+  }
+
+  Future<void> verifyAndDeleteAccount(String password) async {
+    try {
+      isDeleting.value = true;
+
+      // 1. التحقق من كلمة المرور عبر استدعاء الـ updateProfile (مثل منطق التعديل تماماً)
+      final formData = dio.FormData.fromMap({
+        'current_password': password,
+        // نرسل نفس البيانات الحالية لكي لا يتغير شيء، فقط للتحقق
+        'first_name': user.value?.firstName,
+        'last_name': user.value?.lastName,
+        'phone': user.value?.phone,
+      });
+
+      final response = await service.updateProfile(formData);
+
+      // 2. إذا نجح التحقق (السيرفر قبل كلمة المرور)
+      if (response['status'] == 'success') {
+        // 3. استدعاء تابع الحذف الفعلي
+        await service.deleteAccount();
+
+        Get.back(); // إغلاق الديالوج
+
+        // 4. تسجيل الخروج وتصفير البيانات
+        final authController = Get.find<AuthController>();
+        await authController.logout();
+
+        Get.snackbar(
+          "Account Deleted",
+          "Your account has been permanently removed",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Incorrect password",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      // إذا رمى السيرفر خطأ 401 (كلمة سر غلط) سيسقط الكود هنا
+      Get.snackbar(
+        "Verification Failed",
+        "Current password is incorrect",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isDeleting.value = false;
+    }
+  }
+
+  @override
+  void onClose() {
+    deletePasswordController.dispose();
+    super.onClose();
   }
 }
