@@ -11,7 +11,8 @@ class AddApartmentPage extends StatelessWidget {
   final controller = Get.find<AddApartmentController>();
   final PageController pageController = PageController();
 
-  final Color navy = const Color(0xFF0F2A44);
+  final Color navy = const Color(0xFF274668);
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -80,26 +81,36 @@ class AddApartmentPage extends StatelessWidget {
   // ========================= STEP 1 =========================
   Widget _basicInfoStep() {
     return _card(
-      Column(
-        children: [
-          _input("Title", onChanged: (v) => controller.title.value = v),
-          _input("Description",
-              maxLines: 3,
-              onChanged: (v) => controller.description.value = v),
-          _input("Price / Night",
-              keyboard: TextInputType.number,
-              onChanged: (v) => controller.rentValue.value = v),
-          _input("Rooms",
-              keyboard: TextInputType.number,
-              onChanged: (v) => controller.rooms.value = v),
-          _input("Space (m²)",
-              keyboard: TextInputType.number,
-              onChanged: (v) => controller.space.value = v),
-      _nextButton(() {
-        controller.goToStep(1, pageController);
-      }),
+      Obx(
+            () => Column(
+          children: [
+            _input("Title",
+                controller: controller.titleController,
+                error: controller.titleError.value),
+            _input("Description",
+                controller: controller.descriptionController,
+                maxLines: 3,
+                error: controller.descriptionError.value),
+            _input("Price / Night",
+                controller: controller.rentController,
+                keyboard: TextInputType.number,
+                error: controller.rentError.value),
+            _input("Rooms",
+                controller: controller.roomsController,
+                keyboard: TextInputType.number,
+                error: controller.roomsError.value),
+            _input("Space (m²)",
+                controller: controller.spaceController,
+                keyboard: TextInputType.number,
+                error: controller.spaceError.value),
 
-      ],
+            _nextButton(() {
+              if (controller.validateStep1()) {
+                controller.goToStep(1, pageController);
+              }
+            }),
+          ],
+        ),
       ),
     );
   }
@@ -107,52 +118,71 @@ class AddApartmentPage extends StatelessWidget {
   // ========================= STEP 2 =========================
   Widget _locationStep() {
     return _card(
-      Column(
-        children: [
-          Obx(
-                () => _dropdown(
+      Obx(
+            () => Column(
+          children: [
+            _dropdown(
               hint: "Governorate",
               value: controller.selectedGovernorateId.value,
               items: controller.governorates
-                  .map((governorate) => DropdownMenuItem(
-                value: governorate.id,
-                child: Text(governorate.name),
-              ))
+                  .map((g) => DropdownMenuItem(value: g.id, child: Text(g.name)))
                   .toList(),
-        onChanged: (int? newValue) {
-          if (newValue != null) {
-            controller.onGovernorateSelected(newValue);
-          }}
+              onChanged: (v) {
+                if (v != null) controller.onGovernorateSelected(v);
+              },
+              error: controller.governorateError.value,
             ),
-          ),
-          Obx(
-                () => _dropdown(
+
+            _dropdown(
               hint: "City",
               value: controller.selectedCityId.value,
               items: controller.cities
-                  .map<DropdownMenuItem<int>>(
-                    (city) => DropdownMenuItem(
-                  value: city.id,
-                  child: Text(city.name),
-                ),
-              )
+                  .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
                   .toList(),
-              onChanged: (int? newValue) {
-    if (newValue != null) {
-    controller.onCitySelected(newValue);
-    }}),
-          ),
-          _input("Street", onChanged: (v) => controller.street.value = v),
-          _input("Flat Number",
-              onChanged: (v) => controller.flatNumber.value = v),
-    _nextButton(() {
-    controller.goToStep(2, pageController);
-    }),
+              onChanged: (v) {
+                if (v != null) controller.onCitySelected(v);
+              },
+              error: controller.cityError.value,
+            ),
 
-    ],
+            _input("Street",
+                controller: controller.streetController,
+                error: controller.streetError.value),
+            _input("Flat Number",
+                controller: controller.flatNumberController,
+                error: controller.flatError.value),
+            _input(
+              "Longitude (optional)",
+              controller: controller.longitudeController,
+              keyboard: TextInputType.number,
+            ),
+            _input(
+              "Latitude (optional)",
+              controller: controller.latitudeController,
+              keyboard: TextInputType.number,
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              children: [
+                _backButton(() {
+                  controller.goBack(pageController);
+                }),
+
+                _nextButton(() {
+                  if (controller.validateStep2()) {
+                    controller.goToStep(2, pageController);
+                  }
+                }),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
+
 
   // ========================= STEP 3 =========================
   Widget _imagesStep() {
@@ -160,9 +190,13 @@ class AddApartmentPage extends StatelessWidget {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Apartment Images",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "Apartment Images",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 12),
+
+          /// الصور
           Obx(
                 () => Wrap(
               spacing: 8,
@@ -194,26 +228,66 @@ class AddApartmentPage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          Obx(
-                () => ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: navy,
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
+
+          const SizedBox(height: 32),
+
+          /// أزرار Back + Add
+          Row(
+            children: [
+              /// Back
+              Expanded(
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: navy,
+                    side: BorderSide(color: navy),
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  onPressed: () {
+                    controller.goBack(pageController);
+                  },
+                  child: const Text("← Back"),
+                ),
               ),
-              onPressed:
-              controller.isLoading.value ? null : controller.submit,
-              child: controller.isLoading.value
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text("Add Apartment"),
-            ),
-          )
+
+              const SizedBox(width: 12),
+
+              /// Add Apartment
+              Expanded(
+                child: Obx(
+                      () => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: navy,
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : controller.submit,
+                    child: controller.isLoading.value
+                        ? const SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                        : const Text("Add Apartment"),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
+
 
   // ========================= HELPERS =========================
   Widget _card(Widget child) {
@@ -228,30 +302,39 @@ class AddApartmentPage extends StatelessWidget {
     );
   }
 
-  Widget _input(String hint,
-      {int maxLines = 1,
+  Widget _input(
+      String hint, {
+        required TextEditingController controller,
+        String? error,
+        int maxLines = 1,
         TextInputType keyboard = TextInputType.text,
-        required Function(String) onChanged}) {
+      }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
+        controller: controller,
         maxLines: maxLines,
         keyboardType: keyboard,
-        onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hint,
+          errorText: error,
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14)),
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
     );
   }
+
+
+
 
   Widget _dropdown({
     required String hint,
     required int? value,
     required List<DropdownMenuItem<int>> items,
     required Function(int?) onChanged,
+    String? error,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -261,8 +344,10 @@ class AddApartmentPage extends StatelessWidget {
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hint,
+          errorText: error,
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14)),
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
     );
@@ -271,12 +356,34 @@ class AddApartmentPage extends StatelessWidget {
   Widget _nextButton(VoidCallback onTap) {
     return Align(
       alignment: Alignment.centerRight,
-      child: TextButton(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: navy,
+          foregroundColor: Colors.white,
+        ),
         onPressed: onTap,
-        child: const Text("Next →"),
+        child: const Text("Next"),
       ),
     );
   }
+
+  Widget _backButton(VoidCallback onTap) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: navy,
+          side: BorderSide(color: navy),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        onPressed: onTap,
+        child: const Text("← Back"),
+      ),
+    );
+  }
+
 
   void _pickImages() async {
     final picker = ImagePicker();

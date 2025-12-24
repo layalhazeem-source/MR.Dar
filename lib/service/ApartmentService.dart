@@ -262,8 +262,8 @@ class ApartmentService {
         'city_id': cityId,
         'street': street,
         'flat_number': flatNumber,
-        'longitude': longitude ?? 0,
-        'latitude': latitude ?? 0,
+        if (longitude != null) 'longitude': longitude,
+        if (latitude != null) 'latitude': latitude,
       });
 
       for (var image in houseImages) {

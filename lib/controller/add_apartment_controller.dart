@@ -12,6 +12,7 @@ import '../service/ApartmentService.dart';
 class AddApartmentController extends GetxController {
   final ApartmentService service;
 
+
   AddApartmentController({required this.service});
   // ================= Steps =================
   var currentStep = 0.obs;
@@ -24,14 +25,42 @@ class AddApartmentController extends GetxController {
       curve: Curves.ease,
     );
   }
-  // form fields
-  var title = ''.obs;
-  var description = ''.obs;
-  var rentValue = ''.obs;
-  var rooms = ''.obs;
-  var space = ''.obs;
-  var street = ''.obs;
-  var flatNumber = ''.obs;
+  void goBack(PageController pageController) {
+    if (currentStep.value > 0) {
+      currentStep.value--;
+      pageController.animateToPage(
+        currentStep.value,
+        duration: 300.milliseconds,
+        curve: Curves.ease,
+      );
+    }
+  }
+
+  // ================= Validation Errors =================
+  var titleError = RxnString();
+  var descriptionError = RxnString();
+  var rentError = RxnString();
+  var roomsError = RxnString();
+  var spaceError = RxnString();
+
+  var governorateError = RxnString();
+  var cityError = RxnString();
+  var streetError = RxnString();
+  var flatError = RxnString();
+
+  //--------
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final rentController = TextEditingController();
+  final roomsController = TextEditingController();
+  final spaceController = TextEditingController();
+  final streetController = TextEditingController();
+  final flatNumberController = TextEditingController();
+
+  final longitudeController = TextEditingController();
+  final latitudeController = TextEditingController();
+
+
 
   // location
   var governorates = <GovernorateModel>[].obs;
@@ -49,6 +78,36 @@ class AddApartmentController extends GetxController {
     super.onInit();
     loadGovernorates();
   }
+  bool validateStep1() {
+    titleError.value = titleController.text.isEmpty ? "Title is required" : null;
+    descriptionError.value =
+    descriptionController.text.isEmpty ? "Description is required" : null;
+    rentError.value = rentController.text.isEmpty ? "Price is required" : null;
+    roomsError.value = roomsController.text.isEmpty ? "Rooms is required" : null;
+    spaceError.value = spaceController.text.isEmpty ? "Space is required" : null;
+
+    return titleError.value == null &&
+        descriptionError.value == null &&
+        rentError.value == null &&
+        roomsError.value == null &&
+        spaceError.value == null;
+  }
+
+  bool validateStep2() {
+    governorateError.value =
+    selectedGovernorateId.value == null ? "Governorate is required" : null;
+    cityError.value =
+    selectedCityId.value == null ? "City is required" : null;
+    streetError.value =
+    streetController.text.isEmpty ? "Street is required" : null;
+    flatError.value =
+    flatNumberController.text.isEmpty ? "Flat number is required" : null;
+
+    return governorateError.value == null &&
+        cityError.value == null &&
+        streetError.value == null &&
+        flatError.value == null;
+  }
 
   Future<void> loadGovernorates() async {
     governorates.value = await service.getGovernorates();
@@ -64,40 +123,30 @@ class AddApartmentController extends GetxController {
     selectedCityId.value = id;
   }
 
-  bool validate() {
-    if (title.isEmpty ||
-        rentValue.isEmpty ||
-        rooms.isEmpty ||
-        space.isEmpty ||
-        street.isEmpty ||
-        flatNumber.isEmpty ||
-        selectedCityId.value == null ||
-        images.isEmpty) {
-      Get.snackbar("Error", "Please fill all required fields");
-      return false;
-    }
-    return true;
-  }
+
 
   Future<void> submit() async {
-    if (!validate()) return;
 try {
   isLoading.value = true;
 
+
   await service.createApartment(
-    title: title.value,
-    description: description.value,
-    rentValue: double.parse(rentValue.value),
-    rooms: int.parse(rooms.value),
-    space: double.parse(space.value),
+    title: titleController.text.trim(),
+    description: descriptionController.text.trim(),
+    rentValue: double.parse(rentController.text),
+    rooms: int.parse(roomsController.text),
+    space: double.parse(spaceController.text),
     notes: "",
-    // ❌ ما عم نستخدمها
     governorateId: selectedGovernorateId.value!,
     cityId: selectedCityId.value!,
-    street: street.value,
-    flatNumber: flatNumber.value,
-    longitude: null,
-    latitude: null,
+    street: streetController.text.trim(),
+    flatNumber: flatNumberController.text.trim(),
+    longitude: longitudeController.text.isEmpty
+        ? null
+        : int.parse(longitudeController.text),
+    latitude: latitudeController.text.isEmpty
+        ? null
+        : int.parse(latitudeController.text),
     houseImages: images,
   );
 
@@ -106,7 +155,7 @@ try {
   Get.offAllNamed('/home');
 
   Get.snackbar(
-    "Apartment added 🏠",
+    "Apartment added ",
     "Your apartment was added successfully\nWaiting for admin approval",
     backgroundColor: const Color(0xFF0F2A44),
     colorText: Colors.white,
@@ -116,7 +165,6 @@ try {
     duration: const Duration(seconds: 3),
   );
 } catch (e) {
-    // ❌ فشل
     Get.snackbar(
     "Error",
     e.toString(),
@@ -127,5 +175,16 @@ try {
     // 🔴 هذا أهم سطر
     isLoading.value = false;
   }}
+  @override
+  void onClose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    rentController.dispose();
+    roomsController.dispose();
+    spaceController.dispose();
+    streetController.dispose();
+    flatNumberController.dispose();
+    super.onClose();
+  }
 
 }
