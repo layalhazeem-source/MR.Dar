@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/UserController.dart';
 import '../model/apartment_model.dart';
+import 'booking_date_page.dart';
 
 class ApartmentDetailsPage extends StatelessWidget {
   final Apartment apartment;
@@ -185,7 +186,10 @@ class ApartmentDetailsPage extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            // Get.to(() => BookingPage(apartment: apartment));
+            Get.to(() => BookingDatePage(
+              houseId: apartment.id,
+              rentValue: apartment.rentValue,
+            ));
           },
           child: const Text(
             "Book Now",

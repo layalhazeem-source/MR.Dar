@@ -8,6 +8,7 @@ class EndPoint {
   static const String getApartments = "houses";
   static const String createApartment = "houses";
   static const String getGovernorates = "governorates";
+  static const String reservations = "reservations";
 
   static String getAccount = "profile";
   static String updateAccount = "profile";
