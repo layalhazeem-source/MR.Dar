@@ -55,14 +55,14 @@ class ApartmentService {
 
   //-------
   Future<List<Apartment>> getApartmentsByQuery({
-    int? maxPrice,
+    int? maxRent,
     String? orderBy,
   }) async {
     try {
       final response = await api.dio.get(
         EndPoint.getApartments,
         queryParameters: {
-          if (maxPrice != null) 'max_price': maxPrice,
+          if (maxRent != null) 'max_rent': maxRent,
           if (orderBy != null) 'order_by': orderBy,
         },
         options: Options(validateStatus: (status) => true),
@@ -173,30 +173,7 @@ class ApartmentService {
   }
 
   // Get Featured Apartments (مثال: الإيجار أقل من 200)
-  Future<List<Apartment>> getFeaturedApartments() async {
-    try {
-      final response = await getApartments(
-        filter: FilterModel(maxRent: 200),
-        limit: 5,
-      );
-      return response['apartments'] as List<Apartment>;
-    } catch (e) {
-      return [];
-    }
-  }
 
-  // Get Top Rated Apartments
-  Future<List<Apartment>> getTopRatedApartments() async {
-    try {
-      final response = await getApartments(
-        filter: FilterModel(sortBy: 'rate', sortDir: 'desc'),
-        limit: 5,
-      );
-      return response['apartments'] as List<Apartment>;
-    } catch (e) {
-      return [];
-    }
-  }
 
   // Search Apartments
   Future<List<Apartment>> searchApartments(String query) async {

@@ -67,8 +67,7 @@ class ApartmentController extends GetxController {
 
       await Future.wait([
         loadAllApartments(),
-        loadFeaturedApartments(),
-        loadTopRatedApartments(),
+
       ]);
 
     } catch (e) {
@@ -89,7 +88,7 @@ class ApartmentController extends GetxController {
       );
 
       featuredApartments.assignAll(
-        await service.getApartmentsByQuery(maxPrice: 200),
+        await service.getApartmentsByQuery(maxRent: 200),
       );
 
       topRatedApartments.assignAll(
@@ -141,23 +140,7 @@ class ApartmentController extends GetxController {
     }
   }
 
-  // تحميل الشقق المميزة
-  Future<void> loadFeaturedApartments() async {
-    try {
-      featuredApartments.value = await service.getFeaturedApartments();
-    } catch (e) {
-      print("Error loading featured apartments: $e");
-    }
-  }
 
-  // تحميل الشقق الأعلى تقييماً
-  Future<void> loadTopRatedApartments() async {
-    try {
-      topRatedApartments.value = await service.getTopRatedApartments();
-    } catch (e) {
-      print("Error loading top rated apartments: $e");
-    }
-  }
 
   // تطبيق الفلتر
   Future<void> applyFilter(FilterModel filter) async {

@@ -11,7 +11,7 @@ class BookingConfirmPage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Confirm Booking")),
+      appBar: AppBar(title: const Text("Confirm Booking"),backgroundColor: Color(0xFF274668),),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -35,7 +35,7 @@ class BookingConfirmPage extends StatelessWidget {
                       _row("Duration",
                           "${controller.duration.value} month(s)"),
                       const Divider(),
-                      _row("Total",
+                      _row("Total price ",
                           "\$${controller.totalPrice}",
                           bold: true),
                     ],
@@ -48,6 +48,12 @@ class BookingConfirmPage extends StatelessWidget {
 
             Obx(
                   () => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF274668),
+                      foregroundColor: Colors.white, // النص يكون أبيض دائمًا
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      textStyle: const TextStyle(fontSize: 12),
+                    ),
                 onPressed: controller.isLoading.value
                     ? null
                     : controller.confirmBooking,

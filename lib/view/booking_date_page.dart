@@ -28,7 +28,7 @@ class BookingDatePage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Select Dates")),
+      appBar: AppBar(title: const Text("Select Dates"),backgroundColor: Color(0xFF274668),),
       body: Obx(
             () => Column(
           children: [
@@ -148,6 +148,7 @@ class BookingDatePage extends StatelessWidget {
             ),
 
             const SizedBox(height: 24),
+
             // Check In / Check Out Section with Arrow
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -162,13 +163,18 @@ class BookingDatePage extends StatelessWidget {
                       child: _dateBox("CHECK IN", controller.selectedStartDate.value),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
                         color: Color(0xFF274668),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
                         child: Icon(
                           Icons.arrow_forward,
                           color: Colors.white,
-                          size: 24,
+                          size: 20,
                         ),
                       ),
                     ),
@@ -180,8 +186,34 @@ class BookingDatePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            _durationChips(controller),
-
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  const Text(
+                    "Duration (months): ",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(width: 12),
+                  Obx(
+                        () => DropdownButton<int>(
+                      value: controller.duration.value,
+                      items: List.generate(12, (index) => index + 1)
+                          .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text("$e"),
+                      ))
+                          .toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          controller.duration.value = value;
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const Spacer(),
 
             Padding(
@@ -195,8 +227,9 @@ class BookingDatePage extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF274668),
-
-
+                  foregroundColor: Colors.white, // النص يكون أبيض دائمًا
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  textStyle: const TextStyle(fontSize: 16),
               ),
                 child: const Text("Next"),
               ),
@@ -232,23 +265,5 @@ class BookingDatePage extends StatelessWidget {
     );
   }
 
-  Widget _durationChips(BookingController controller) {
-    final months = [1, 2, 3, 6];
 
-    return Wrap(
-      spacing: 10,
-      children: months.map((m) {
-        final selected = controller.duration.value == m;
-        return ChoiceChip(
-          label: Text("$m Month${m > 1 ? 's' : ''}"),
-          selected: selected,
-          selectedColor: const Color(0xFF274668),
-          labelStyle: TextStyle(
-            color: selected ? Colors.white : Colors.black,
-          ),
-          onSelected: (_) => controller.duration.value = m,
-        );
-      }).toList(),
-    );
-  }
 }
