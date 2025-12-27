@@ -72,7 +72,6 @@ class ApartmentDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // العنوان والسعر
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
