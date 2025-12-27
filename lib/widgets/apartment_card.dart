@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import '../controller/ApartmentController.dart';
 import '../model/apartment_model.dart';
 
 class ApartmentCard extends StatelessWidget {
@@ -13,6 +17,8 @@ class ApartmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ApartmentController controller = Get.find();
+
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -25,20 +31,21 @@ class ApartmentCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
+                  ),
                   child: apartment.houseImages.isNotEmpty
                       ? Image.network(
-                    apartment.houseImages.first,
-                    height: 130,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
+                          apartment.houseImages.first,
+                          height: 130,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
                       : Container(
-                    height: 140,
-                    color: Colors.grey[200],
-                    child: const Icon(Icons.home, size: 50),
-                  ),
+                          height: 140,
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.home, size: 50),
+                        ),
                 ),
 
                 // Favorite
@@ -50,11 +57,22 @@ class ApartmentCard extends StatelessWidget {
                       color: Colors.black.withOpacity(0.4),
                       shape: BoxShape.circle,
                     ),
-                    child: IconButton(
-                      icon: const Icon(Icons.favorite_border,
-                          color: Colors.white, size: 18),
-                      onPressed: () {},
-                    ),
+                    child: Obx(() {
+                      final isFav = controller.favoriteIds.contains(
+                        apartment.id,
+                      );
+
+                      return IconButton(
+                        icon: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          color: isFav ? Colors.red : Colors.white,
+                          size: 18,
+                        ),
+                        onPressed: () {
+                          controller.toggleFavorite(apartment.id);
+                        },
+                      );
+                    }),
                   ),
                 ),
               ],
@@ -70,12 +88,14 @@ class ApartmentCard extends StatelessWidget {
                   Text(
                     apartment.title,
                     style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height:10),
+                  const SizedBox(height: 10),
 
                   // Location
                   Text(
@@ -85,16 +105,16 @@ class ApartmentCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
 
-
                   const SizedBox(height: 9),
 
                   // Price
                   Text(
                     "\$${apartment.rentValue} / month",
                     style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF000000)),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF000000),
+                    ),
                   ),
                 ],
               ),

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/api/end_points.dart';
 import '../model/apartment_model.dart';
 import '../model/city_model.dart';
@@ -14,13 +15,12 @@ class ApartmentController extends GetxController {
   FilterModel filter = FilterModel();
   final TextEditingController searchController = TextEditingController();
 
-
   ApartmentController({required this.service});
 
   RxList<GovernorateModel> governorates = <GovernorateModel>[].obs;
   RxList<CityModel> cities = <CityModel>[].obs;
   final ApartmentService apiService = Get.find();
-
+  RxSet<int> favoriteIds = <int>{}.obs;
   var searchResults = <Apartment>[].obs;
   var isSearching = false.obs;
 
@@ -53,23 +53,18 @@ class ApartmentController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();   // استدعاء الدالة الأصلية أولاً
+    super.onInit(); // استدعاء الدالة الأصلية أولاً
     loadApartments(); // دالة تحميل الشقق
     loadInitialData(); // دالة تحميل البيانات الابتدائية
     loadGovernorates();
   }
-
 
   // تحميل البيانات الأولية
   Future<void> loadInitialData() async {
     try {
       isLoading.value = true;
 
-      await Future.wait([
-        loadAllApartments(),
-
-      ]);
-
+      await Future.wait([loadAllApartments()]);
     } catch (e) {
       errorMessage.value = "Failed to load initial data: ${e.toString()}";
     } finally {
@@ -77,15 +72,13 @@ class ApartmentController extends GetxController {
     }
   }
 
-//load apartments
+  //load apartments
   Future<void> loadApartments() async {
     try {
       isLoading.value = true;
       errorMessage.value = "";
 
-      allApartments.assignAll(
-        await service.getAllApartments(),
-      );
+      allApartments.assignAll(await service.getAllApartments());
 
       featuredApartments.assignAll(
         await service.getApartmentsByQuery(maxRent: 200),
@@ -94,7 +87,6 @@ class ApartmentController extends GetxController {
       topRatedApartments.assignAll(
         await service.getApartmentsByQuery(orderBy: 'rate'),
       );
-
     } catch (e) {
       errorMessage.value = e.toString();
     } finally {
@@ -131,7 +123,6 @@ class ApartmentController extends GetxController {
       totalPages.value = response['total_pages'];
       totalItems.value = response['total_items'];
       hasMore.value = response['has_more'];
-
     } catch (e) {
       errorMessage.value = "Failed to load apartments: ${e.toString()}";
     } finally {
@@ -139,8 +130,6 @@ class ApartmentController extends GetxController {
       isLoadingMore.value = false;
     }
   }
-
-
 
   // تطبيق الفلتر
   Future<void> applyFilter(FilterModel filter) async {
@@ -161,7 +150,6 @@ class ApartmentController extends GetxController {
       totalPages.value = response['total_pages'];
       totalItems.value = response['total_items'];
       hasMore.value = response['has_more'];
-
     } catch (e) {
       errorMessage.value = "Failed to apply filter: ${e.toString()}";
     } finally {
@@ -188,7 +176,6 @@ class ApartmentController extends GetxController {
       );
 
       filteredApartments.assignAll(result['apartments'] as List<Apartment>);
-
     } catch (e) {
       filteredApartments.assignAll([]);
       print("Search error: $e");
@@ -240,7 +227,6 @@ class ApartmentController extends GetxController {
 
       hasMore.value = response['has_more'];
       totalPages.value = response['total_pages'];
-
     } catch (e) {
       errorMessage.value = "Failed to load more: ${e.toString()}";
       currentPage.value--;
@@ -265,7 +251,6 @@ class ApartmentController extends GetxController {
     cities.value = gov.cities;
     selectedCityId = null;
   }
-
 
   // إعادة تعيين الفلتر
   void resetFilter() {
@@ -315,7 +300,6 @@ class ApartmentController extends GetxController {
 
       createMessage.value = "Apartment added successfully";
       return true;
-
     } catch (e) {
       createMessage.value = "Failed to add apartment: $e";
       return false;
@@ -324,11 +308,31 @@ class ApartmentController extends GetxController {
     }
   }
 
+  Future<void> toggleFavorite(int houseId) async {
+    final bool isFav = favoriteIds.contains(houseId);
+
+    // Optimistic UI
+    if (isFav) {
+      favoriteIds.remove(houseId);
+    } else {
+      favoriteIds.add(houseId);
+    }
+
+    try {
+      await service.toggleFavorite(houseId);
+    } catch (e) {
+      // rollback إذا فشل
+      if (isFav) {
+        favoriteIds.add(houseId);
+      } else {
+        favoriteIds.remove(houseId);
+      }
+    }
+  }
 
   // فحص إذا كان هناك فلتر أو بحث نشط
   bool get hasActiveFilter {
-    return currentFilter.value.hasActiveFilters ||
-        searchQuery.value.isNotEmpty;
+    return currentFilter.value.hasActiveFilters || searchQuery.value.isNotEmpty;
   }
 
   // الحصول على القائمة المناسبة للعرض

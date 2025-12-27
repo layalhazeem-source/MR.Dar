@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controller/ApartmentController.dart';
 import '../controller/UserController.dart';
 import '../model/apartment_model.dart';
 import 'booking_date_page.dart';
@@ -8,7 +9,8 @@ class ApartmentDetailsPage extends StatelessWidget {
   final Apartment apartment;
   final user = Get.find<UserController>();
 
-   ApartmentDetailsPage({super.key, required this.apartment});
+  ApartmentDetailsPage({super.key, required this.apartment});
+  final apartmentController = Get.find<ApartmentController>();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,6 @@ class ApartmentDetailsPage extends StatelessWidget {
       backgroundColor: Colors.white,
 
       // AppBar مع زر رجوع وعنوان
-
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,15 +41,27 @@ class ApartmentDetailsPage extends StatelessWidget {
                   Positioned(
                     top: 40,
                     left: 16,
-                    child: _circleIcon(Icons.arrow_back_ios_new, () => Get.back()),
+                    child: _circleIcon(
+                      Icons.arrow_back_ios_new,
+                      () => Get.back(),
+                    ),
                   ),
 
                   Positioned(
                     top: 40,
                     right: 16,
-                    child: _circleIcon(Icons.favorite_border, () {}),
-                  ),
+                    child: Obx(() {
+                      final isFav = apartmentController.favoriteIds.contains(
+                        apartment.id,
+                      );
 
+                      return _circleIcon(
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        () => apartmentController.toggleFavorite(apartment.id),
+                        iconColor: isFav ? Colors.red : Colors.white,
+                      );
+                    }),
+                  ),
                 ],
               ),
             ),
@@ -83,18 +96,23 @@ class ApartmentDetailsPage extends StatelessWidget {
                     ],
                   ),
 
-
                   SizedBox(height: 16),
 
                   // الموقع
                   Row(
                     children: [
-                      Icon(Icons.location_on_outlined, color: Color(0xFF274668)),
+                      Icon(
+                        Icons.location_on_outlined,
+                        color: Color(0xFF274668),
+                      ),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                            "${apartment.street}, ${apartment.cityName}, ${apartment.governorateName}",
-                            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                          "${apartment.street}, ${apartment.cityName}, ${apartment.governorateName}",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[700],
+                          ),
                         ),
                       ),
                     ],
@@ -116,7 +134,6 @@ class ApartmentDetailsPage extends StatelessWidget {
                         _specsItem(Icons.square_foot, "${apartment.space} m²"),
                         _specsItem(Icons.apartment, "Apartment"),
                         _specsItem(Icons.wifi, "wifi"),
-
                       ],
                     ),
                   ),
@@ -126,10 +143,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                   // الوصف
                   Text(
                     "Description",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 8),
                   Text(
@@ -146,22 +160,19 @@ class ApartmentDetailsPage extends StatelessWidget {
 
                   Text(
                     "Flat Num",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 8),
 
                   if (apartment.flatNumber.isNotEmpty)
                     Text(
                       apartment.flatNumber,
-                      style: TextStyle( fontSize: 16,
+                      style: TextStyle(
+                        fontSize: 16,
                         color: Colors.grey[700],
-                        height: 1.5,),
+                        height: 1.5,
+                      ),
                     ),
-
-
 
                   SizedBox(height: 80),
                 ],
@@ -175,37 +186,43 @@ class ApartmentDetailsPage extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: !user.isOwner
           ? Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        width: double.infinity,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF274668),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          onPressed: () {
-            Get.to(() => BookingDatePage(
-              houseId: apartment.id,
-              rentValue: apartment.rentValue,
-            ));
-          },
-          child: const Text(
-            "Book Now",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      )
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF274668),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Get.to(
+                    () => BookingDatePage(
+                      houseId: apartment.id,
+                      rentValue: apartment.rentValue,
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Book Now",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
           : null,
-
     );
   }
-  Widget _circleIcon(IconData icon, VoidCallback onTap) {
+
+  Widget _circleIcon(
+    IconData icon,
+    VoidCallback onTap, {
+    Color iconColor = Colors.white,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -214,7 +231,7 @@ class ApartmentDetailsPage extends StatelessWidget {
           color: Colors.black.withOpacity(0.4),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.white, size: 20),
+        child: Icon(icon, color: iconColor, size: 20),
       ),
     );
   }

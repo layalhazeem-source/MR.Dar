@@ -174,7 +174,6 @@ class ApartmentService {
 
   // Get Featured Apartments (مثال: الإيجار أقل من 200)
 
-
   // Search Apartments
   Future<List<Apartment>> searchApartments(String query) async {
     try {
@@ -256,6 +255,27 @@ class ApartmentService {
       throw ServerException(
         errModel: ErrorModel(errorMessage: "Network error: ${e.message}"),
       );
+    }
+  }
+
+  Future<void> toggleFavorite(int houseId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("token") ?? "";
+
+      await api.dio.post(
+        EndPoint.toggleFavorite,
+        data: {"house_id": houseId},
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Accept": "application/json",
+          },
+          validateStatus: (status) => true,
+        ),
+      );
+    } on DioException catch (e) {
+      throw Exception("Failed to toggle favorite: ${e.message}");
     }
   }
 }

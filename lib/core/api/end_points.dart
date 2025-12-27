@@ -13,6 +13,8 @@ class EndPoint {
   static String getAccount = "profile";
   static String updateAccount = "profile";
   static String deleteAccount = "profile";
+
+  static const String toggleFavorite = "favorites";
 }
 
 class ApiKey {

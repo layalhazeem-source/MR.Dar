@@ -29,10 +29,13 @@ class Login extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 SizedBox(
-                  height: 220,
-                  width: 120,
+                  height: 250,
+                  width: 320,
 
-                  child: Image.asset("images/logo1.png", fit: BoxFit.cover),
+                  child: Image.asset(
+                    "images/Gemini_Generated_Image_4nnjfd4nnjfd4nnj.png",
+                    fit: BoxFit.cover,
+                  ),
                 ),
 
                 const SizedBox(height: 30),
