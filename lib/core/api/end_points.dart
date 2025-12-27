@@ -15,6 +15,7 @@ class EndPoint {
   static String deleteAccount = "profile";
 
   static const String toggleFavorite = "favorites";
+  static const String myFavorite = "my-favorites";
 }
 
 class ApiKey {

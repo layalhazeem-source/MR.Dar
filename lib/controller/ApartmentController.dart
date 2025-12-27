@@ -21,6 +21,7 @@ class ApartmentController extends GetxController {
   RxList<CityModel> cities = <CityModel>[].obs;
   final ApartmentService apiService = Get.find();
   RxSet<int> favoriteIds = <int>{}.obs;
+  RxList<Apartment> favoriteApartments = <Apartment>[].obs;
   var searchResults = <Apartment>[].obs;
   var isSearching = false.obs;
 
@@ -311,22 +312,62 @@ class ApartmentController extends GetxController {
   Future<void> toggleFavorite(int houseId) async {
     final bool isFav = favoriteIds.contains(houseId);
 
-    // Optimistic UI
     if (isFav) {
       favoriteIds.remove(houseId);
+      favoriteApartments.removeWhere((ap) => ap.id == houseId);
     } else {
       favoriteIds.add(houseId);
+      final apartment = allApartments.firstWhere(
+        (ap) => ap.id == houseId,
+        orElse: () => Apartment(
+          id: houseId,
+          title: '',
+          description: '',
+          rentValue: 0,
+          rooms: 0,
+          space: 0,
+          notes: '',
+          cityId: 0,
+          cityName: '',
+          governorateId: 0,
+          governorateName: '',
+          street: '',
+          flatNumber: '',
+          longitude: null,
+          latitude: null,
+          houseImages: [],
+        ),
+      );
+      favoriteApartments.add(apartment);
     }
 
     try {
       await service.toggleFavorite(houseId);
     } catch (e) {
-      // rollback إذا فشل
+      // rollback
       if (isFav) {
         favoriteIds.add(houseId);
+        favoriteApartments.add(
+          allApartments.firstWhere((ap) => ap.id == houseId),
+        );
       } else {
         favoriteIds.remove(houseId);
+        favoriteApartments.removeWhere((ap) => ap.id == houseId);
       }
+    }
+  }
+
+  Future<void> loadFavorites() async {
+    try {
+      isLoading.value = true;
+      favoriteApartments.value = await service.getMyFavorites();
+
+      // تحديث الـ favoriteIds عشان القلوب تتغير بالـ UI
+      favoriteIds.value = favoriteApartments.map((e) => e.id).toSet();
+    } catch (e) {
+      errorMessage.value = "Failed to load favorites: $e";
+    } finally {
+      isLoading.value = false;
     }
   }
 

@@ -278,4 +278,28 @@ class ApartmentService {
       throw Exception("Failed to toggle favorite: ${e.message}");
     }
   }
+
+  Future<List<Apartment>> getMyFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("token") ?? "";
+
+      final response = await api.dio.get(
+        EndPoint.myFavorite,
+        options: Options(
+          headers: {"Authorization": "Bearer $token"},
+          validateStatus: (status) => true,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final List list = response.data['data'];
+        return list.map((e) => Apartment.fromJson(e)).toList();
+      } else {
+        throw Exception("Failed to load favorites");
+      }
+    } on DioException catch (e) {
+      throw Exception("Network error: ${e.message}");
+    }
+  }
 }
