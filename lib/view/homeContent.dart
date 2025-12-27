@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controller/ApartmentController.dart';
 import '../controller/FilterController.dart';
 import '../widgets/apartment_card.dart';
+import 'AllApartmentsPage.dart';
 import 'FilterPage.dart';
 import 'apartment_details_page.dart';
 
@@ -28,60 +29,45 @@ class HomeContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ---------------- Search Bar ----------------
-          GestureDetector(
-            onTap: _openFilterPage,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: AbsorbPointer(
+          Row(
+            children: [
+              // Search Bar
+              Expanded(
                 child: TextField(
-                  enabled: false,
+                  controller: controller.searchController,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
-                    hintText: "Search apartments...",
+                    hintText: "Search ",
                     hintStyle: TextStyle(color: Colors.grey[500]),
-                    border: InputBorder.none,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 16,
                       horizontal: 20,
                     ),
-                    suffixIcon: Obx(() {
-                      if (controller.hasActiveFilter) {
-                        return Container(
-                          padding: const EdgeInsets.only(right: 12),
-                          child: Badge(
-                            smallSize: 10,
-                            backgroundColor: Colors.blue,
-                            child: const Icon(
-                              Icons.tune,
-                              color: Colors.grey,
-                              size: 24,
-                            ),
-                          ),
-                        );
-                      }
-                      return const Padding(
-                        padding: EdgeInsets.only(right: 12),
-                        child: Icon(
-                          Icons.tune,
-                          color: Colors.grey,
-                          size: 24,
-                        ),
-                      );
-                    }),
                   ),
+                  onChanged: (value) {
+                    controller.searchApartments(value); // دالة البحث منفصلة
+                  },
                 ),
               ),
-            ),
+
+              const SizedBox(width: 12),
+
+              // Filter button
+              GestureDetector(
+                onTap: _openFilterPage,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF274668),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.tune, color: Colors.white, size: 28),
+                ),
+              ),
+            ],
           ),
 
           // مؤشر الفلتر النشط
@@ -263,6 +249,62 @@ class HomeContent extends StatelessWidget {
                       );
                     },
                   ),
+                ),
+              ],
+            );
+          }),
+
+          // قسم عرض كل الشقق
+          Obx(() {
+            if (controller.allApartments.isEmpty) return const SizedBox();
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "All Apartments",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    if (controller.topRatedApartments.length > 3)
+                      TextButton(
+                        onPressed: () {
+                          Get.to(() => AllApartmentsPage());
+                        },
+                        child: const Text(
+                          "See All",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: controller.allApartments.length,
+                  itemBuilder: (context, index) {
+                    final apt = controller.allApartments[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: ApartmentCard(
+                        apartment: apt,
+                        onTap: () {
+                          Get.to(() => ApartmentDetailsPage(apartment: apt));
+                        },
+                      ),
+                    );
+                  },
                 ),
               ],
             );

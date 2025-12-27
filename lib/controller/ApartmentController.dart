@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../core/api/end_points.dart';
 import '../model/apartment_model.dart';
 import '../model/city_model.dart';
 import '../model/filter_model.dart';
@@ -9,12 +12,17 @@ import '../service/ApartmentService.dart';
 class ApartmentController extends GetxController {
   final ApartmentService service;
   FilterModel filter = FilterModel();
+  final TextEditingController searchController = TextEditingController();
 
 
   ApartmentController({required this.service});
 
   RxList<GovernorateModel> governorates = <GovernorateModel>[].obs;
   RxList<CityModel> cities = <CityModel>[].obs;
+  final ApartmentService apiService = Get.find();
+
+  var searchResults = <Apartment>[].obs;
+  var isSearching = false.obs;
 
   int? selectedGovernorateId;
   int? selectedCityId;
@@ -180,25 +188,52 @@ class ApartmentController extends GetxController {
 
   // البحث
   Future<void> searchApartments(String query) async {
+    searchQuery.value = query;
+
+    if (query.length < 1) {
+      filteredApartments.assignAll(allApartments);
+      return;
+    }
+
+    isSearching.value = true;
+
     try {
-      searchQuery.value = query;
-      currentPage.value = 1;
-      isLoading.value = true;
+      final result = await service.getApartments(
+        filter: FilterModel(search: query),
+        page: 1,
+        limit: 10,
+      );
 
-      final response = await service.searchApartments(query, page: 1);
-
-      filteredApartments.value = response['apartments'] as List<Apartment>;
-      currentPage.value = response['current_page'];
-      totalPages.value = response['total_pages'];
-      totalItems.value = response['total_items'];
-      hasMore.value = response['has_more'];
+      filteredApartments.assignAll(result['apartments'] as List<Apartment>);
 
     } catch (e) {
-      errorMessage.value = "Failed to search: ${e.toString()}";
+      filteredApartments.assignAll([]);
+      print("Search error: $e");
     } finally {
-      isLoading.value = false;
+      isSearching.value = false;
     }
   }
+
+  // Future<void> searchApartments(String query) async {
+  //   try {
+  //     searchQuery.value = query;
+  //     currentPage.value = 1;
+  //     isLoading.value = true;
+  //
+  //     final response = await service.searchApartments(query, page: 1);
+  //
+  //     filteredApartments.value = response['apartments'] as List<Apartment>;
+  //     currentPage.value = response['current_page'];
+  //     totalPages.value = response['total_pages'];
+  //     totalItems.value = response['total_items'];
+  //     hasMore.value = response['has_more'];
+  //
+  //   } catch (e) {
+  //     errorMessage.value = "Failed to search: ${e.toString()}";
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 
   // تحميل المزيد من البيانات (Pagination)
   Future<void> loadMore() async {

@@ -199,25 +199,16 @@ class ApartmentService {
   }
 
   // Search Apartments
-  Future<Map<String, dynamic>> searchApartments(
-    String query, {
-    int page = 1,
-  }) async {
+  Future<List<Apartment>> searchApartments(String query) async {
     try {
       final response = await getApartments(
         filter: FilterModel(search: query),
-        page: page,
+        page: 1,
         limit: 10,
       );
-      return response;
+      return response['apartments'] as List<Apartment>;
     } catch (e) {
-      return {
-        'apartments': [],
-        'current_page': 1,
-        'total_pages': 1,
-        'total_items': 0,
-        'has_more': false,
-      };
+      return [];
     }
   }
 
