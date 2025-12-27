@@ -10,194 +10,285 @@ class ApartmentDetailsPage extends StatelessWidget {
   final user = Get.find<UserController>();
 
   ApartmentDetailsPage({super.key, required this.apartment});
+
   final apartmentController = Get.find<ApartmentController>();
+  final PageController _pageController = PageController();
+  final RxInt currentImageIndex = 0.obs;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
 
-      // AppBar مع زر رجوع وعنوان
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ---------- صور الشقة ----------
-            Container(
-              height: 300,
-              child: Stack(
-                children: [
-                  // الصور
-                  PageView.builder(
-                    itemCount: apartment.houseImages.length,
-                    itemBuilder: (_, index) {
-                      return Image.network(
-                        apartment.houseImages[index],
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      );
-                    },
-                  ),
-                  Positioned(
-                    top: 40,
-                    left: 16,
-                    child: _circleIcon(
-                      Icons.arrow_back_ios_new,
-                      () => Get.back(),
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 40,
-                    right: 16,
-                    child: Obx(() {
-                      final isFav = apartmentController.favoriteIds.contains(
-                        apartment.id,
-                      );
-
-                      return _circleIcon(
-                        isFav ? Icons.favorite : Icons.favorite_border,
-                        () => apartmentController.toggleFavorite(apartment.id),
-                        iconColor: isFav ? Colors.red : Colors.white,
-                      );
-                    }),
-                  ),
-                ],
+      // ===== AppBar =====
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+        actions: [
+          Obx(() {
+            final isFav =
+            apartmentController.favoriteIds.contains(apartment.id);
+            return IconButton(
+              icon: Icon(
+                isFav ? Icons.favorite : Icons.favorite_border,
+                color: isFav ? Colors.red : Colors.black,
               ),
-            ),
+              onPressed: () =>
+                  apartmentController.toggleFavorite(apartment.id),
+            );
+          }),
+        ],
+      ),
 
-            // ---------- المحتوى ----------
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 120),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ===== Images Slider =====
+                SizedBox(
+                  height: 320,
+                  child: Stack(
                     children: [
-                      Expanded(
-                        child: Text(
-                          apartment.title,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                      PageView.builder(
+                        controller: _pageController,
+                        itemCount: apartment.houseImages.length,
+                        onPageChanged: (index) {
+                          currentImageIndex.value = index;
+                        },
+                        itemBuilder: (_, index) {
+                          return Image.network(
+                            apartment.houseImages[index],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          );
+                        },
                       ),
-                      Text(
-                        "\$${apartment.rentValue}",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF274668),
+
+                      // ===== Left Arrow =====
+                      Obx(() => currentImageIndex.value > 0
+                          ? Positioned(
+                        left: 12,
+                        top: 140,
+                        child: _circleIcon(
+                          Icons.arrow_back_ios,
+                              () {
+                            _pageController.previousPage(
+                              duration:
+                              const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                        ),
+                      )
+                          : const SizedBox()),
+
+                      // ===== Right Arrow =====
+                      Obx(() => currentImageIndex.value <
+                          apartment.houseImages.length - 1
+                          ? Positioned(
+                        right: 12,
+                        top: 140,
+                        child: _circleIcon(
+                          Icons.arrow_forward_ios,
+                              () {
+                            _pageController.nextPage(
+                              duration:
+                              const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                        ),
+                      )
+                          : const SizedBox()),
+
+                      // ===== Dots =====
+                      Positioned(
+                        bottom: 14,
+                        left: 0,
+                        right: 0,
+                        child: Obx(
+                              () => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.35),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                apartment.houseImages.length,
+                                    (index) => AnimatedContainer(
+                                  duration:
+                                  const Duration(milliseconds: 250),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 4),
+                                  width: currentImageIndex.value == index
+                                      ? 10
+                                      : 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color:
+                                    currentImageIndex.value == index
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.5),
+                                    borderRadius:
+                                    BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
+                ),
 
-                  SizedBox(height: 16),
-
-                  // الموقع
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        color: Color(0xFF274668),
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          "${apartment.street}, ${apartment.cityName}, ${apartment.governorateName}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 24),
-
-                  // المواصفات الأساسية
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.circular(12),
+                // ===== Content Card =====
+                Transform.translate(
+                  offset: const Offset(0, -30),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(30)),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _specsItem(Icons.bed, "${apartment.rooms} Bedrooms"),
-                        _specsItem(Icons.square_foot, "${apartment.space} m²"),
-                        _specsItem(Icons.apartment, "Apartment"),
-                        _specsItem(Icons.wifi, "wifi"),
+                        // Title + Price
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                apartment.title,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "\$${apartment.rentValue}",
+                              style: const TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF274668),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Location
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on_outlined,
+                                size: 18,
+                                color: Color(0xFF274668)),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                "${apartment.street}, ${apartment.cityName}, ${apartment.governorateName}",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Amenities
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: [
+                            _amenity(Icons.apartment, "Apartment"),
+                            _amenity(
+                                Icons.bed, "${apartment.rooms} Rooms"),
+                            _amenity(Icons.square_foot,
+                                "${apartment.space} m²"),
+                            _amenity(Icons.wifi, "Wi-Fi"),
+                          ],
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // Description
+                        const Text(
+                          "Description",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          apartment.description.isNotEmpty
+                              ? apartment.description
+                              : "A beautiful apartment with modern amenities and comfortable living space.",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey[700],
+                            height: 1.6,
+                          ),
+                        ),
+
+                        if (apartment.flatNumber.isNotEmpty) ...[
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Flat Number",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            apartment.flatNumber,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
-
-                  SizedBox(height: 24),
-
-                  // الوصف
-                  Text(
-                    "Description",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    apartment.description.isNotEmpty
-                        ? apartment.description
-                        : "A beautiful apartment with modern amenities and comfortable living space.",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[700],
-                      height: 1.5,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-
-                  Text(
-                    "Flat Num",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 8),
-
-                  if (apartment.flatNumber.isNotEmpty)
-                    Text(
-                      apartment.flatNumber,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[700],
-                        height: 1.5,
-                      ),
-                    ),
-
-                  SizedBox(height: 80),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
 
-      // ---------- زر book ----------
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: !user.isOwner
-          ? Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              width: double.infinity,
+          // ===== Book Button =====
+          if (!user.isOwner)
+            Positioned(
+              bottom: 20,
+              left: 20,
+              right: 20,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF274668),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 onPressed: () {
                   Get.to(
-                    () => BookingDatePage(
+                        () => BookingDatePage(
                       houseId: apartment.id,
                       rentValue: apartment.rentValue,
                     ),
@@ -206,46 +297,47 @@ class ApartmentDetailsPage extends StatelessWidget {
                 child: const Text(
                   "Book Now",
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
-            )
-          : null,
-    );
-  }
-
-  Widget _circleIcon(
-    IconData icon,
-    VoidCallback onTap, {
-    Color iconColor = Colors.white,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.4),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: iconColor, size: 20),
+            ),
+        ],
       ),
     );
   }
 
-  Widget _specsItem(IconData icon, String text) {
-    return Column(
-      children: [
-        Icon(icon, size: 28, color: Color(0xFF274668)),
-        SizedBox(height: 8),
-        Text(
-          text,
-          style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-          textAlign: TextAlign.center,
+  // ===== Helpers =====
+  Widget _circleIcon(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.4),
+          shape: BoxShape.circle,
         ),
-      ],
+        child: Icon(icon, color: Colors.white, size: 20),
+      ),
+    );
+  }
+
+  Widget _amenity(IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: const Color(0xFF274668)),
+          const SizedBox(width: 6),
+          Text(text, style: const TextStyle(fontSize: 13)),
+        ],
+      ),
     );
   }
 }
