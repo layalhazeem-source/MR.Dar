@@ -41,7 +41,10 @@ class AppBindings extends Bindings {
 
     //Controllers
     Get.put<HomeController>(HomeController(), permanent: true);
-
+    Get.put<ApartmentController>(
+      ApartmentController(service: Get.find()),
+      permanent: true,
+    );
     Get.put<AuthController>(
       AuthController(authService: authService),
       permanent: true,

@@ -51,30 +51,6 @@ class _FavouriteState extends State<Favourite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "My Favorites",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xFF274668),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () async {
-              await _loadFavorites();
-              Get.snackbar(
-                "Refreshed",
-                "Favorites list updated",
-                backgroundColor: Colors.green,
-                colorText: Colors.white,
-                duration: const Duration(seconds: 1),
-              );
-            },
-          ),
-        ],
-      ),
       body: Obx(() {
         if (controller.isLoading.value &&
             controller.favoriteApartments.isEmpty) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controller/ApartmentController.dart';
 import '../controller/UserController.dart';
 import '../controller/authcontroller.dart';
 import '../controller/homecontroller.dart';
@@ -59,9 +60,13 @@ class Home extends StatelessWidget {
     }
 
     return AppBar(
-      title: Text(title, style: const TextStyle(fontSize: 27)),
-      backgroundColor: const Color(0xFF274668),
-      foregroundColor: Colors.white,
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.white,
+      foregroundColor: const Color(0xFF274668),
+      centerTitle: true,
       actions: index == 0
           ? [
               Obx(() {
@@ -74,6 +79,25 @@ class Home extends StatelessWidget {
                   ),
                 );
               }),
+            ]
+          : index == 2
+          ? [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () async {
+                  final apartmentController = Get.find<ApartmentController>();
+
+                  await apartmentController.loadFavorites();
+
+                  Get.snackbar(
+                    "Refreshed",
+                    "Favorites list updated",
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 1),
+                  );
+                },
+              ),
             ]
           : [],
     );

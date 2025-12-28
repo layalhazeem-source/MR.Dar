@@ -364,24 +364,13 @@ class ApartmentController extends GetxController {
 
   Future<void> loadFavorites() async {
     try {
-      print("🔄 Loading favorites from server...");
-
-      // الحصول على المفضلة من الخادم
       final List<Apartment> serverFavorites = await service.getMyFavorites();
 
-      // تحديث القوائم
       favoriteApartments.assignAll(serverFavorites);
       favoriteIds.value = serverFavorites.map((e) => e.id).toSet();
-
-      print("✅ Loaded ${favoriteApartments.length} favorites");
-      print("✅ Favorite IDs: ${favoriteIds.toList()}");
-
-      update();
     } catch (e) {
-      print("❌ Failed to load favorites: $e");
       favoriteApartments.clear();
       favoriteIds.clear();
-      update();
     }
   }
 

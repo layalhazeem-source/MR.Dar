@@ -4,6 +4,7 @@ import 'package:new_project/view/settings_screen.dart';
 import '../controller/my_account_controller.dart';
 import '../controller/authcontroller.dart';
 import '../model/user_model.dart';
+import 'edit_profile.dart';
 
 class MyAccount extends StatelessWidget {
   MyAccount({super.key});
@@ -27,16 +28,16 @@ class MyAccount extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.person_off, size: 60, color: Colors.grey),
-              SizedBox(height: 20),
-              Text(
+              const Icon(Icons.person_off, size: 60, color: Colors.grey),
+              const SizedBox(height: 20),
+              const Text(
                 "No user data",
                 style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () => controller.loadProfile(),
-                child: Text("Retry"),
+                child: const Text("Retry"),
               ),
             ],
           ),
@@ -44,262 +45,156 @@ class MyAccount extends StatelessWidget {
       }
 
       return SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ===== مؤشر مصدر البيانات =====
+            // ===== Cached data indicator =====
             if (controller.isDataFromLocal.value)
               Container(
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.amber[50],
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.amber),
                 ),
                 child: Row(
                   children: [
                     Icon(Icons.info, color: Colors.amber[700]),
-                    SizedBox(width: 8),
-                    Expanded(
+                    const SizedBox(width: 8),
+                    const Expanded(
                       child: Text(
                         "Showing cached data. Pull to refresh for latest.",
-                        style: TextStyle(color: Colors.amber[800]),
                       ),
                     ),
                   ],
                 ),
               ),
-            // ===== Header Card =====
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    // Profile Image - استبدل هذا الجزء
-                    _buildProfileImage(user),
-                    const SizedBox(width: 20),
 
-                    // User Info
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${user.firstName} ${user.lastName}",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
+            // ===== Profile Header =====
+            _buildProfileHeader(user),
 
-                          Text(
-                            user.role,
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 25),
-
-            // ===== User Details =====
-            _buildInfoCard("📱", "Phone", user.phone),
-            _buildInfoCard("🎂", "Date of Birth", user.dateOfBirth),
             const SizedBox(height: 30),
-            _buildIdImage(user),
-            const SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // ===== Refresh Button =====
-                Center(
-                  child: OutlinedButton.icon(
-                    onPressed: () => controller.loadProfile(),
-                    icon: Icon(Icons.refresh),
-                    label: Text("Refresh Data"),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                ),
 
-                const SizedBox(height: 15),
-                // زر التعديل
-                Center(
-                  child: OutlinedButton.icon(
-                    onPressed: () => Get.to(() => SettingsScreen()),
-                    icon: const Icon(Icons.settings),
-                    label: const Text("Settings"),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            // ===== Options =====
+            _profileOption(
+              icon: Icons.edit,
+              title: "Edit account information",
+              onTap: () => Get.to(() => EditProfileScreen()),
+            ),
+            const SizedBox(height: 10),
+
+            // ===== Options =====
+            _profileOption(
+              icon: Icons.settings,
+              title: "Settings",
+              onTap: () => Get.to(() => SettingsScreen()),
             ),
 
-            // const SizedBox(height: 30),
-            // // ===== Logout Button =====
-            // Center(
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       ElevatedButton.icon(
-            //         onPressed: () => authController.logout(),
-            //         icon: const Icon(Icons.logout),
-            //         label: const Text("Logout"),
-            //         style: ElevatedButton.styleFrom(
-            //           backgroundColor: Colors.red,
-            //           padding: const EdgeInsets.symmetric(
-            //             horizontal: 30,
-            //             vertical: 14,
-            //           ),
-            //         ),
-            //       ),
-            //
-            //       ElevatedButton.icon(
-            //         onPressed: () => _confirmDeleteSequence(context),
-            //         icon: const Icon(Icons.delete_outline),
-            //         label: const Text("Delete Account"),
-            //         style: ElevatedButton.styleFrom(
-            //           backgroundColor: Colors.red,
-            //           padding: const EdgeInsets.symmetric(
-            //             horizontal: 30,
-            //             vertical: 14,
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            const SizedBox(height: 15),
+
+            // ===== Refresh Button =====
+            OutlinedButton.icon(
+              onPressed: () => controller.loadProfile(),
+              icon: const Icon(Icons.refresh),
+              label: const Text("Refresh Profile"),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 14,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 30),
           ],
         ),
       );
     });
   }
 
+  // ================= Widgets =================
+
+  Widget _buildProfileHeader(UserModel user) {
+    return Column(
+      children: [
+        _buildProfileImage(user),
+        const SizedBox(height: 14),
+
+        Text(
+          "${user.firstName} ${user.lastName}",
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 6),
+
+        Text(
+          user.role,
+          style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+        ),
+        const SizedBox(height: 8),
+
+        Text(
+          user.phone,
+          style: TextStyle(fontSize: 15, color: Colors.grey.shade600),
+        ),
+      ],
+    );
+  }
+
   Widget _buildProfileImage(UserModel user) {
-    if (user.profileImage != null && user.profileImage!.isNotEmpty) {
+    final imageUrl = user.profileImage;
+
+    // تحقق إنو الرابط موجود وصالح وURL كامل
+    if (imageUrl != null &&
+        imageUrl.isNotEmpty &&
+        Uri.tryParse(imageUrl)?.hasScheme == true &&
+        Uri.tryParse(imageUrl)?.hasAuthority == true) {
       return CircleAvatar(
-        radius: 40,
-        backgroundImage: NetworkImage(user.profileImage!),
+        radius: 48,
+        backgroundImage: NetworkImage(imageUrl),
         backgroundColor: Colors.transparent,
       );
     } else {
       return CircleAvatar(
-        radius: 40,
+        radius: 48,
         backgroundColor: Colors.grey[200],
-        child: Icon(Icons.person, size: 40, color: Colors.grey[600]),
+        child: Icon(Icons.person, size: 42, color: Colors.grey[600]),
       );
     }
   }
 
-  Widget _buildIdImage(UserModel user) {
-    if (user.idImage != null && user.idImage!.isNotEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "ID Image",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              user.idImage!,
-              height: 100,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  height: 200,
-                  color: Colors.grey[200],
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
+  Widget _profileOption({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Card(
+        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+          child: Row(
+            children: [
+              Icon(icon, size: 24),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 200,
-                  color: Colors.grey[300],
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error, color: Colors.red, size: 40),
-                        SizedBox(height: 10),
-                        Text(
-                          "Failed to load image",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget _buildInfoCard(String emoji, String label, String value) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 24)),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              const Icon(Icons.arrow_forward_ios, size: 16),
+            ],
+          ),
         ),
       ),
     );
