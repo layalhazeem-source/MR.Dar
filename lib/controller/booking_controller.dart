@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../model/apartment_model.dart';
 import '../model/booking_model.dart';
 import '../service/booking_service.dart';
 
@@ -8,6 +9,7 @@ class BookingController extends GetxController {
   final BookingService service;
   final int houseId;
   final double rentValue;
+  late Apartment apartment;
 
   BookingController(
        {
@@ -28,6 +30,7 @@ class BookingController extends GetxController {
   void onInit() {
     super.onInit();
     loadReservations();
+
   }
 
   Future<void> loadReservations() async {
@@ -39,6 +42,8 @@ class BookingController extends GetxController {
     List<DateTime> days = [];
 
     for (var r in reservations) {
+      if (r.status != 'approved') continue;
+
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
 
@@ -52,8 +57,11 @@ class BookingController extends GetxController {
   }
   bool isDayBooked(DateTime day) {
     for (var r in reservations) {
+      if (r.status != 'approved') continue;
+
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
+
 
       if (!day.isBefore(start) && !day.isAfter(end)) {
         return true;

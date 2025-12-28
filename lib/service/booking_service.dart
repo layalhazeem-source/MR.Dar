@@ -22,6 +22,23 @@ class BookingService {
     }
     return [];
   }
+  Future<bool> approveReservation(int reservationId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token") ?? "";
+
+    final response = await api.dio.put(
+      '${EndPoint.reservations}/$reservationId/approve',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+        validateStatus: (_) => true,
+      ),
+    );
+
+    return response.statusCode == 200;
+  }
 
   /// 🟢 إنشاء حجز
   Future<bool> createReservation({

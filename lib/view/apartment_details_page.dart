@@ -28,20 +28,7 @@ class ApartmentDetailsPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
-        actions: [
-          Obx(() {
-            final isFav =
-            apartmentController.favoriteIds.contains(apartment.id);
-            return IconButton(
-              icon: Icon(
-                isFav ? Icons.favorite : Icons.favorite_border,
-                color: isFav ? Colors.red : Colors.black,
-              ),
-              onPressed: () =>
-                  apartmentController.toggleFavorite(apartment.id),
-            );
-          }),
-        ],
+
       ),
 
       body: Stack(
@@ -179,14 +166,28 @@ class ApartmentDetailsPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text(
-                              "\$${apartment.rentValue}",
-                              style: const TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF274668),
-                              ),
-                            ),
+
+                              Obx(() {
+                                final isFav =
+                                apartmentController.favoriteIds.contains(apartment.id);
+                                return IconButton(
+                                  icon: Icon(
+                                    isFav ? Icons.favorite : Icons.favorite_border,
+                                    color: isFav ? Colors.red : Colors.black,
+                                  ),
+                                  onPressed: () =>
+                                      apartmentController.toggleFavorite(apartment.id),
+                                );
+                              }),
+
+                            // Text(
+                            //   "\$${apartment.rentValue}",
+                            //   style: const TextStyle(
+                            //     fontSize: 26,
+                            //     fontWeight: FontWeight.bold,
+                            //     color: Color(0xFF274668),
+                            //   ),
+                            // ),
                           ],
                         ),
 
@@ -195,7 +196,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                         // Location
                         Row(
                           children: [
-                            const Icon(Icons.location_on_outlined,
+                            const Icon(Icons.location_on,
                                 size: 18,
                                 color: Color(0xFF274668)),
                             const SizedBox(width: 6),
@@ -214,16 +215,44 @@ class ApartmentDetailsPage extends StatelessWidget {
                         const SizedBox(height: 24),
 
                         // Amenities
-                        Wrap(
-                          spacing: 12,
-                          runSpacing: 12,
+
+                        const Text(
+                          "Specifications",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        GridView.count(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 14,
+                          crossAxisSpacing: 14,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          childAspectRatio: 2.0,
                           children: [
-                            _amenity(Icons.apartment, "Apartment"),
-                            _amenity(
-                                Icons.bed, "${apartment.rooms} Rooms"),
-                            _amenity(Icons.square_foot,
-                                "${apartment.space} m²"),
-                            _amenity(Icons.wifi, "Wi-Fi"),
+                            _specItem(
+                              Icons.bed,
+                              "Rooms",
+                              "${apartment.rooms}",
+                            ),
+                            _specItem(
+                              Icons.square_foot,
+                              "Space",
+                              "${apartment.space} m²",
+                            ),
+                            _specItem(
+                              Icons.wifi,
+                              "Wi-Fi",
+                              "Available",
+                            ),
+                            _specItem(
+                              Icons.apartment,
+                              "Type",
+                              "Apartment",
+                            ),
                           ],
                         ),
 
@@ -275,34 +304,83 @@ class ApartmentDetailsPage extends StatelessWidget {
           // ===== Book Button =====
           if (!user.isOwner)
             Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF274668),
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                onPressed: () {
-                  Get.to(
-                        () => BookingDatePage(
-                      houseId: apartment.id,
-                      rentValue: apartment.rentValue,
+              bottom: 16,
+              left: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 10,
+                      offset: const Offset(0, -2),
                     ),
-                  );
-                },
-                child: const Text(
-                  "Book Now",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    // 💰 Price
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Price",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "\$${apartment.rentValue}",
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF274668),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(width: 16),
+
+                    // 📌 Book button
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF274668),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        onPressed: () {
+                          Get.to(
+                                () => BookingDatePage(
+                              houseId: apartment.id,
+                              rentValue: apartment.rentValue,
+                            ),
+                            arguments: apartment,
+                          );
+                        },
+                        child: const Text(
+                          "Book Now",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+
         ],
       ),
     );
@@ -323,21 +401,43 @@ class ApartmentDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _amenity(IconData icon, String text) {
+  Widget _specItem(IconData icon, String title, String value) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF274668)),
-          const SizedBox(width: 6),
-          Text(text, style: const TextStyle(fontSize: 13)),
+          Icon(
+            icon,
+            size: 20,
+            color: const Color(0xFF274668),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 11,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );
   }
+
+
+
+
 }
