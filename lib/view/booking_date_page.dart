@@ -23,6 +23,7 @@ class BookingDatePage extends StatelessWidget {
         service: Get.find<BookingService>(),
         houseId: houseId,
         rentValue: rentValue,
+
       ),
       tag: houseId.toString(),
     );
@@ -63,67 +64,59 @@ class BookingDatePage extends StatelessWidget {
                   ),
                 ),
                 calendarBuilders: CalendarBuilders(
-                  defaultBuilder: (context, day, focusedDay) {
-                    // تظليل الأيام المحجوزة
+                  // استخدمي prioritizedBuilder بدلاً من defaultBuilder لضمان أن التصميم يطبق فوق الستايل الافتراضي
+                  prioritizedBuilder: (context, day, focusedDay) {
+                    // 1. تظليل الأيام المحجوزة باللون الأحمر (Unavailable)
                     if (controller.isDayBooked(day)) {
                       return Container(
+                        margin: const EdgeInsets.all(4), // ترك مسافة بسيطة بين الدوائر
                         decoration: BoxDecoration(
-                          color: Colors.blueGrey.shade200,
+                          color: Colors.red.shade50, // خلفية حمراء فاتحة جداً
                           shape: BoxShape.circle,
+                          border: Border.all(color: Colors.red.shade200, width: 1), // إطار أحمر خفيف
                         ),
                         child: Center(
                           child: Text(
                             "${day.day}",
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color: Colors.red.shade400,
+                              fontWeight: FontWeight.w300,
+                              decoration: TextDecoration.lineThrough, // خط فوق الرقم ليوحي بأنه غير متاح
                             ),
                           ),
                         ),
                       );
                     }
 
-                    // تظليل الفترة المختارة (من تاريخ البداية + المدة)
-                    if (controller.selectedStartDate.value != null) {
+                    // 2. تظليل الفترة المختارة (كما هي مع تحسين بسيط)
+                    if (controller.selectedStartDate.value != null && controller.endDate != null) {
                       final startDate = controller.selectedStartDate.value!;
-                      final endDate = controller.endDate;
+                      final endDate = controller.endDate!;
 
-                      if (endDate != null &&
-                          !isSameDay(day, startDate) &&
-                          !isSameDay(day, endDate) &&
-                          day.isAfter(startDate) &&
-                          day.isBefore(endDate)) {
+                      // تاريخ البداية
+                      if (isSameDay(day, startDate)) {
                         return Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF274668).withOpacity(0.3),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "${day.day}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          decoration: const BoxDecoration(color: Color(0xFF274668), shape: BoxShape.circle),
+                          child: Center(child: Text("${day.day}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
                         );
                       }
 
-                      // تظليل تاريخ النهاية
-                      if (endDate != null && isSameDay(day, endDate)) {
+                      // تاريخ النهاية
+                      if (isSameDay(day, endDate)) {
+                        return Container(
+                          decoration: const BoxDecoration(color: Color(0xFF274668), shape: BoxShape.circle),
+                          child: Center(child: Text("${day.day}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+                        );
+                      }
+
+                      // الأيام الوسطى
+                      if (day.isAfter(startDate) && day.isBefore(endDate)) {
                         return Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xFF274668),
+                            color: const Color(0xFF274668).withOpacity(0.15),
                             shape: BoxShape.circle,
                           ),
-                          child: Center(
-                            child: Text(
-                              "${day.day}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          child: Center(child: Text("${day.day}", style: const TextStyle(color: Color(0xFF274668), fontWeight: FontWeight.bold))),
                         );
                       }
                     }
@@ -148,7 +141,17 @@ class BookingDatePage extends StatelessWidget {
             ),
 
             const SizedBox(height: 24),
-
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildLegendItem(Colors.red.shade300, "Booked"),
+                  const SizedBox(width: 20),
+                  _buildLegendItem(const Color(0xFF274668), "Selected"),
+                ],
+              ),
+            ),
             // Check In / Check Out Section with Arrow
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -219,12 +222,20 @@ class BookingDatePage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: ElevatedButton(
-                onPressed: controller.selectedStartDate.value == null
-                    ? null
-                    : () => Get.to(
-                      () => BookingConfirmPage(),
-                  arguments: houseId.toString(),
-                ),
+                  onPressed: () {
+                    if (controller.selectedStartDate.value == null) return;
+
+                    if (controller.isRangeAvailable()) {
+                      Get.to(() => BookingConfirmPage(), arguments: houseId.toString());
+                    } else {
+                      Get.snackbar(
+                        "Sorry",
+                        "The selected period conflicts with existing bookings",
+                        backgroundColor: Colors.redAccent,
+                        colorText: Colors.white,
+                      );
+                    }
+                  },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF274668),
                   foregroundColor: Colors.white, // النص يكون أبيض دائمًا
@@ -265,5 +276,13 @@ class BookingDatePage extends StatelessWidget {
     );
   }
 
-
+  Widget _buildLegendItem(Color color, String label) {
+    return Row(
+      children: [
+        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        const SizedBox(width: 6),
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
 }
