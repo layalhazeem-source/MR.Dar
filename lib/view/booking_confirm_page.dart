@@ -13,9 +13,22 @@ class BookingConfirmPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Confirm Booking"),
-        backgroundColor: const Color(0xFF274668),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Color(0xFF274668),
+        ),
+        title: const Text(
+          "Confirm BookingConfirm Booking",
+          style: TextStyle(
+            color: Color(0xFF274668),
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

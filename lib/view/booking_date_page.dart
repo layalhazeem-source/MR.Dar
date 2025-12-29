@@ -32,9 +32,22 @@ class BookingDatePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Select Booking Date"),
-        backgroundColor: const Color(0xFF274668),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Color(0xFF274668),
+        ),
+        title: const Text(
+          "Select Booking Date",
+          style: TextStyle(
+            color: Color(0xFF274668),
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
       ),
+
       body: Obx(
             () => Column(
           children: [

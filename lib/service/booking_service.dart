@@ -10,9 +10,9 @@ class BookingService {
   BookingService({required this.api});
 
   /// 🟢 جلب الحجوزات لبيت معين
-  Future<List<Booking>> getHouseReservations(int houseId) async {
+  Future<List<Booking>> getHouseReservations(int house_Id) async {
     final response = await api.dio.get(
-      '${EndPoint.reservations}/house/$houseId',
+      '${EndPoint.reservations}/house/$house_Id',
       options: Options(validateStatus: (_) => true),
     );
 
@@ -22,12 +22,12 @@ class BookingService {
     }
     return [];
   }
-  Future<bool> approveReservation(int reservationId) async {
+  Future<bool> approveReservation(int house_Id) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token") ?? "";
 
     final response = await api.dio.put(
-      '${EndPoint.reservations}/$reservationId/approve',
+      '${EndPoint.reservations}/accept/$house_Id',
       options: Options(
         headers: {
           "Authorization": "Bearer $token",
