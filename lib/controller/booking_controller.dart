@@ -12,11 +12,11 @@ class BookingController extends GetxController {
   late Apartment apartment;
 
   BookingController(
-       {
-    required this.service,
-    required this.houseId,
-    required this.rentValue,
-  });
+      {
+        required this.service,
+        required this.houseId,
+        required this.rentValue,
+      });
 
   /// بيانات الحجز
   var selectedStartDate = Rxn<DateTime>();
@@ -42,7 +42,7 @@ class BookingController extends GetxController {
     List<DateTime> days = [];
 
     for (var r in reservations) {
-      if (r.statusId != 2) continue; // 2 = accepted
+      if (r.statusId != 'accepted') continue;
 
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
@@ -57,7 +57,7 @@ class BookingController extends GetxController {
   }
   bool isDayBooked(DateTime day) {
     for (var r in reservations) {
-      if (r.statusId != 2) continue; // 2 = accepted
+      if (r.statusId != 'accepted') continue;
 
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
@@ -86,13 +86,13 @@ class BookingController extends GetxController {
     return tempEnd;
   }
   bool isRangeAvailable() {
-    if (selectedStartDate.value == null || endDate == null) return false;
+    if (selectedStartDate.value == null && endDate == null) return false;
 
     DateTime current = selectedStartDate.value!;
     // نمشي يوم يوم من البداية للنهاية ونشوف إذا في يوم محجوز
-    while (current.isBefore(endDate!) || isSameDay(current, endDate!)) {
-      if (isDayBooked(current)) return false; // لقينا يوم محجوز بالنص!
-      current = current.add(const Duration(days: 1));
+    while (current.isBefore(endDate!) && isSameDay(current, endDate!)) {
+    if (isDayBooked(current)) return false; // لقينا يوم محجوز بالنص!
+    current = current.add(const Duration(days: 1));
     }
     return true;
   }
