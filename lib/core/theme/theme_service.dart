@@ -34,40 +34,78 @@ class ThemeService extends GetxService {
 
   // تعطي ThemeData جاهزين — عدلي القيم حسب ذوقك
   ThemeData get lightTheme {
+    const primaryColor = Color(0xFF274668); // كحلي
+    const textColor = Color(0xFF274668); // نفس الكحلي للنصوص
     return ThemeData(
       brightness: Brightness.light,
-      primaryColor: const Color(0xFF274668), // لونك الأساسي
-      scaffoldBackgroundColor: Colors.white,
+      primaryColor: primaryColor,
+      scaffoldBackgroundColor: Colors.white, // الخلفية الرئيسية
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF96C6E2),
+        backgroundColor: Colors.white, // أبيض
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: primaryColor, // كتابة الكحلي
+        iconTheme: IconThemeData(color: primaryColor), // أيقونات الكحلي
       ),
-      colorScheme: ColorScheme.light(
-        primary: const Color(0xFF274668),
-        secondary: const Color(0xFF96C6E2),
-        background: Colors.white,
-        surface: const Color(0xFFE5E8EF),
-        onPrimary: Colors.white,
+      colorScheme: const ColorScheme.light(
+        primary: primaryColor, // لون رئيسي
+        secondary: Color(0xFF274668), // لون ثانوي
+        background: Colors.white, // خلفية عامة
+        surface: Colors.white, // خلفية عناصر مثل البطاقات
+        onPrimary: Colors.white, // نص على العناصر المختارة
         onSecondary: Colors.white,
-        onBackground: Colors.black87,
-        onSurface: Colors.black87,
+        onBackground: primaryColor, // نصوص عامة
+        onSurface: primaryColor,
+      ),
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(color: textColor),
+        bodyMedium: TextStyle(color: textColor),
+        titleLarge: TextStyle(color: textColor),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFDFEEF6),
+        fillColor: const Color(0xFFF5F5F5), // خلفية الحقول فاتحة
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF274668),
+          backgroundColor: primaryColor, // لون الزر الأساسي
+          foregroundColor: Colors.white, // كتابة الزر بيضاء
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
         ),
       ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryColor, // العنصر المختار كحلي
+        unselectedItemColor: primaryColor.withOpacity(0.5), // العناصر العادية فاتحة شوي
+      ), checkboxTheme: CheckboxThemeData(
+ fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+ if (states.contains(WidgetState.disabled)) { return null; }
+ if (states.contains(WidgetState.selected)) { return primaryColor; }
+ return null;
+ }),
+ ), radioTheme: RadioThemeData(
+ fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+ if (states.contains(WidgetState.disabled)) { return null; }
+ if (states.contains(WidgetState.selected)) { return primaryColor; }
+ return null;
+ }),
+ ), switchTheme: SwitchThemeData(
+ thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+ if (states.contains(WidgetState.disabled)) { return null; }
+ if (states.contains(WidgetState.selected)) { return primaryColor; }
+ return null;
+ }),
+ trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+ if (states.contains(WidgetState.disabled)) { return null; }
+ if (states.contains(WidgetState.selected)) { return primaryColor; }
+ return null;
+ }),
+ ), // مثل Checkbox & Switch
     );
   }
+
 
   ThemeData get darkTheme {
     return ThemeData(

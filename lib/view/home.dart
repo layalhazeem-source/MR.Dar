@@ -5,7 +5,7 @@ import '../controller/UserController.dart';
 import '../controller/authcontroller.dart';
 import '../controller/homecontroller.dart';
 import '../core/theme/theme_service.dart';
-import 'MyBooking.dart';
+import 'MyApartments.dart';
 import 'add_apartment_page.dart';
 import 'homeContent.dart';
 import 'favourite.dart';
@@ -52,7 +52,7 @@ class Home extends StatelessWidget {
     if (index == 0) {
       title = 'MR.Dar';
     } else if (index == 1) {
-      title = user.isOwner ? 'My Booking' : 'My Rents';
+      title = user.isOwner ? 'My Apartments' : 'My Rents';
     } else if (index == 2) {
       title = 'Favourite';
     } else {
@@ -109,7 +109,7 @@ class Home extends StatelessWidget {
       return IndexedStack(
         index: controller.currentIndex.value,
         children: user.isOwner
-            ? [HomeContent(), MyBooking(), Favourite(), MyAccount()]
+            ? [HomeContent(), MyApartments(), Favourite(), MyAccount()]
             : [HomeContent(), MyRent(), Favourite(), MyAccount()],
       );
     });
@@ -162,7 +162,7 @@ class Home extends StatelessWidget {
     BottomNavigationBarItem(
       icon: Icon(Icons.book_outlined),
       activeIcon: Icon(Icons.book_rounded),
-      label: "My Booking",
+      label: "My Apartments",
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.favorite_border),

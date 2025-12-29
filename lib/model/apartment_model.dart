@@ -17,6 +17,8 @@ class Apartment {
   final double? longitude;
   final double? latitude;
 
+  final String? apartmentStatus;
+
   final List<String> houseImages;
 
   Apartment({
@@ -36,6 +38,7 @@ class Apartment {
     required this.longitude,
     required this.latitude,
     required this.houseImages,
+    required this.apartmentStatus,
   });
 
   factory Apartment.fromJson(Map<String, dynamic> json) {
@@ -84,6 +87,7 @@ class Apartment {
           : double.tryParse(address['latitude'].toString()),
 
       houseImages: parseImages(json['images']),
+      apartmentStatus: json['status'],
     );
   }
 }

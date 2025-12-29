@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controller/my_rents_controller.dart';
-import '../core/enums/reservation_status.dart';
+import '../controller/my_apartments_controller.dart';
+import '../core/enums/apartment_status.dart';
 
-class MyRent extends StatefulWidget {
-  const MyRent({super.key});
+class MyApartments extends StatefulWidget {
+  const MyApartments({super.key});
 
   @override
-  State<MyRent> createState() => _MyRentState();
+  State<MyApartments> createState() => _MyApartmentsState();
 }
 
-class _MyRentState extends State<MyRent> {
-  final MyRentsController controller = Get.put(MyRentsController());
+class _MyApartmentsState extends State<MyApartments> {
+  final MyApartmentsController controller =
+  Get.put(MyApartmentsController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          // ----------- Status Tabs -----------
+          // -------- Status Tabs --------
           Obx(
                 () => SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
-                children: ReservationStatus.values.map((status) {
+                children: ApartmentStatus.values.map((status) {
                   final isSelected =
                       controller.currentStatus.value == status;
 
@@ -35,7 +36,7 @@ class _MyRentState extends State<MyRent> {
                       label: Text(status.displayName),
                       selected: isSelected,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20), // غيّري الرقم حسب الدرجة اللي تحبيها
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       onSelected: (_) => controller.changeStatus(status),
                     ),
@@ -47,34 +48,34 @@ class _MyRentState extends State<MyRent> {
 
           const SizedBox(height: 10),
 
-          // ----------- Reservation List -----------
+          // -------- Apartments List --------
           Expanded(
             child: Obx(() {
-              final reservations = controller.filteredReservations;
+              final apartments = controller.filteredApartments;
 
-              if (reservations.isEmpty) {
+              if (apartments.isEmpty) {
                 return const Center(
-                  child: Text('no reservations here'),
+                  child: Text('no apartments'),
                 );
               }
 
               return ListView.builder(
-                itemCount: reservations.length,
+                itemCount: apartments.length,
                 itemBuilder: (context, index) {
-                  final reservation = reservations[index];
+                  final apartment = apartments[index];
 
                   return ListTile(
-                    leading: reservation.apartment.houseImages.isNotEmpty
+                    leading: apartment.houseImages.isNotEmpty
                         ? Image.network(
-                      reservation.apartment.houseImages.first,
+                      apartment.houseImages.first,
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,
                     )
-                        : const Icon(Icons.home),
-                    title: Text(reservation.apartment.title),
+                        : const Icon(Icons.apartment),
+                    title: Text(apartment.title),
                     subtitle: Text(
-                      'from ${reservation.startDate} to ${reservation.endDate}',
+                      '${apartment.cityName} - ${apartment.governorateName}',
                     ),
                   );
                 },
