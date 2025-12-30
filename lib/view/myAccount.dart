@@ -80,7 +80,11 @@ class MyAccount extends StatelessWidget {
             _profileOption(
               icon: Icons.edit,
               title: "Edit account information",
-              onTap: () => Get.to(() => EditProfileScreen()),
+              onTap: () async {
+                await Get.to(() => EditProfileScreen());
+                // إعادة تحميل البيانات عند الرجوع من صفحة التعديل
+                controller.loadProfile();
+              },
             ),
             const SizedBox(height: 10),
 

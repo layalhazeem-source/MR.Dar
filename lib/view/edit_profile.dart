@@ -378,13 +378,11 @@ class EditProfileScreen extends StatelessWidget {
 
                       final success = await controller.saveAllChanges(pass);
 
-                      if (success) {
-                        controller.dialogPasswordError.value = null;
-                        Get.back(); // سكري الديالوج فقط
-                      } else {
+                      if (!success) {
                         controller.dialogPasswordError.value =
                             controller.errorMessage.value;
                       }
+                      Get.back();
                     },
               child: controller.isUpdating.value
                   ? const SizedBox(

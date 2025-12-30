@@ -155,12 +155,13 @@ class EditProfileController extends GetxController {
             dateOfBirth: dobController.text.trim(),
             profileImage: selectedImage.value != null
                 ? selectedImage.value!.path
-                : null,
+                : oldUser.profileImage,
           );
         }
 
         myAccountController.update(); // تحديث الواجهة
         _clearSensitiveData();
+        Get.back(); // إغلاق صفحة التعديل
         return true;
       } else {
         errorMessage.value =
