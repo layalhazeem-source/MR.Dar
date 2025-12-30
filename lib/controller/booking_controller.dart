@@ -96,7 +96,33 @@ class BookingController extends GetxController {
 
     return tempEnd;
   }
-  // داخل BookingController
+  bool isStartDay(DateTime day) {
+    if (selectedStartDate.value == null) return false;
+    return isSameDay(day, selectedStartDate.value);
+  }
+
+  bool isEndDay(DateTime day) {
+    if (endDate == null) return false;
+    return isSameDay(day, endDate);
+  }
+
+  bool isInSelectedRange(DateTime day) {
+    if (selectedStartDate.value == null || endDate == null) return false;
+
+    final d = DateTime(day.year, day.month, day.day);
+    final start = DateTime(
+      selectedStartDate.value!.year,
+      selectedStartDate.value!.month,
+      selectedStartDate.value!.day,
+    );
+    final end = DateTime(
+      endDate!.year,
+      endDate!.month,
+      endDate!.day,
+    );
+
+    return d.isAfter(start) && d.isBefore(end);
+  }
 
   // دالة لمعرفة حالة اليوم بدقة
   int getDayStatus(DateTime day) {

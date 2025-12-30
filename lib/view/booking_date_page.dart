@@ -43,208 +43,212 @@ class BookingDatePage extends StatelessWidget {
       ),
 
       body: Obx(
-        () => Column(
-          children: [
-            /// 🔽 كل المحتوى Scroll
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Column(
-                  children: [
-                    /// 📅 Calendar
-                    Card(
-                      margin: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: TableCalendar(
+            () =>
+            Column(
+              children: [
 
-                          key: ValueKey(controller.reservations.length),
+                /// 🔽 كل المحتوى Scroll
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Column(
+                      children: [
 
-                          firstDay: DateTime.now(),
-                          lastDay: DateTime.now().add(
-                            const Duration(days: 365),
+                        /// 📅 Calendar
+                        Card(
+                          margin: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          focusedDay: DateTime.now(),
+                          elevation: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: TableCalendar(
 
-                          calendarFormat: CalendarFormat.month,
-                          availableCalendarFormats: const {
-                            CalendarFormat.month: 'Month',
-                          },
-                          selectedDayPredicate: (day) => isSameDay(
-                            controller.selectedStartDate.value,
-                            day,
-                          ),
-                          onDaySelected: (day, _) {
-                            if (controller.isDayBooked(day)) return; // يمنع الاختيار
-                            controller.selectedStartDate.value = day;
-                          },
-                          calendarBuilders: CalendarBuilders(
-                            // هذا الـ Builder له الأولوية القصوى
-                            prioritizedBuilder: (context, day, _) {
-                              if (controller.isDayBooked(day)) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red.shade400, // لون أحمر هادئ لكن واضح
-                                    shape: BoxShape.circle,
+                              key: ValueKey(controller.reservations.length),
+
+                              firstDay: DateTime.now(),
+                              lastDay: DateTime.now().add(
+                                const Duration(days: 365),
+                              ),
+                              focusedDay: DateTime.now(),
+
+                              calendarFormat: CalendarFormat.month,
+                              availableCalendarFormats: const {
+                                CalendarFormat.month: 'Month',
+                              },
+                              selectedDayPredicate: (day) =>
+                                  isSameDay(
+                                    controller.selectedStartDate.value,
+                                    day,
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      '${day.day}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),
+                              onDaySelected: (day, _) {
+                                if (controller.isDayBooked(day))
+                                  return; // يمنع الاختيار
+                                controller.selectedStartDate.value = day;
+                              },
+                              calendarBuilders: CalendarBuilders(
+                                prioritizedBuilder: (context, day, _) {
+
+                                  /// 🔴 محجوز (له الأولوية القصوى)
+                                  if (controller.isDayBooked(day)) {
+                                    return _circleDay(
+                                        day, Colors.red.shade400, Colors.white);
+                                  }
+
+                                  /// 🔵 بداية الحجز
+                                  if (controller.isStartDay(day)) {
+                                    return _circleDay(
+                                        day, const Color(0xFF274668),
+                                        Colors.white);
+                                  }
+
+                                  /// 🔵 نهاية الحجز
+                                  if (controller.isEndDay(day)) {
+                                    return _circleDay(
+                                        day, const Color(0xFF274668),
+                                        Colors.white);
+                                  }
+
+                                  /// 🔹 داخل الفترة
+                                  if (controller.isInSelectedRange(day)) {
+                                    return _circleDay(
+                                      day,
+                                      const Color(0xFF274668).withOpacity(0.25),
+                                      Colors.black,
+                                    );
+                                  }
+
+                                  return null;
+                                },
+                              ),
+
+                              headerStyle: const HeaderStyle(
+                                formatButtonVisible: false,
+                                titleCentered: true,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        /// 🗓 Check in / out
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  _dateInfo(
+                                    Icons.login,
+                                    "CHECK IN",
+                                    controller.selectedStartDate.value,
+                                  ),
+                                  const Spacer(),
+                                  _dateInfo(
+                                    Icons.logout,
+                                    "CHECK OUT",
+                                    controller.endDate,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        /// ⏱ Duration
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Duration (Months)",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
                                     ),
                                   ),
-                                );
-                              }
-                              return null;
-                            },
-
-                            // تنسيق الأيام التي يختارها المستخدم حالياً (الحجز الجديد)
-                            selectedBuilder: (context, day, focusedDay) {
-                              return Container(
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF274668),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text('${day.day}', style: const TextStyle(color: Colors.white)),
-                                ),
-                              );
-                            },
-                          ),
-                          headerStyle: const HeaderStyle(
-                            formatButtonVisible: false,
-                            titleCentered: true,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    /// 🗓 Check in / out
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              _dateInfo(
-                                Icons.login,
-                                "CHECK IN",
-                                controller.selectedStartDate.value,
-                              ),
-                              const Spacer(),
-                              _dateInfo(
-                                Icons.logout,
-                                "CHECK OUT",
-                                controller.endDate,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// ⏱ Duration
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Duration (Months)",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Wrap(
-                                spacing: 10,
-                                children: List.generate(12, (index) {
-                                  final m = index + 1;
-                                  return ChoiceChip(
-                                    label: Text("$m"),
-                                    selected: controller.duration.value == m,
-                                    selectedColor: const Color(0xFF274668),
-                                    labelStyle: TextStyle(
-                                      color: controller.duration.value == m
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                    onSelected: (_) =>
+                                  const SizedBox(height: 12),
+                                  Wrap(
+                                    spacing: 10,
+                                    children: List.generate(12, (index) {
+                                      final m = index + 1;
+                                      return ChoiceChip(
+                                        label: Text("$m"),
+                                        selected: controller.duration.value ==
+                                            m,
+                                        selectedColor: const Color(0xFF274668),
+                                        labelStyle: TextStyle(
+                                          color: controller.duration.value == m
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                        onSelected: (_) =>
                                         controller.duration.value = m,
-                                  );
-                                }),
+                                      );
+                                    }),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                /// ▶️ زر ثابت
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF274668),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (controller.selectedStartDate.value == null) return;
+
+                        if (controller.isRangeAvailable()) {
+                          Get.to(
+                                () => BookingConfirmPage(),
+                            arguments: houseId.toString(),
+                          );
+                        } else {
+                          Get.snackbar(
+                            "Unavailable",
+                            "Selected period conflicts with existing bookings",
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        }
+                      },
+                      child: const Text(
+                        "Next",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-
-            /// ▶️ زر ثابت
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF274668),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (controller.selectedStartDate.value == null) return;
-
-                    if (controller.isRangeAvailable()) {
-                      Get.to(
-                        () => BookingConfirmPage(),
-                        arguments: houseId.toString(),
-                      );
-                    } else {
-                      Get.snackbar(
-                        "Unavailable",
-                        "Selected period conflicts with existing bookings",
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "Next",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
       ),
     );
   }
@@ -265,31 +269,23 @@ class BookingDatePage extends StatelessWidget {
     );
   }
 
-  Widget _bookedDay(DateTime day) => Container(
-    decoration: BoxDecoration(
-      color: Colors.red.shade100,
-      shape: BoxShape.circle,
-    ),
-    child: Center(
-      child: Text("${day.day}", style: const TextStyle(color: Colors.red)),
-    ),
-  );
-
-  Widget _selectedDay(DateTime day) => Container(
-    decoration: const BoxDecoration(
-      color: Color(0xFF274668),
-      shape: BoxShape.circle,
-    ),
-    child: Center(
-      child: Text("${day.day}", style: const TextStyle(color: Colors.white)),
-    ),
-  );
-
-  Widget _rangeDay(DateTime day) => Container(
-    decoration: BoxDecoration(
-      color: const Color(0xFF274668).withOpacity(0.15),
-      shape: BoxShape.circle,
-    ),
-    child: Center(child: Text("${day.day}")),
-  );
+  Widget _circleDay(DateTime day, Color bg, Color textColor) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+      decoration: BoxDecoration(
+        color: bg,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Text(
+          '${day.day}',
+          style: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
 }
