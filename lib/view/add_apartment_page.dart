@@ -32,8 +32,8 @@ class AddApartmentPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
           onPressed: () => Get.back(),
         ),
-        title: const Text(
-          "Add Apartment",
+        title: Text(
+          "Add Apartment".tr,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         ),
       ),
@@ -98,17 +98,17 @@ class AddApartmentPage extends StatelessWidget {
       Obx(() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle("General Information"),
-          _input("Apartment Title", controller: controller.titleController, error: controller.titleError.value),
-          _input("Description", controller: controller.descriptionController, maxLines: 3, error: controller.descriptionError.value),
+          _sectionTitle("General Information".tr),
+          _input("Apartment Title".tr, controller: controller.titleController, error: controller.titleError.value),
+          _input("Description".tr, controller: controller.descriptionController, maxLines: 3, error: controller.descriptionError.value),
           Row(
             children: [
-              Expanded(child: _input("Price / Night", controller: controller.rentController, keyboard: TextInputType.number, error: controller.rentError.value)),
+              Expanded(child: _input("Price / Month".tr, controller: controller.rentController, keyboard: TextInputType.number, error: controller.rentError.value)),
               const SizedBox(width: 12),
-              Expanded(child: _input("Rooms", controller: controller.roomsController, keyboard: TextInputType.number, error: controller.roomsError.value)),
+              Expanded(child: _input("Rooms".tr, controller: controller.roomsController, keyboard: TextInputType.number, error: controller.roomsError.value)),
             ],
           ),
-          _input("Space (m²)", controller: controller.spaceController, keyboard: TextInputType.number, error: controller.spaceError.value),
+          _input("Space (m²)".tr, controller: controller.spaceController, keyboard: TextInputType.number, error: controller.spaceError.value),
           const SizedBox(height: 20),
           _nextButton(() {
             if (controller.validateStep1()) {
@@ -127,30 +127,30 @@ class AddApartmentPage extends StatelessWidget {
       Obx(() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle("Location Details"),
+          _sectionTitle("Location Details".tr),
           _dropdown(
-            hint: "Select Governorate",
+            hint: "Select Governorate".tr,
             value: controller.selectedGovernorateId.value,
             items: controller.governorates.map((g) => DropdownMenuItem(value: g.id, child: Text(g.name))).toList(),
             onChanged: (v) => v != null ? controller.onGovernorateSelected(v) : null,
             error: controller.governorateError.value,
           ),
           _dropdown(
-            hint: "Select City",
+            hint: "Select City".tr,
             value: controller.selectedCityId.value,
             items: controller.cities.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
             onChanged: (v) => v != null ? controller.onCitySelected(v) : null,
             error: controller.cityError.value,
           ),
-          _input("Street Name", controller: controller.streetController, error: controller.streetError.value),
-          _input("Flat Number", controller: controller.flatNumberController, error: controller.flatError.value),
+          _input("Street Name".tr, controller: controller.streetController, error: controller.streetError.value),
+          _input("Flat Number".tr, controller: controller.flatNumberController, error: controller.flatError.value),
 
           // 📍 إضافة الإحداثيات هنا بجانب بعضهما
           Row(
             children: [
               Expanded(
                 child: _input(
-                    "Longitude (opt)",
+                    "Longitude (opt)".tr,
                     controller: controller.longitudeController,
                     keyboard: TextInputType.number
                 ),
@@ -158,7 +158,7 @@ class AddApartmentPage extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _input(
-                    "Latitude (opt)",
+                    "Latitude (opt)".tr,
                     controller: controller.latitudeController,
                     keyboard: TextInputType.number
                 ),
@@ -189,8 +189,8 @@ class AddApartmentPage extends StatelessWidget {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle("Apartment Gallery"),
-          const Text("Please select at least one clear image of the flat.", style: TextStyle(color: Colors.grey, fontSize: 13)),
+          _sectionTitle("Apartment Gallery".tr),
+           Text("Please select at least one clear image of the flat".tr, style: TextStyle(color: Colors.grey, fontSize: 13)),
           const SizedBox(height: 20),
           Obx(
                 () => Column(
@@ -262,14 +262,14 @@ class AddApartmentPage extends StatelessWidget {
                     ),
                     onPressed: controller.isLoading.value ? null : () {
                       if(controller.images.isEmpty) {
-                        Get.snackbar("Error", "Please add at least one image", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+                        Get.snackbar("Error".tr, "Please add at least one image".tr, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
                       } else {
                         controller.submit();
                       }
                     },
                     child: controller.isLoading.value
                         ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                        : const Text("Finish & Post", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        : Text("Finish & Post".tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),
@@ -347,7 +347,7 @@ class AddApartmentPage extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       onPressed: onTap,
-      child: const Text("Continue", style: TextStyle(fontWeight: FontWeight.bold)),
+      child: Text("Continue".tr, style: TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 
@@ -360,7 +360,7 @@ class AddApartmentPage extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       onPressed: onTap,
-      child: const Text("Back"),
+      child:  Text("Back".tr),
     );
   }
 

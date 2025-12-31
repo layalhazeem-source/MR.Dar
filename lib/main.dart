@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_project/view/onboarding/onboarding_screen.dart';
+import 'controller/locale/locale.dart';
 import 'view/apartment_details_page.dart';
 import 'core/bindings/app_bindings.dart';
 import 'view/Splash.dart';
@@ -39,6 +40,8 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       builder: (context, child) {
         return GetMaterialApp(
+          locale: Get.deviceLocale,
+          translations: MyLocale(),
           initialBinding: AppBindings(),
           debugShowCheckedModeBanner: false,
           theme: themeService.lightTheme,

@@ -19,8 +19,8 @@ class BookingConfirmPage extends StatelessWidget {
         iconTheme: const IconThemeData(
           color: Color(0xFF274668),
         ),
-        title: const Text(
-          "Confirm BookingConfirm Booking",
+        title:  Text(
+          "Confirm BookingConfirm Booking".tr,
           style: TextStyle(
             color: Color(0xFF274668),
             fontWeight: FontWeight.bold,
@@ -35,7 +35,7 @@ class BookingConfirmPage extends StatelessWidget {
           children: [
             /// 📍 Location Card
             _infoCard(
-              title: "Location",
+              title: "Location".tr,
               child: _row(
                 Icons.location_on,
                 "${controller.apartment.cityName} - ${controller.apartment.governorateName}"
@@ -48,24 +48,24 @@ class BookingConfirmPage extends StatelessWidget {
 
             /// 📅 Period & Duration
             _infoCard(
-              title: "Booking Period",
+              title: "Booking Period".tr,
               child: Column(
                 children: [
                   _row(
                     Icons.login,
-                    DateFormat('MMM dd, yyyy')
+                    DateFormat('MMM dd, yyyy'.tr)
                         .format(controller.selectedStartDate.value!),
                   ),
                   const SizedBox(height: 12),
                   _row(
                     Icons.logout,
-                    DateFormat('MMM dd, yyyy')
+                    DateFormat('MMM dd, yyyy'.tr)
                         .format(controller.endDate!),
                   ),
                   const Divider(height: 30),
                   _row(
                     Icons.timelapse,
-                    "${controller.duration.value} month(s)",
+                    "${controller.duration.value} month(s)".tr,
                     bold: true,
                   ),
                 ],
@@ -76,12 +76,12 @@ class BookingConfirmPage extends StatelessWidget {
 
             /// 💳 Payment & Price
             _infoCard(
-              title: "Payment",
+              title: "Payment".tr,
               child: Column(
                 children: [
                   _row(
                     Icons.payments,
-                    "Cash",
+                    "Cash".tr,
                   ),
                   const Divider(height: 30),
                   _row(
@@ -120,8 +120,8 @@ class BookingConfirmPage extends StatelessWidget {
                     width: 20,
                     child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                   )
-                      : const Text(
-                    "Confirm Booking",
+                      :  Text(
+                    "Confirm Booking".tr,
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),

@@ -7,6 +7,7 @@ import '../../controller/add_apartment_controller.dart';
 import '../../controller/authcontroller.dart';
 import '../../controller/edit_profile_controller.dart';
 import '../../controller/homecontroller.dart';
+import '../../controller/locale/locale_controller.dart';
 import '../../controller/my_account_controller.dart';
 import '../../controller/my_apartments_controller.dart';
 import '../../controller/my_rents_controller.dart';
@@ -51,6 +52,8 @@ class AppBindings extends Bindings {
       AuthController(authService: authService, userService: userService),
       permanent: true,
     );
+
+    Get.put(LocaleController(), permanent: true);
 
     //lazy Controllers
     Get.lazyPut<MyAccountController>(
@@ -97,12 +100,11 @@ class AppBindings extends Bindings {
       MyRentsController(bookingService: Get.find()),
       permanent: true,
     );
-
     Get.lazyPut<MyApartmentsController>(
-      () => MyApartmentsController(
-        apartmentService: Get.find<ApartmentService>(),
-      ),
+          () => MyApartmentsController(apartmentService: Get.find<ApartmentService>()),
       fenix: true,
     );
+
+
   }
 }

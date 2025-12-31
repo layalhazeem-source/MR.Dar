@@ -13,8 +13,8 @@ class EditProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Edit Profile',
+        title:  Text(
+          'Edit Profile'.tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -28,10 +28,10 @@ class EditProfileScreen extends StatelessWidget {
             children: [
               Obx(() => _buildProfileHeader(controller)),
               const SizedBox(height: 30),
-              _buildSectionTitle('Personal Information', Icons.person_outline),
+              _buildSectionTitle('Personal Information'.tr, Icons.person_outline),
               _buildInfoCard(context, controller),
               const SizedBox(height: 25),
-              _buildSectionTitle('Security', Icons.lock_outline),
+              _buildSectionTitle('Security'.tr, Icons.lock_outline),
               _buildPasswordCard(controller),
               const SizedBox(height: 80),
             ],
@@ -50,8 +50,8 @@ class EditProfileScreen extends StatelessWidget {
                 _showPasswordDialog(context, controller);
               } else {
                 Get.snackbar(
-                  "Validation Error",
-                  "Please fix the errors in the form",
+                  "Validation Error".tr,
+                  "Please fix the errors in the form".tr,
                   backgroundColor: Colors.orange,
                   colorText: Colors.white,
                 );
@@ -59,8 +59,8 @@ class EditProfileScreen extends StatelessWidget {
             },
             backgroundColor: const Color(0xFF274668),
             icon: const Icon(Icons.check, color: Colors.white, size: 24),
-            label: const Text(
-              'SAVE CHANGES',
+            label:  Text(
+              'SAVE CHANGES'.tr,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -171,29 +171,29 @@ class EditProfileScreen extends StatelessWidget {
           children: [
             _buildTextField(
               controller: controller.firstNameController,
-              label: 'First Name',
+              label: 'First Name'.tr,
               icon: Icons.person,
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Required field' : null,
+                  value == null || value.isEmpty ? 'Required field'.tr : null,
             ),
             const SizedBox(height: 15),
             _buildTextField(
               controller: controller.lastNameController,
-              label: 'Last Name',
+              label: 'Last Name'.tr,
               icon: Icons.person_outline,
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Required field' : null,
+                  value == null || value.isEmpty ? 'Required field'.tr : null,
             ),
             const SizedBox(height: 15),
             _buildTextField(
               controller: controller.phoneController,
-              label: 'Phone Number',
+              label: 'Phone Number'.tr,
               icon: Icons.phone,
               keyboardType: TextInputType.phone,
               maxLength: 10,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               validator: (value) => value == null || value.length < 10
-                  ? 'Must be 10 digits'
+                  ? 'Must be 10 digits'.tr
                   : null,
             ),
             const SizedBox(height: 15),
@@ -203,7 +203,7 @@ class EditProfileScreen extends StatelessWidget {
                   readOnly: true,
                   controller: ctrl.dobController,
                   decoration: InputDecoration(
-                    labelText: "Date of Birth (Optional)",
+                    labelText: "Date of Birth (Optional)".tr,
                     prefixIcon: const Icon(
                       Icons.cake_outlined,
                       color: Color(0xFF274668),
@@ -294,15 +294,15 @@ class EditProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text(
-              'Only fill to change password',
+             Text(
+              'Only fill to change password'.tr,
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
             const SizedBox(height: 15),
             Obx(
               () => _passwordTextField(
                 controller: controller.newPasswordController,
-                label: 'New Password',
+                label: 'New Password'.tr,
                 showPassword: controller.showNewPassword.value,
                 onToggleVisibility: () => controller.showNewPassword.toggle(),
               ),
@@ -311,16 +311,16 @@ class EditProfileScreen extends StatelessWidget {
             Obx(
               () => _passwordTextField(
                 controller: controller.confirmPasswordController,
-                label: 'Confirm Password',
+                label: 'Confirm Password'.tr,
                 showPassword: controller.showConfirmPassword.value,
                 onToggleVisibility: () =>
                     controller.showConfirmPassword.toggle(),
                 validator: (value) {
                   if (controller.newPasswordController.text.isNotEmpty) {
                     if (value == null || value.isEmpty)
-                      return 'Please confirm your password';
+                      return 'Please confirm your password'.tr;
                     if (value != controller.newPasswordController.text)
-                      return 'Passwords do not match';
+                      return 'Passwords do not match'.tr;
                   }
                   return null;
                 },
@@ -385,15 +385,15 @@ class EditProfileScreen extends StatelessWidget {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text(
-          'Confirm Your Identity',
+        title:  Text(
+          'Confirm Your Identity'.tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Enter your current password to save changes:',
+             Text(
+              'Enter your current password to save changes:'.tr,
               style: TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 20),
@@ -405,7 +405,7 @@ class EditProfileScreen extends StatelessWidget {
                 autofocus: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: 'Current Password',
+                  labelText: 'Current Password'.tr,
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -429,7 +429,7 @@ class EditProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
             Text(
-              'This ensures your account security',
+              'This ensures your account security'.tr,
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
           ],
@@ -440,8 +440,8 @@ class EditProfileScreen extends StatelessWidget {
               controller.clearDialogFields();
               Get.back();
             },
-            child: const Text(
-              'CANCEL',
+            child:  Text(
+              'CANCEL'.tr,
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             ),
           ),
@@ -464,7 +464,7 @@ class EditProfileScreen extends StatelessWidget {
 
                       if (password.isEmpty) {
                         controller.dialogPasswordError.value =
-                            'Password is required';
+                            'Password is required'.tr;
                         return;
                       }
 
@@ -485,8 +485,8 @@ class EditProfileScreen extends StatelessWidget {
 
                         // نظهر رسالة النجاح
                         Get.snackbar(
-                          "Success",
-                          "Your profile has been updated successfully",
+                          "Success".tr,
+                          "Your profile has been updated successfully".tr,
                           backgroundColor: Colors.green,
                           colorText: Colors.white,
                           duration: const Duration(seconds: 2),
@@ -499,7 +499,7 @@ class EditProfileScreen extends StatelessWidget {
                       } else {
                         // فشل: نظهر الخطأ في الدايلوج (الدائالوج يبقى مفتوح)
                         // لا نعمل Get.back() هنا
-                        if (controller.dialogPasswordError.value == "Success") {
+                        if (controller.dialogPasswordError.value == "Success".tr) {
                           Get.back();
 
                           // ننتظر قليلاً ثم نغلق صفحة التعديل
@@ -521,8 +521,8 @@ class EditProfileScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     )
-                  : const Text(
-                      'Save Changes',
+                  :  Text(
+                      'SAVE CHANGES'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
