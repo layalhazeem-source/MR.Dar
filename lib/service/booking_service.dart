@@ -20,14 +20,11 @@ class BookingService {
     if (response.statusCode == 200) {
       final List list = response.data['data'];
 
-      return list
-          .map((e) => Booking.fromJson(e, houseId: houseId))
-          .toList();
+      return list.map((e) => Booking.fromJson(e, houseId: houseId)).toList();
     }
 
     return [];
   }
-
 
   Future<bool> approveReservation(int house_Id) async {
     final prefs = await SharedPreferences.getInstance();
@@ -97,9 +94,7 @@ class BookingService {
 
         if (data is Map && data.containsKey('data')) {
           final List list = data['data'];
-          return list
-              .map((e) => ReservationModel.fromJson(e))
-              .toList();
+          return list.map((e) => ReservationModel.fromJson(e)).toList();
         }
       }
 
@@ -109,5 +104,84 @@ class BookingService {
       return [];
     }
   }
-}
 
+  Future<bool> cancelReservation(int reservationId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token") ?? "";
+
+    final response = await api.dio.put(
+      '${EndPoint.reservations}/cancel/$reservationId',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+        validateStatus: (_) => true,
+      ),
+    );
+
+    return response.statusCode == 200;
+  }
+
+  /// 🟢 رفض حجز (لصاحب البيت)
+  Future<bool> rejectReservation(int reservationId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token") ?? "";
+
+    final response = await api.dio.put(
+      '${EndPoint.reservations}/reject/$reservationId',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+        validateStatus: (_) => true,
+      ),
+    );
+
+    return response.statusCode == 200;
+  }
+
+  /// 🟢 قبول حجز (لصاحب البيت)
+  Future<bool> acceptReservation(int reservationId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token") ?? "";
+
+    final response = await api.dio.put(
+      '${EndPoint.reservations}/accept/$reservationId',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+        validateStatus: (_) => true,
+      ),
+    );
+
+    return response.statusCode == 200;
+  }
+
+  /// 🟢 تحديث حجز (تعديل التاريخ)
+  Future<bool> updateReservation({
+    required int reservationId,
+    required String startDate,
+    required int duration,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token") ?? "";
+
+    final response = await api.dio.put(
+      '${EndPoint.reservations}/$reservationId',
+      data: {"start_date": startDate, "duration": duration},
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+        validateStatus: (_) => true,
+      ),
+    );
+
+    return response.statusCode == 200;
+  }
+}

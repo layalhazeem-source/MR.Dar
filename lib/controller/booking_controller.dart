@@ -13,12 +13,11 @@ class BookingController extends GetxController {
   late Apartment apartment;
   double get totalPrice => duration.value * rentValue;
 
-  BookingController(
-      {
-        required this.service,
-        required this.houseId,
-        required this.rentValue,
-      });
+  BookingController({
+    required this.service,
+    required this.houseId,
+    required this.rentValue,
+  });
 
   /// بيانات الحجز
   var selectedStartDate = Rxn<DateTime>();
@@ -32,13 +31,11 @@ class BookingController extends GetxController {
   void onInit() {
     super.onInit();
     loadReservations();
-
   }
 
   Future<void> loadReservations() async {
     reservations.value = await service.getHouseReservations(houseId);
     reservations.refresh(); // 👈 مهم
-
   }
 
   /// الأيام المحجوزة (للتقويم)
@@ -51,14 +48,17 @@ class BookingController extends GetxController {
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
 
-      for (DateTime d = start;
-      d.isBefore(end);
-      d = d.add(const Duration(days: 1))) {
+      for (
+        DateTime d = start;
+        d.isBefore(end);
+        d = d.add(const Duration(days: 1))
+      ) {
         days.add(d);
       }
     }
     return days;
   }
+
   bool isDayBooked(DateTime day) {
     final checkDay = DateTime(day.year, day.month, day.day);
 
@@ -79,14 +79,17 @@ class BookingController extends GetxController {
     return false;
   }
 
-
   DateTime? get endDate {
     if (selectedStartDate.value == null) return null;
 
     final start = selectedStartDate.value!;
 
     // 1. منجرب نحسب التاريخ بإضافة المدة
-    DateTime tempEnd = DateTime(start.year, start.month + duration.value, start.day);
+    DateTime tempEnd = DateTime(
+      start.year,
+      start.month + duration.value,
+      start.day,
+    );
 
     // 2. إذا نط التاريخ لشهر زيادة (يعني اليوم اختلف)
     // منقله لـ Dart: أعطيني آخر يوم بالشهر المطلوب (يوم 0 من الشهر التالي هو آخر يوم بالحالي)
@@ -96,6 +99,7 @@ class BookingController extends GetxController {
 
     return tempEnd;
   }
+
   bool isStartDay(DateTime day) {
     if (selectedStartDate.value == null) return false;
     return isSameDay(day, selectedStartDate.value);
@@ -115,11 +119,7 @@ class BookingController extends GetxController {
       selectedStartDate.value!.month,
       selectedStartDate.value!.day,
     );
-    final end = DateTime(
-      endDate!.year,
-      endDate!.month,
-      endDate!.day,
-    );
+    final end = DateTime(endDate!.year, endDate!.month, endDate!.day);
 
     return d.isAfter(start) && d.isBefore(end);
   }
@@ -134,7 +134,8 @@ class BookingController extends GetxController {
 
       if (!day.isBefore(start) && !day.isAfter(end)) {
         if (r.status == 'accepted') return 2; // مؤكد -> أحمر مباشرة
-        if (r.status == 'pending') hasPending = true; // مؤقتاً إذا وجدت حالة معلقة
+        if (r.status == 'pending')
+          hasPending = true; // مؤقتاً إذا وجدت حالة معلقة
       }
     }
 
@@ -154,7 +155,6 @@ class BookingController extends GetxController {
     return true;
   }
 
-
   Future<void> confirmBooking() async {
     if (selectedStartDate.value == null) return;
 
@@ -171,7 +171,8 @@ class BookingController extends GetxController {
     if (success) {
       // حالة (ب): نجاح (سواء كان التاريخ فارغاً أو عليه طلبات Pending لغيرك)
       Get.snackbar(
-        "Success", "Your reservation request has been sent",
+        "Success",
+        "Your reservation request has been sent",
         backgroundColor: Colors.green.withOpacity(0.8),
         colorText: Colors.white,
         icon: const Icon(Icons.check_circle, color: Colors.white),
@@ -179,10 +180,10 @@ class BookingController extends GetxController {
       );
       _showResultDialog(
         title: "Booking Sent",
-        message: "Your request is pending. The owner can now see it and choose to accept it.",
+        message:
+            "Your request is pending. The owner can now see it and choose to accept it.",
         type: 1, // نجاح
       );
-
     } else {
       // حالة (ج): فشل من السيرفر (غالباً لأن المستخدم لديه طلب Pending مسبق لنفس البيت)
       Get.snackbar(
@@ -195,7 +196,8 @@ class BookingController extends GetxController {
       );
       _showResultDialog(
         title: "Request Exists",
-        message: "You have already sent a request for this house. Please wait for the owner's response.",
+        message:
+            "You have already sent a request for this house. Please wait for the owner's response.",
         type: 2, // تنبيه
       );
     }
@@ -236,7 +238,10 @@ class BookingController extends GetxController {
           children: [
             Icon(mainIcon, color: mainColor, size: 64),
             const SizedBox(height: 16),
-            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Text(message, textAlign: TextAlign.center),
           ],
@@ -251,7 +256,10 @@ class BookingController extends GetxController {
                   Get.back(); // العودة من صفحة التاريخ
                 }
               },
-              child: Text(buttonText, style: TextStyle(color: mainColor, fontWeight: FontWeight.bold)),
+              child: Text(
+                buttonText,
+                style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

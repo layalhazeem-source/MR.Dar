@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../controller/my_rents_controller.dart';
 import '../core/enums/reservation_status.dart';
+import '../model/reservation_model.dart';
 import '../widgets/apartment_card.dart';
 import 'apartment_details_page.dart';
 
@@ -18,21 +18,17 @@ class _MyRentState extends State<MyRent> {
 
   @override
   Widget build(BuildContext context) {
-    print("🎨 UI rebuild, reservations = ${controller.allReservations.length}");
-    print('🎨 UI using controller ${controller.hashCode}');
     return Scaffold(
       body: Column(
         children: [
           // ----------- Status Tabs -----------
           Obx(
-                () => SingleChildScrollView(
-
+            () => SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: ReservationStatus.values.map((status) {
-                  final isSelected =
-                      controller.currentStatus.value == status;
+                  final isSelected = controller.currentStatus.value == status;
 
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
@@ -40,7 +36,9 @@ class _MyRentState extends State<MyRent> {
                       label: Text(status.displayName),
                       selected: isSelected,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20), // غيّري الرقم حسب الدرجة اللي تحبيها
+                        borderRadius: BorderRadius.circular(
+                          20,
+                        ), // غيّري الرقم حسب الدرجة اللي تحبيها
                       ),
                       onSelected: (_) => controller.changeStatus(status),
                     ),
@@ -55,20 +53,14 @@ class _MyRentState extends State<MyRent> {
           // ----------- Reservation List -----------
           Expanded(
             child: Obx(() {
-              print('🎨 rebuild with ${controller.allReservations.length}');
-
               // 1️⃣ Loading
               if (controller.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
 
               // 2️⃣ Error
               if (controller.errorMessage.isNotEmpty) {
-                return Center(
-                  child: Text(controller.errorMessage.value),
-                );
+                return Center(child: Text(controller.errorMessage.value));
               }
 
               final reservations = controller.filteredReservations;
@@ -93,24 +85,83 @@ class _MyRentState extends State<MyRent> {
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    child: ApartmentCard(
-                      apartment: reservation.apartment,
-                      onTap: () {
-                        Get.to(
+                    child: Column(
+                      children: [
+                        ApartmentCard(
+                          apartment: reservation.apartment,
+                          onTap: () {
+                            Get.to(
                               () => ApartmentDetailsPage(
-                            apartment: reservation.apartment,
-                          ),
-                        );
-                      },
+                                apartment: reservation.apartment,
+                              ),
+                            );
+                          },
+                        ),
+
+                        // 🔽 نضيف أزرار التعديل والإلغاء للـ Pending فقط
+                        if (controller.currentStatus.value ==
+                            ReservationStatus.pending)
+                          _buildPendingActions(reservation),
+                      ],
                     ),
                   );
-
                 },
               );
             }),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPendingActions(ReservationModel reservation) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // زر التعديل
+          ElevatedButton.icon(
+            onPressed: () => controller.editReservation(reservation),
+            icon: const Icon(Icons.edit, size: 16),
+            label: const Text("Edit"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF274668),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+          ),
+
+          const SizedBox(width: 8),
+
+          // زر الإلغاء
+          ElevatedButton.icon(
+            onPressed: () => _showCancelDialog(reservation.id),
+            icon: const Icon(Icons.close, size: 16),
+            label: const Text("Cancel"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCancelDialog(int reservationId) {
+    Get.defaultDialog(
+      title: "Cancel Reservation",
+      middleText: "Are you sure you want to cancel this reservation?",
+      textConfirm: "Yes, Cancel",
+      textCancel: "No",
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () {
+        Get.back();
+        controller.cancelReservation(reservationId);
+      },
     );
   }
 }

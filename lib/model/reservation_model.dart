@@ -22,8 +22,7 @@ class ReservationModel {
   });
 
   factory ReservationModel.fromJson(Map<String, dynamic> json) {
-    int safeInt(dynamic v) =>
-        v == null ? 0 : int.tryParse(v.toString()) ?? 0;
+    int safeInt(dynamic v) => v == null ? 0 : int.tryParse(v.toString()) ?? 0;
 
     return ReservationModel(
       id: safeInt(json['id']),
@@ -33,6 +32,27 @@ class ReservationModel {
       endDate: json['end_date'] ?? '',
       duration: safeInt(json['duration']),
       status: json['status'] ?? '',
+    );
+  }
+
+  // إضافة copyWith
+  ReservationModel copyWith({
+    int? id,
+    Apartment? apartment,
+    UserModel? user,
+    String? startDate,
+    String? endDate,
+    int? duration,
+    String? status,
+  }) {
+    return ReservationModel(
+      id: id ?? this.id,
+      apartment: apartment ?? this.apartment,
+      user: user ?? this.user,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      duration: duration ?? this.duration,
+      status: status ?? this.status,
     );
   }
 }

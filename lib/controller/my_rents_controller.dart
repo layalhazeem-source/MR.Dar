@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../core/enums/reservation_status.dart' show ReservationStatus, ReservationStatusExtension;
+import '../core/enums/reservation_status.dart'
+    show ReservationStatus, ReservationStatusExtension;
 import '../model/reservation_model.dart';
 import '../service/booking_service.dart';
+import '../view/booking_date_page.dart';
 
 class MyRentsController extends GetxController {
   final BookingService bookingService;
@@ -16,6 +18,7 @@ class MyRentsController extends GetxController {
   //حالات الواجهة
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
+  final RxBool isProcessing = false.obs; // للعمليات الجديدة
 
   @override
   void onInit() {
@@ -26,7 +29,6 @@ class MyRentsController extends GetxController {
 
   /// جلب الحجوزات من السيرفر
   Future<void> fetchMyReservations() async {
-
     print("🟡 fetchMyReservations START");
 
     try {
@@ -107,5 +109,75 @@ class MyRentsController extends GetxController {
   /// تفريغ البيانات (اختياري)
   void clearReservations() {
     allReservations.clear();
+  }
+
+  /// إلغاء حجز
+  Future<void> cancelReservation(int reservationId) async {
+    try {
+      isProcessing.value = true;
+
+      final success = await bookingService.cancelReservation(reservationId);
+
+      if (success) {
+        // تحديث حالة الحجز محلياً
+        final index = allReservations.indexWhere((r) => r.id == reservationId);
+        if (index != -1) {
+          allReservations[index] = allReservations[index].copyWith(
+            status: 'canceled',
+          );
+          allReservations.refresh(); // لتحديث الـ Obx
+        }
+
+        Get.snackbar(
+          "Success",
+          "Reservation cancelled successfully",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      } else {
+        throw Exception("Failed to cancel reservation");
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to cancel reservation: ${e.toString()}",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isProcessing.value = false;
+    }
+  }
+
+  /// تعديل حجز (يلغي القديم وينتقل لصفحة الحجز)
+  void editReservation(ReservationModel reservation) {
+    // 1. نسأل المستخدم إذا مؤكد
+    Get.defaultDialog(
+      title: "Edit Reservation",
+      middleText:
+          "Editing will cancel the current request and create a new one. Continue?",
+      textConfirm: "Yes, Edit",
+      textCancel: "Cancel",
+      confirmTextColor: Colors.white,
+      buttonColor: const Color(0xFF274668),
+      onConfirm: () async {
+        Get.back();
+
+        // 2. نلغي الحجز القديم
+        await cancelReservation(reservation.id);
+
+        // 3. ننتقل لصفحة الحجز مع بيانات الفترة القديمة
+        // هون رح نحتاج نمرر بيانات الفترة القديمة
+        Get.to(
+          () => BookingDatePage(
+            houseId: reservation.apartment.id,
+            rentValue: reservation.apartment.rentValue,
+            initialStartDate: reservation.startDate,
+            initialDuration: reservation.duration,
+          ),
+          arguments: reservation.apartment,
+        );
+      },
+    );
   }
 }
