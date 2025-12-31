@@ -67,7 +67,7 @@ class AddApartmentController extends GetxController {
 
   // images
   var images = <XFile>[].obs;
-
+  var imageError = RxnString(); // متغير لحمل نص الخطأ
   var isLoading = false.obs;
 
   @override
@@ -114,6 +114,14 @@ class AddApartmentController extends GetxController {
         cityError.value == null &&
         streetError.value == null &&
         flatError.value == null;
+  }
+  bool validateStep3() {
+    if (images.isEmpty) {
+      imageError.value = "Please select at least one image";
+      return false;
+    }
+    imageError.value = null;
+    return true;
   }
 
   Future<void> loadGovernorates() async {

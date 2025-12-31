@@ -5,6 +5,7 @@ import '../widgets/apartment_card.dart';
 import 'AllApartmentsPage.dart';
 import 'FilterPage.dart';
 import 'apartment_details_page.dart';
+import 'featured_apartments_page.dart';
 
 class HomeContent extends StatelessWidget {
   HomeContent({super.key});
@@ -164,10 +165,15 @@ class HomeContent extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
-                      ),
-                      if (controller.featuredApartments.length > 3)
+                      ),if (controller.featuredApartments.length > 5)
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(
+                                  () => FeaturedApartmentsPage(
+                                apartments: controller.featuredApartments,
+                              ),
+                            );
+                          },
                           child: const Text(
                             "See All",
                             style: TextStyle(
@@ -176,6 +182,7 @@ class HomeContent extends StatelessWidget {
                             ),
                           ),
                         ),
+
                     ],
                   ),
                   const SizedBox(height: 12),
