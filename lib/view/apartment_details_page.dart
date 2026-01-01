@@ -183,19 +183,19 @@ class ApartmentDetailsPage extends StatelessWidget {
                     crossAxisSpacing: 14,
                     childAspectRatio: 2.6,
                     children: [
-                      _specItem(Icons.bed, "Rooms",
+                      _specItem(Icons.bed, "Rooms".tr,
                           "${apartment.rooms}"),
-                      _specItem(Icons.square_foot, "Space",
-                          "${apartment.space} m²"),
-                      _specItem(Icons.wifi, "Wi-Fi", "Available"),
-                      _specItem(Icons.apartment, "Type", "Apartment"),
+                      _specItem(Icons.square_foot, "Space".tr,
+                          "${apartment.space} m²".tr),
+                      _specItem(Icons.wifi, "Wi-Fi".tr, "Available".tr),
+                      _specItem(Icons.apartment, "Type".tr, "Apartment".tr),
                     ],
                   ),
 
                   const SizedBox(height: 28),
 
-                  const Text(
-                    "About This House",
+                   Text(
+                    "About This House".tr,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -213,8 +213,8 @@ class ApartmentDetailsPage extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  const Text(
-                    "Flat Number",
+                   Text(
+                    "Flat Number".tr,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -244,8 +244,8 @@ class ApartmentDetailsPage extends StatelessWidget {
                         crossAxisAlignment:
                         CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Price",
+                           Text(
+                            "Price".tr,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
@@ -284,8 +284,8 @@ class ApartmentDetailsPage extends StatelessWidget {
                                   arguments: apartment,
                                 );
                               },
-                              child: const Text(
-                                "Reserve",
+                              child:  Text(
+                                "Reserve".tr,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,

@@ -1,3 +1,5 @@
+import '../core/enums/apartment_status.dart';
+
 class Apartment {
   final int id;
   final String title;
@@ -62,6 +64,30 @@ class Apartment {
     final city = address['city'] ?? {};
     final governorate = city['governorate'] ?? {};
 
+    String? getApartmentStatus() {
+      dynamic statusValue;
+
+      if (json['house'] is Map && json['house']['status'] != null) {
+        statusValue = json['house']['status'];
+      } else if (json['status'] != null) {
+        statusValue = json['status'];
+      } else if (json['is_active'] != null) {
+        final isActive = json['is_active'];
+        return (isActive == 1 || isActive == true || isActive == '1')
+            ? 'accepted'
+            : 'pending';
+      }
+
+      // استخدم الدالة المساعدة للتحويل
+      if (statusValue != null) {
+        final status = ApartmentStatusExtension.fromDynamic(statusValue);
+        return status.toString().split('.').last; // يحول 'ApartmentStatus.accepted' إلى 'accepted'
+      }
+
+      return 'pending';
+    }
+    final apartmentStatus = getApartmentStatus();
+
     return Apartment(
       id: safeInt(json['id']),
       title: json['title'] ?? '',
@@ -87,7 +113,7 @@ class Apartment {
           : double.tryParse(address['latitude'].toString()),
 
       houseImages: parseImages(json['images']),
-      apartmentStatus: json['status'],
+      apartmentStatus: apartmentStatus, // ✅ هنا
     );
   }
 }

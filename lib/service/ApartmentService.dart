@@ -316,35 +316,44 @@ class ApartmentService {
   }
 
   //جلب كل شقق المالك
+  // في ملف apartment_service.dart
   Future<List<Apartment>> getMyApartments() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString("token") ?? "";
 
       final response = await api.dio.get(
-        EndPoint.getApartments,
+        EndPoint.getMyHouses,
         options: Options(
-          headers: {
-            "Authorization": "Bearer $token",
-            "Accept": "application/json",
-          },
-          validateStatus: (_) => true,
+          headers: {"Authorization": "Bearer $token"},
+          validateStatus: (status) => true,
         ),
       );
+
+      print("My Apartments Response status: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final data = response.data;
 
-        if (data is Map && data.containsKey('data')) {
-          final List list = data['data'];
+        if (data is Map && data.containsKey("data")) {
+          final List list = data["data"];
           return list.map((e) => Apartment.fromJson(e)).toList();
+        } else {
+          throw ServerException(
+            errModel: ErrorModel(errorMessage: "Invalid data format from server"),
+          );
         }
+      } else {
+        final errorMsg =
+            response.data["message"] ?? "Failed to fetch my apartments";
+        throw ServerException(
+          errModel: ErrorModel(errorMessage: errorMsg),
+        );
       }
-
-      return [];
     } on DioException catch (e) {
-      print("getMyApartments error: ${e.message}");
-      return [];
+      throw ServerException(
+        errModel: ErrorModel(errorMessage: "Network error: ${e.message}"),
+      );
     }
   }
 

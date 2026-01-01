@@ -21,7 +21,7 @@ class AllApartmentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("All Apartments"),
+        title:  Text("All Apartments".tr),
         backgroundColor: const Color(0xFF274668),
       ),
       body: Column(
@@ -36,7 +36,7 @@ class AllApartmentsPage extends StatelessWidget {
                     controller: controller.searchController,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
-                      hintText: "Search apartments...",
+                      hintText: "Search".tr,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -76,9 +76,9 @@ class AllApartmentsPage extends StatelessWidget {
               }
 
               if (apartments.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    "No apartments found",
+                    "No apartments found".tr,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 );

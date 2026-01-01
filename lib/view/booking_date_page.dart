@@ -48,8 +48,8 @@ class BookingDatePage extends StatelessWidget {
         backgroundColor: Colors.white,
         centerTitle: true,
         iconTheme: const IconThemeData(color: Color(0xFF274668)),
-        title: const Text(
-          "Select Booking Date",
+        title:  Text(
+          "Select Booking Date".tr,
           style: TextStyle(
             color: Color(0xFF274668),
             fontWeight: FontWeight.bold,
@@ -86,8 +86,8 @@ class BookingDatePage extends StatelessWidget {
                           focusedDay: DateTime.now(),
 
                           calendarFormat: CalendarFormat.month,
-                          availableCalendarFormats: const {
-                            CalendarFormat.month: 'Month',
+                          availableCalendarFormats:  {
+                            CalendarFormat.month: 'Month'.tr,
                           },
                           selectedDayPredicate: (day) => isSameDay(
                             controller.selectedStartDate.value,
@@ -161,13 +161,13 @@ class BookingDatePage extends StatelessWidget {
                             children: [
                               _dateInfo(
                                 Icons.login,
-                                "CHECK IN",
+                                "CHECK IN".tr,
                                 controller.selectedStartDate.value,
                               ),
                               const Spacer(),
                               _dateInfo(
                                 Icons.logout,
-                                "CHECK OUT",
+                                "CHECK OUT".tr,
                                 controller.endDate,
                               ),
                             ],
@@ -190,8 +190,8 @@ class BookingDatePage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Duration (Months)",
+                               Text(
+                                "Duration (Months)".tr,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -249,15 +249,15 @@ class BookingDatePage extends StatelessWidget {
                       );
                     } else {
                       Get.snackbar(
-                        "Unavailable",
-                        "Selected period conflicts with existing bookings",
+                        "Unavailable".tr,
+                        "Selected period conflicts with existing bookings".tr,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
                       );
                     }
                   },
-                  child: const Text(
-                    "Next",
+                  child:  Text(
+                    "Next".tr,
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
@@ -278,7 +278,7 @@ class BookingDatePage extends StatelessWidget {
         Text(title, style: const TextStyle(fontSize: 12)),
         const SizedBox(height: 4),
         Text(
-          date == null ? "--" : DateFormat('MMM dd, yyyy').format(date),
+          date == null ? "--" : DateFormat('MMM dd, yyyy'.tr).format(date),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'onboarding_page.dart';
 import '../WelcomePage.dart';
 
@@ -43,22 +44,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 });
               },
               children: [
-                const OnboardingPage(
-                  title: "Find Your Perfect Apartment",
+                 OnboardingPage(
+                  title: 'Find Your Perfect Apartment'.tr,
                   subtitle: "The easiest and fastest way to book apartments",
                   image: "images/House searching-rafiki.png",
                 ),
-                const OnboardingPage(
-                  title: "Choose With Confidence",
+                 OnboardingPage(
+                  title: "Choose With Confidence".tr,
                   subtitle:
-                      "Clear photos, full details, and transparent prices",
+                      "Clear photos, full details, and transparent prices".tr,
                   image: "images/Apartment rent-amico.png",
                 ),
 
                 /// آخر صفحة onboarding
                 OnboardingPage(
-                  title: "Ready to Get Started?",
-                  subtitle: "Start your journey with MR.Dar today",
+                  title: "Ready to Get Started?".tr,
+                  subtitle: "Start your journey with MR.Dar today".tr,
                   image: "images/Apartment rent-pana.png",
                   bottomWidget: ElevatedButton(
                     onPressed: () {
@@ -74,8 +75,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                     ),
-                    child: const Text(
-                      "Get Started",
+                    child:  Text(
+                      "Get Started".tr,
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
@@ -96,8 +97,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       curve: Curves.easeInOut,
                     );
                   },
-                  child: const Text(
-                    "Skip",
+                  child:  Text(
+                    "Skip".tr,
                     style: TextStyle(fontSize: 16, color: Color(0xFF274668)),
                   ),
                 ),
@@ -145,8 +146,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           borderRadius: BorderRadius.circular(25),
                         ),
                       ),
-                      child: const Text(
-                        "Next",
+                      child: Text(
+                        "Next".tr,
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
