@@ -11,9 +11,11 @@ import '../../controller/locale/locale_controller.dart';
 import '../../controller/my_account_controller.dart';
 import '../../controller/my_apartments_controller.dart';
 import '../../controller/my_rents_controller.dart';
+import '../../controller/notification_controller.dart';
 import '../../service/ApartmentService.dart';
 import '../../service/UserLocalService.dart';
 import '../../service/booking_service.dart';
+import '../../service/notification_service.dart';
 import '../../service/userService.dart';
 import '../api/dio_consumer.dart';
 import '../../controller/logincontroller.dart';
@@ -30,6 +32,7 @@ class AppBindings extends Bindings {
     final userService = UserService(dioConsumer);
     final controller = UserController();
     final bookingService = BookingService(api: dioConsumer);
+    final notificationService = NotificationService(api: dioConsumer);
 
     //core
     Get.put<Dio>(dio, permanent: true);
@@ -41,7 +44,10 @@ class AppBindings extends Bindings {
     Get.put<UserService>(UserService(dioConsumer), permanent: true);
     Get.put<UserLocalService>(UserLocalService(), permanent: true);
     Get.put<BookingService>(bookingService, permanent: true);
-
+    Get.put<NotificationService>(
+      notificationService,
+      permanent: true,
+    );
     //Controllers
     Get.put<HomeController>(HomeController(), permanent: true);
     Get.put<ApartmentController>(
@@ -104,7 +110,10 @@ class AppBindings extends Bindings {
           () => MyApartmentsController(apartmentService: Get.find<ApartmentService>()),
       fenix: true,
     );
-
+    Get.lazyPut<NotificationController>(
+          () => NotificationController(service: notificationService),
+      fenix: true,
+    );
 
   }
 }
