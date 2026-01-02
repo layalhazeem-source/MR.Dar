@@ -13,7 +13,7 @@ class SearchSuggestionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Search Apartments")),
+      appBar: AppBar(title:  Text("Search Apartments".tr)),
       body: Column(
         children: [
           Padding(
@@ -21,7 +21,7 @@ class SearchSuggestionsPage extends StatelessWidget {
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
-                hintText: "Type at least 2 letters...",
+                hintText: "Type at least 2 letters...".tr,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -38,7 +38,7 @@ class SearchSuggestionsPage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (controller.searchResults.isEmpty) {
-                return const Center(child: Text("No results found"));
+                return  Center(child: Text("No results found".tr));
               }
               return ListView.builder(
                 itemCount: controller.searchResults.length,

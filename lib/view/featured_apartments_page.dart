@@ -16,7 +16,7 @@ class FeaturedApartmentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Featured Apartments"),
+        title:  Text("Featured Apartments".tr),
         centerTitle: true,
       ),
       body: ListView.builder(

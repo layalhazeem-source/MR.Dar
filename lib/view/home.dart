@@ -56,11 +56,11 @@ class Home extends StatelessWidget {
     if (index == 0) {
       title = 'MR.Dar';
     } else if (index == 1) {
-      title = user.isOwner ? 'My Apartments' : 'My Rents';
+      title = user.isOwner ? 'My Apartments'.tr : 'My Rents'.tr;
     } else if (index == 2) {
-      title = 'Favourite';
+      title = 'Favourite'.tr;
     } else {
-      title = 'My Account';
+      title = 'My Account'.tr;
     }
 
     return AppBar(
@@ -125,8 +125,8 @@ class Home extends StatelessWidget {
                   await apartmentController.loadFavorites();
 
                   Get.snackbar(
-                    "Refreshed",
-                    "Favorites list updated",
+                    "Refreshed".tr,
+                    "Favorites list updated".tr,
                     backgroundColor: Colors.green,
                     colorText: Colors.white,
                     duration: const Duration(seconds: 1),
@@ -153,61 +153,67 @@ class Home extends StatelessWidget {
   // ========================= BottomNavigationBar =========================
   Widget _buildBottomNavigationBar() {
     return Obx(() {
+      final isOwner = user.isOwner;
+
       return BottomNavigationBar(
+        key: ValueKey(Get.locale?.languageCode), // 🔥 مهم
         currentIndex: controller.currentIndex.value,
         onTap: controller.changeTab,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFF274668),
         unselectedItemColor: Colors.black45,
-        items: user.isOwner ? _ownerItems : _renterItems,
+        items: isOwner ? _ownerItems() : _renterItems(),
       );
     });
   }
 
+
   // ========================= Nav Items =========================
-  final List<BottomNavigationBarItem> _renterItems = const [
-    BottomNavigationBarItem(
-      icon: Icon(Icons.home_outlined),
-      activeIcon: Icon(Icons.home),
-      label: "Home",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.bookmark_added_outlined),
-      activeIcon: Icon(Icons.bookmark_added),
-      label: "My Rents",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.favorite_border),
-      activeIcon: Icon(Icons.favorite),
-      label: "Favourite",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.person_2_outlined),
-      activeIcon: Icon(Icons.person_2),
-      label: "Account",
-    ),
+   List<BottomNavigationBarItem> _renterItems() => [
+  BottomNavigationBarItem(
+  icon: Icon(Icons.home_outlined),
+  activeIcon: Icon(Icons.home),
+  label: "Home".tr,
+  ),
+  BottomNavigationBarItem(
+  icon: Icon(Icons.bookmark_added_outlined),
+  activeIcon: Icon(Icons.bookmark_added),
+  label: "My Rents".tr,
+  ),
+  BottomNavigationBarItem(
+  icon: Icon(Icons.favorite_border),
+  activeIcon: Icon(Icons.favorite),
+  label: "Favourite".tr,
+  ),
+  BottomNavigationBarItem(
+  icon: Icon(Icons.person_2_outlined),
+  activeIcon: Icon(Icons.person_2),
+  label: "Account".tr,
+  ),
   ];
 
-  final List<BottomNavigationBarItem> _ownerItems = const [
+
+  List<BottomNavigationBarItem> _ownerItems() => [
     BottomNavigationBarItem(
       icon: Icon(Icons.home_outlined),
       activeIcon: Icon(Icons.home),
-      label: "Home",
+      label: "Home".tr,
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.book_outlined),
       activeIcon: Icon(Icons.book_rounded),
-      label: "My Apartments",
+      label: "My Apartments".tr,
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.favorite_border),
       activeIcon: Icon(Icons.favorite),
-      label: "Favourite",
+      label: "Favourite".tr,
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.person_2_outlined),
       activeIcon: Icon(Icons.person_2),
-      label: "Account",
+      label: "Account".tr,
     ),
   ];
+
 }

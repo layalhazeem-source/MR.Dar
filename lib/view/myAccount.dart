@@ -34,8 +34,8 @@ class MyAccount extends StatelessWidget {
             children: [
               const Icon(Icons.person_off, size: 80, color: Colors.grey),
               const SizedBox(height: 20),
-              const Text(
-                "No Profile Data",
+               Text(
+                "No Profile Data".tr,
                 style: TextStyle(fontSize: 20, color: Colors.grey),
               ),
               const SizedBox(height: 10),
@@ -48,8 +48,8 @@ class MyAccount extends StatelessWidget {
                     vertical: 12,
                   ),
                 ),
-                child: const Text(
-                  "Try Again",
+                child:  Text(
+                  "Try Again".tr,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -77,9 +77,9 @@ class MyAccount extends StatelessWidget {
                   children: [
                     Icon(Icons.info_outline, color: Colors.amber.shade700),
                     const SizedBox(width: 10),
-                    const Expanded(
+                     Expanded(
                       child: Text(
-                        "Showing cached data. Pull to refresh for latest updates.",
+                        "Showing cached data. Pull to refresh for latest updates".tr,
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -101,7 +101,7 @@ class MyAccount extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () => controller.loadProfile(),
               icon: const Icon(Icons.refresh),
-              label: const Text("Refresh Profile"),
+              label:  Text("Refresh Profile".tr),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
@@ -175,7 +175,7 @@ class MyAccount extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: user.role == 'owner'
+            color: user.role == 'owner'.tr
                 ? Colors.blue.shade50
                 : Colors.green.shade50,
             borderRadius: BorderRadius.circular(20),
@@ -185,7 +185,7 @@ class MyAccount extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: user.role == 'owner'
+              color: user.role == 'owner'.tr
                   ? Colors.blue.shade700
                   : Colors.green.shade700,
             ),
@@ -228,8 +228,8 @@ class MyAccount extends StatelessWidget {
       children: [
         _buildOptionCard(
           icon: Icons.edit_outlined,
-          title: "Edit Profile",
-          subtitle: "Update your personal information",
+          title: "Edit Profile".tr,
+          subtitle: "Update your personal information".tr,
           onTap: () async {
             await Get.to(() => EditProfileScreen());
             controller.loadProfile();
@@ -238,8 +238,8 @@ class MyAccount extends StatelessWidget {
         const SizedBox(height: 12),
         _buildOptionCard(
           icon: Icons.settings_outlined,
-          title: "Settings",
-          subtitle: "App preferences and configurations",
+          title: "Settings".tr,
+          subtitle: "App preferences and configurations".tr,
           onTap: () => Get.to(() => SettingsScreen()),
         ),
       ],

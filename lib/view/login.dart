@@ -40,8 +40,8 @@ class Login extends StatelessWidget {
 
                 const SizedBox(height: 30),
 
-                const Text(
-                  "Welcome Back",
+                 Text(
+                  "Welcome Back".tr,
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
@@ -69,15 +69,15 @@ class Login extends StatelessWidget {
                               maxLength: 10,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "Phone required!";
+                                  return "Phone required!".tr;
                                 }
                                 if (value.length != 10) {
-                                  return "Phone must be 10 digits!";
+                                  return "Must be 10 digits".tr;
                                 }
                                 return null;
                               },
                               decoration: _inputDecoration(
-                                "Phone Number",
+                                "Phone Number".tr,
                                 suffix: Icons.phone,
                               ).copyWith(errorText: ctrl.phoneError),
                             );
@@ -95,15 +95,15 @@ class Login extends StatelessWidget {
                               maxLength: 15,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "Password required!";
+                                  return "Password required!".tr;
                                 }
-                                if (value.length < 7) {
-                                  return "Min 7 characters!";
+                                if (value.length < 8) {
+                                  return "Min 8 characters!".tr;
                                 }
                                 return null;
                               },
                               decoration: _inputDecoration(
-                                "Password",
+                                "Password".tr,
                                 suffixWidget: IconButton(
                                   icon: Icon(
                                     ctrl.isPasswordHidden
@@ -144,8 +144,8 @@ class Login extends StatelessWidget {
                                           strokeWidth: 3,
                                         ),
                                       )
-                                    : const Text(
-                                        "Log In",
+                                    :  Text(
+                                        "Log In".tr,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 20,
@@ -162,11 +162,11 @@ class Login extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Don’t have an account? "),
+                             Text("Don’t have an account?".tr),
                             GestureDetector(
                               onTap: () => Get.to(Signup()),
-                              child: const Text(
-                                "Sign Up",
+                              child:  Text(
+                                "Sign Up".tr,
                                 style: TextStyle(
                                   color: Color(0xFF274668),
                                   fontWeight: FontWeight.bold,

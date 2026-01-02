@@ -69,7 +69,7 @@ class _MyRentState extends State<MyRent> {
               if (reservations.isEmpty) {
                 return Center(
                   child: Text(
-                    'no ${controller.currentStatus.value.displayName} reservations',
+                    'no ${controller.currentStatus.value.displayName} reservations'.tr,
                   ),
                 );
               }
@@ -124,7 +124,7 @@ class _MyRentState extends State<MyRent> {
           ElevatedButton.icon(
             onPressed: () => controller.editReservation(reservation),
             icon: const Icon(Icons.edit, size: 16),
-            label: const Text("Edit"),
+            label:  Text("Edit".tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF274668),
               foregroundColor: Colors.white,
@@ -138,7 +138,7 @@ class _MyRentState extends State<MyRent> {
           ElevatedButton.icon(
             onPressed: () => _showCancelDialog(reservation.id),
             icon: const Icon(Icons.close, size: 16),
-            label: const Text("Cancel"),
+            label:  Text("CANCEL".tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
@@ -152,10 +152,10 @@ class _MyRentState extends State<MyRent> {
 
   void _showCancelDialog(int reservationId) {
     Get.defaultDialog(
-      title: "Cancel Reservation",
-      middleText: "Are you sure you want to cancel this reservation?",
-      textConfirm: "Yes, Cancel",
-      textCancel: "No",
+      title: "Cancel Reservation".tr,
+      middleText: "Are you sure you want to cancel this reservation?".tr,
+      textConfirm: "Yes, Cancel".tr,
+      textCancel: "No".tr,
       confirmTextColor: Colors.white,
       buttonColor: Colors.red,
       onConfirm: () {

@@ -37,7 +37,7 @@ class HomeContent extends StatelessWidget {
                     controller: controller.searchController,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
-                      hintText: "Search ",
+                      hintText: "Search".tr,
                       hintStyle: TextStyle(color: Colors.grey[500]),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -100,7 +100,7 @@ class HomeContent extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Active Filters",
+                              "Active Filters".tr,
                               style: TextStyle(
                                 color: Colors.blue[700],
                                 fontSize: 14,
@@ -109,7 +109,7 @@ class HomeContent extends StatelessWidget {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              "${controller.filteredApartments.length} apartments found",
+                              "${controller.filteredApartments.length} apartments found".tr,
                               style: TextStyle(
                                 color: Colors.blue[600],
                                 fontSize: 12,
@@ -130,7 +130,7 @@ class HomeContent extends StatelessWidget {
                           minimumSize: const Size(0, 0),
                         ),
                         child: Text(
-                          "Clear All",
+                          "Clear All".tr,
                           style: TextStyle(
                             color: Colors.blue[700],
                             fontSize: 14,
@@ -158,8 +158,8 @@ class HomeContent extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Featured Apartments",
+                       Text(
+                        "Featured Apartments".tr,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -174,8 +174,8 @@ class HomeContent extends StatelessWidget {
                               ),
                             );
                           },
-                          child: const Text(
-                            "See All",
+                          child:  Text(
+                            "See All".tr,
                             style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w500,
@@ -228,8 +228,8 @@ class HomeContent extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Top Rated",
+                       Text(
+                        "Top Rated".tr,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -239,8 +239,8 @@ class HomeContent extends StatelessWidget {
                       if (controller.topRatedApartments.length > 3)
                         TextButton(
                           onPressed: () {},
-                          child: const Text(
-                            "See All",
+                          child:  Text(
+                            "See All".tr,
                             style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w500,
@@ -290,8 +290,8 @@ class HomeContent extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "All Apartments",
+                       Text(
+                        "All Apartments".tr,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -303,8 +303,8 @@ class HomeContent extends StatelessWidget {
                           onPressed: () {
                             Get.to(() => AllApartmentsPage());
                           },
-                          child: const Text(
-                            "See All",
+                          child:  Text(
+                            "See All".tr,
                             style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w500,
@@ -344,8 +344,8 @@ class HomeContent extends StatelessWidget {
                     const SizedBox(height: 30),
                     Row(
                       children: [
-                        const Text(
-                          "Filtered Results",
+                         Text(
+                          "Filtered Results".tr,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -386,8 +386,8 @@ class HomeContent extends StatelessWidget {
                               color: Colors.grey[400],
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              "No apartments match your search",
+                             Text(
+                              "No apartments match your search".tr,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,
@@ -395,8 +395,8 @@ class HomeContent extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              "Try adjusting your filters",
+                             Text(
+                              "Try adjusting your filters".tr,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
@@ -414,8 +414,8 @@ class HomeContent extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
-                              child: const Text(
-                                "Adjust Filters",
+                              child:  Text(
+                                "Adjust Filters".tr,
                                 style: TextStyle(fontWeight: FontWeight.w500),
                               ),
                             ),

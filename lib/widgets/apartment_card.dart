@@ -95,8 +95,8 @@ class ApartmentCard extends StatelessWidget {
                           Get.showSnackbar(
                             GetSnackBar(
                               message: isFav
-                                  ? "Removing from favorites..."
-                                  : "Adding to favorites...",
+                                  ? "Removing from favorites...".tr
+                                  : "Adding to favorites...".tr,
                               duration: const Duration(seconds: 1),
                               backgroundColor: Colors.blue,
                             ),
@@ -109,8 +109,8 @@ class ApartmentCard extends StatelessWidget {
                             Get.showSnackbar(
                               GetSnackBar(
                                 message: isFav
-                                    ? "Removed from favorites"
-                                    : "Added to favorites",
+                                    ? "Removed from favorites".tr
+                                    : "Added to favorites".tr,
                                 duration: const Duration(seconds: 1),
                                 backgroundColor: Colors.green,
                               ),
@@ -118,7 +118,7 @@ class ApartmentCard extends StatelessWidget {
                           } catch (e) {
                             Get.showSnackbar(
                               GetSnackBar(
-                                message: "Failed to update favorites",
+                                message: "Failed to update favorites".tr,
                                 duration: const Duration(seconds: 2),
                                 backgroundColor: Colors.red,
                               ),
@@ -197,7 +197,7 @@ class ApartmentCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "\$${apartment.rentValue} / month",
+                          "\$${apartment.rentValue} / month".tr,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -217,8 +217,8 @@ class ApartmentCard extends StatelessWidget {
                             elevation: 0,
                           ),
                           onPressed: onTap,
-                          child: const Text(
-                            "View ",
+                          child:  Text(
+                            "View".tr,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,

@@ -46,8 +46,12 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       builder: (context, child) {
         return GetMaterialApp(
+          defaultTransition: Transition.fadeIn,
+          transitionDuration: const Duration(milliseconds: 300),
+
           locale: Get.deviceLocale,
           translations: MyLocale(),
+
           initialBinding: AppBindings(),
           debugShowCheckedModeBanner: false,
           theme: themeService.lightTheme,

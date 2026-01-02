@@ -11,7 +11,7 @@ class NotificationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notifications"),
+        title:  Text("Notifications".tr),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -19,7 +19,7 @@ class NotificationsPage extends StatelessWidget {
         }
 
         if (controller.notifications.isEmpty) {
-          return const Center(child: Text("No notifications yet"));
+          return  Center(child: Text("No notifications yet".tr));
         }
 
         return ListView.builder(
@@ -29,10 +29,10 @@ class NotificationsPage extends StatelessWidget {
 
             return ListTile(
               leading: Icon(
-                n.status == "accepted"
+                n.status == "accepted".tr
                     ? Icons.check_circle
                     : Icons.cancel,
-                color: n.status == "accepted"
+                color: n.status == "accepted".tr
                     ? Colors.green
                     : Colors.red,
               ),

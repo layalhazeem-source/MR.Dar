@@ -17,7 +17,7 @@ class Signup extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          "Join us & find your perfect home",
+          "Join us & find your perfect home".tr,
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 21,
@@ -46,11 +46,11 @@ class Signup extends StatelessWidget {
                       children: [
                         Expanded(
                           child: GestureDetector(
-                    onTap: () => ctrl.setRole('renter'),
+                    onTap: () => ctrl.setRole('renter'.tr),
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
-                                color: ctrl.role.value == 'renter'
+                                color: ctrl.role.value == 'renter'.tr
                                     ? const Color(0xFF274668)
                                     : const Color(0xFFE8ECF4),
                                 borderRadius: BorderRadius.circular(24),
@@ -64,11 +64,11 @@ class Signup extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  "Renter",
+                                  "renter".tr,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: ctrl.role.value == 'renter'
+                                    color: ctrl.role.value == 'renter'.tr
                                         ? Colors.white
                                         : const Color(0xFF274668),
 
@@ -81,11 +81,11 @@ class Signup extends StatelessWidget {
                         SizedBox(width: 15),
                         Expanded(
                           child: GestureDetector(
-                    onTap: () => ctrl.setRole('owner'),
+                    onTap: () => ctrl.setRole('owner'.tr),
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
-                                color: ctrl.role.value == 'owner'
+                                color: ctrl.role.value == 'owner'.tr
                                     ? const Color(0xFF274668)
                                     : const Color(0xFFE8ECF4),
                                 borderRadius: BorderRadius.circular(24),
@@ -99,11 +99,11 @@ class Signup extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  "Owner",
+                                  "owner".tr,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: ctrl.role.value == 'owner'
+                                    color: ctrl.role.value == 'owner'.tr
                                         ? Colors.white
                                         : const Color(0xFF274668),
                                   ),
@@ -131,8 +131,8 @@ class Signup extends StatelessWidget {
                           fontSize: 22,
                         ),
                         validator: (v) =>
-                        v!.isEmpty ? "First name is required!" : null,
-                        decoration: _inputDecoration("First name"),
+                        v!.isEmpty ? "First name is required!".tr : null,
+                        decoration: _inputDecoration("First name".tr),
                       ),
                     ),
                     SizedBox(width: 15),
@@ -145,8 +145,8 @@ class Signup extends StatelessWidget {
                           fontSize: 22,
                         ),
                         validator: (v) =>
-                        v!.isEmpty ? "Last name is required!" : null,
-                        decoration: _inputDecoration("Last name"),
+                        v!.isEmpty ? "Last name is required!".tr : null,
+                        decoration: _inputDecoration("Last name".tr),
                       ),
                     ),
                   ],
@@ -161,7 +161,7 @@ class Signup extends StatelessWidget {
                       readOnly: true,
                       controller: ctrl.birthDateController,
                       decoration: _inputDecoration(
-                        "Date of Birth",
+                        "Date of Birth".tr,
                         suffix: Icons.calendar_today,
                       ),
                       onTap: () async {
@@ -178,7 +178,7 @@ class Signup extends StatelessWidget {
                         }
                       },
                       validator: (v) =>
-                      v!.isEmpty ? "Date of Birth is required" : null,
+                      v!.isEmpty ? "Date of Birth is required".tr : null,
                     );
                   },
                 ),
@@ -220,8 +220,8 @@ class Signup extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           ctrl.profileImage.value == null
-                                              ? "Profile Image"
-                                              : "Profile Image Selected",
+                                              ? "Profile Image".tr
+                                              : "Profile Image Selected".tr,
                                           style: TextStyle(
                                             fontSize:
                                             16,
@@ -298,8 +298,8 @@ class Signup extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           ctrl.idImage.value == null
-                                              ? "ID Image"
-                                              : "ID Image Selected",
+                                              ? "ID Image".tr
+                                              : "ID Image Selected".tr,
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: ctrl.idImage.value == null
@@ -356,11 +356,11 @@ class Signup extends StatelessWidget {
                   maxLength: 10,
                   style: const TextStyle(color: Colors.black87, fontSize: 22),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return "Phone is required";
-                    if (v.length != 10) return "Phone must be 10 digits";
+                    if (v == null || v.isEmpty) return "Phone required!".tr;
+                    if (v.length != 10) return "Must be 10 digits".tr;
                     return null;
                   },
-                  decoration: _inputDecoration("Phone", suffix: Icons.phone),
+                  decoration: _inputDecoration("Phone Number".tr, suffix: Icons.phone),
                 ),
 
                 SizedBox(height: 10.h),
@@ -377,12 +377,12 @@ class Signup extends StatelessWidget {
                         fontSize: 22,
                       ),
                       validator: (v) {
-                        if (v!.isEmpty) return "Password required";
-                        if (v.length < 8) return "Must be at least 8 chars";
+                        if (v!.isEmpty) return "Password required!".tr;
+                        if (v.length < 8) return "Min 8 characters!".tr;
                         return null;
                       },
                       decoration: _inputDecoration(
-                        "Password",
+                        "Password".tr,
                         suffixWidget: IconButton(
                           icon: Icon(
                             ctrl.isPasswordHidden
@@ -411,14 +411,14 @@ class Signup extends StatelessWidget {
                         fontSize: 22,
                       ),
                       validator: (v) {
-                        if (v!.isEmpty) return "Confirm is required";
+                        if (v!.isEmpty) return "Confirm is required".tr;
                         if (v != ctrl.passwordController.text) {
-                          return "Not matching";
+                          return "Not matching".tr;
                         }
                         return null;
                       },
                       decoration: _inputDecoration(
-                        "Confirm Password",
+                        "Confirm Password".tr,
                         suffixWidget: IconButton(
                           icon: Icon(
                             ctrl.isConfirmHidden ? Icons.lock : Icons.lock_open,
@@ -456,8 +456,8 @@ class Signup extends StatelessWidget {
                           strokeWidth: 3,
                         ),
                       )
-                          : const Text(
-                        "Sign Up",
+                          :  Text(
+                        "Sign Up".tr,
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,

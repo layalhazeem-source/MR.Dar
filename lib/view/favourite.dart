@@ -64,8 +64,8 @@ class _FavouriteState extends State<Favourite> {
               children: [
                 Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
                 const SizedBox(height: 16),
-                const Text(
-                  "No favorites yet",
+                 Text(
+                  "No favorites yet".tr,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -73,8 +73,8 @@ class _FavouriteState extends State<Favourite> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  "Tap the heart icon on apartments to add them here",
+                 Text(
+                  "Tap the heart icon on apartments to add them here".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
@@ -84,7 +84,7 @@ class _FavouriteState extends State<Favourite> {
                     Get.back(); // العودة للصفحة الرئيسية
                   },
                   icon: const Icon(Icons.explore),
-                  label: const Text("Browse Apartments"),
+                  label:  Text("Browse Apartments".tr),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF274668),
                   ),

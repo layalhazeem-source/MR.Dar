@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'language_selector_dialog.dart';
 import 'login.dart';
 import 'signup.dart';
 
@@ -45,11 +46,11 @@ class WelcomePage extends StatelessWidget {
                   horizontal: 20,
                   vertical: 25,
                 ),
-                child: Column(
+                child:Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      "Welcome to MR.Dar",
+                    Text(
+                      "Welcome to MR.Dar".tr,
                       style: TextStyle(
                         color: Color(0xFF274668),
                         fontSize: 30,
@@ -60,46 +61,99 @@ class WelcomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton(
-                          onPressed: () => Get.to(Login()),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF274668),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF274668), Color(0xFF3A6FA0)], // تدرج أزرق
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 15,
-                            ),
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          child: ElevatedButton(
+                            onPressed: () => Get.to(Login()),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Text(
+                              "Login".tr,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                        ElevatedButton(
-                          onPressed: () => Get.to(Signup()),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFE5E8EF),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+
+
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFFE5E8EF), Color(0xFFC7D1E3)], // تدرج فاتح
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 15,
-                            ),
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                          child: const Text(
-                            "Sign Up",
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 18,
+                          child: ElevatedButton(
+                            onPressed: () => Get.to(Signup()),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Text(
+                              "Sign Up".tr,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    // const SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    // زر اللغة تحت الأزرار
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xFF274668), Color(0xFF3A6FA0)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: ElevatedButton.icon(
+                        onPressed: showLanguageSelector,
+                        icon: Icon(Icons.language, color: Colors.white),
+                        label: Text(
+                          "Language".tr,
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        ),
+                      ),
+                    ),
+
+
+                  ],
+                ),
+
+                // const SizedBox(height: 20),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.center,
                     //   children: [
@@ -120,8 +174,6 @@ class WelcomePage extends StatelessWidget {
                     //     ),
                     //   ],
                     // ),
-                  ],
-                ),
               ),
             ),
           ),

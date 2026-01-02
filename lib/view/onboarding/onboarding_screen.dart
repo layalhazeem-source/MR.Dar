@@ -46,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                  OnboardingPage(
                   title: 'Find Your Perfect Apartment'.tr,
-                  subtitle: "The easiest and fastest way to book apartments",
+                  subtitle: "The easiest and fastest way to book apartments".tr,
                   image: "images/House searching-rafiki.png",
                 ),
                  OnboardingPage(

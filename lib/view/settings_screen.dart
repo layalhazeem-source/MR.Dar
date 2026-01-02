@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controller/my_account_controller.dart';
 import '../controller/authcontroller.dart';
 import 'edit_profile.dart';
+import 'language_selector_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
   SettingsScreen({super.key});
@@ -14,8 +15,8 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Settings",
+        title:  Text(
+          "Settings".tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -23,38 +24,38 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          _sectionTitle("Account"),
+          _sectionTitle("Account".tr),
 
           settingsCard(
             icon: Icons.edit,
-            title: "Edit Profile",
-            subtitle: "Update your personal information",
+            title: "Edit Profile".tr,
+            subtitle: "Update your personal information".tr,
             onTap: () => Get.to(() => EditProfileScreen()),
           ),
 
           settingsCard(
             icon: Icons.logout,
-            title: "Logout",
-            subtitle: "Sign out from your account",
+            title: "Logout".tr,
+            subtitle: "Sign out from your account".tr,
             onTap: () {
               Get.dialog(
                 AlertDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  title: const Text(
-                    'Attention ! ',
+                  title:  Text(
+                    'Attention ! '.tr,
                     style: TextStyle(fontSize: 30),
                   ),
                   content: Text(
-                    'Are you sure you want to logout?',
+                    'Are you sure you want to logout?'.tr,
                     style: TextStyle(fontSize: 17),
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Get.back(),
-                      child: const Text(
-                        'Cancel',
+                      child:  Text(
+                        'CANCEL'.tr,
                         style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -68,7 +69,7 @@ class SettingsScreen extends StatelessWidget {
                       },
 
                       child: Text(
-                        'Confirm',
+                        'Confirm'.tr,
                         style: TextStyle(
                           color: Color(0xFF274668),
                           fontWeight: FontWeight.bold,
@@ -81,30 +82,31 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
 
-          _sectionTitle("Preferences"),
+          _sectionTitle("Preferences".tr),
 
           settingsCard(
             icon: Icons.dark_mode,
-            title: "Theme",
-            subtitle: "Light / Dark mode (coming soon)",
+            title: "Theme".tr,
+            subtitle: "Light / Dark mode".tr,
             enabled: false,
           ),
 
           settingsCard(
             icon: Icons.language,
-            title: "Language",
-            subtitle: "Change app language (coming soon)",
-            enabled: false,
+            title: "Language".tr,
+            subtitle: "Change app language".tr,
+            onTap: showLanguageSelector,
           ),
 
-          _sectionTitle("Danger Zone"),
+
+          _sectionTitle("Danger Zone".tr),
 
           settingsCard(
             icon: Icons.delete,
             iconColor: Colors.red,
-            title: "Delete Account",
+            title: "Delete Account".tr,
             textColor: Colors.red,
-            subtitle: "Delete your account !",
+            subtitle: "Delete your account !".tr,
             onTap: () => accountController.showDeleteAccountFlow(context),
           ),
         ],

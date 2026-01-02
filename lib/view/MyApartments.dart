@@ -28,7 +28,7 @@ class _MyApartmentsState extends State<MyApartments> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Apartments'),
+        title:  Text('My Apartments'.tr),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -136,7 +136,7 @@ class _MyApartmentsState extends State<MyApartments> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () => controller.fetchMyApartments(),
-                        child: const Text('Retry'),
+                        child:  Text('Retry'.tr),
                       ),
                     ],
                   ),
@@ -158,7 +158,7 @@ class _MyApartmentsState extends State<MyApartments> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No apartments in ${controller.currentStatus.value.displayName}',
+                        'No apartments in ${controller.currentStatus.value.displayName}'.tr,
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -168,7 +168,7 @@ class _MyApartmentsState extends State<MyApartments> {
                       if (controller.currentStatus.value != ApartmentStatus.pending)
                         ElevatedButton(
                           onPressed: () => controller.changeStatus(ApartmentStatus.pending),
-                          child: const Text('View Pending Apartments'),
+                          child:  Text('View Pending Apartments'.tr),
                         ),
                     ],
                   ),
@@ -219,7 +219,7 @@ class _MyApartmentsState extends State<MyApartments> {
                                   ),
                                 ),
                                 Text(
-                                  '${apartment.rentValue} SYP',
+                                  '${apartment.rentValue} SYP'.tr,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
