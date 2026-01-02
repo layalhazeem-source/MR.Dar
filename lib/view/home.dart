@@ -11,6 +11,8 @@ import 'homeContent.dart';
 import 'favourite.dart';
 import 'myAccount.dart';
 import 'myRent.dart';
+import 'notifications_page.dart';
+import '../controller/notification_controller.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
@@ -18,6 +20,8 @@ class Home extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
   final ThemeService themeService = Get.find();
   final UserController user = Get.find<UserController>();
+  final NotificationController notificationController =
+  Get.find<NotificationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +73,37 @@ class Home extends StatelessWidget {
       centerTitle: true,
       actions: index == 0
           ? [
+        // 🔔 زر الإشعارات
+        Obx(() {
+          final hasNotifications =
+              notificationController.notifications.isNotEmpty;
+
+          return Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.notifications_none),
+                onPressed: () {
+                  Get.to(() => NotificationsPage());
+                },
+              ),
+
+              // 🔴 Badge
+              if (hasNotifications)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    width: 9,
+                    height: 9,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        }),
               Obx(() {
                 final isDark = themeService.rxIsDark.value;
                 return IconButton(
