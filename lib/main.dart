@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_project/view/onboarding/onboarding_screen.dart';
+import 'fcm_test.dart';
 import 'controller/locale/locale.dart';
 import 'view/apartment_details_page.dart';
 import 'core/bindings/app_bindings.dart';
@@ -25,6 +27,10 @@ void main() async {
 
   // نطبق الثيم اللي مخزون
   Get.changeThemeMode(themeService.themeMode);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await initFcm(); // 👈 هون
+
   runApp(const MyApp());
 }
 
