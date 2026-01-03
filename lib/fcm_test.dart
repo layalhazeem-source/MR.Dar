@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:new_project/service/local_notification_service.dart';
 import '../controller/notification_controller.dart';
 
 Future<void> initFcm() async {
@@ -16,13 +17,20 @@ Future<void> initFcm() async {
     print("NEW TOKEN: $newToken");
   });
 
-  // 3️⃣ هون الشغل المهم 🔥
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("🔥 New notification arrived");
+    final title = message.notification?.title ?? 'Notification';
+    final body = message.notification?.body ?? '';
 
-    // لما يوصل إشعار → نحدّث الإشعارات من الباك
+    // 🔔 هذا اللي بيخلّي الإشعار يطلع على الشاشة
+    LocalNotificationService.show(
+      title: title,
+      body: body,
+    );
+
+    // 🔄 تحديث الليست داخل التطبيق
     if (Get.isRegistered<NotificationController>()) {
       Get.find<NotificationController>().fetchNotifications();
     }
   });
+
 }

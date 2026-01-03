@@ -14,6 +14,19 @@ class MyRent extends StatefulWidget {
 }
 
 class _MyRentState extends State<MyRent> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final id = controller.highlightedReservationId.value;
+
+      if (id != null) {
+        controller.scrollToReservation(id);
+      }
+    });
+  }
+
   final MyRentsController controller = Get.find<MyRentsController>();
 
   @override
@@ -76,6 +89,8 @@ class _MyRentState extends State<MyRent> {
 
               // 4️⃣ List
               return ListView.builder(
+                controller: controller.scrollController,
+
                 itemCount: reservations.length,
                 itemBuilder: (context, index) {
                   final reservation = reservations[index];

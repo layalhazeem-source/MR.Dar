@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_project/service/local_notification_service.dart';
 import 'package:new_project/view/onboarding/onboarding_screen.dart';
 import 'fcm_test.dart';
 import 'controller/locale/locale.dart';
@@ -30,6 +31,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await initFcm(); // 👈 هون
+  await LocalNotificationService.init();
 
   runApp(const MyApp());
 }

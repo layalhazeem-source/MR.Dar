@@ -17,7 +17,7 @@ import '../controller/notification_controller.dart';
 class Home extends StatelessWidget {
   Home({super.key});
 
-  final HomeController controller = Get.put(HomeController());
+  final HomeController controller = Get.find<HomeController>();
   final ThemeService themeService = Get.find();
   final UserController user = Get.find<UserController>();
   final NotificationController notificationController =

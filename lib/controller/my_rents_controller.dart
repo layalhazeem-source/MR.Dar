@@ -19,12 +19,39 @@ class MyRentsController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   final RxBool isProcessing = false.obs; // للعمليات الجديدة
+  final highlightedReservationId = RxnInt();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void onInit() {
     super.onInit();
     print('و🔥 MyRentsController INIT ${hashCode}');
     fetchMyReservations();
+
+
+  }
+  // 👈 هاي الدالة بس
+  void handleNotification({
+    required String status,
+    required int reservationId,
+  }) {
+    currentStatus.value =
+        ReservationStatusExtension.fromString(status);
+
+    highlightedReservationId.value = reservationId;
+  }
+
+  void scrollToReservation(int reservationId) {
+    final index = filteredReservations
+        .indexWhere((r) => r.id == reservationId);
+
+    if (index == -1) return;
+
+    scrollController.animateTo(
+      index * 170, // حسب ارتفاع الكارد
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   /// جلب الحجوزات من السيرفر

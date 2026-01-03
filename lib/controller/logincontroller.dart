@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../core/errors/exceptions.dart';
+import '../fcm_test.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 import 'UserController.dart';
@@ -61,6 +62,7 @@ class LoginController extends GetxController {
         );
         return;
       }
+      await initFcm();  // ← هون
 
       Get.offAll(() => Home());
     } on ServerException catch (e) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../fcm_test.dart';
 import '../service/auth_service.dart';
 import '../controller/my_account_controller.dart';
 import '../service/userService.dart';
@@ -16,6 +17,8 @@ class AuthController extends GetxController {
   /// بعد Login أو Signup
   Future<void> handleAuthSuccess() async {
     await Get.find<MyAccountController>().loadProfile();
+    await initFcm();
+
     Get.offAll(() => Home());
   }
 
