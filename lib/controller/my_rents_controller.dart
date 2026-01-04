@@ -27,8 +27,6 @@ class MyRentsController extends GetxController {
     super.onInit();
     print('و🔥 MyRentsController INIT ${hashCode}');
     fetchMyReservations();
-
-
   }
 
   /// 🔄 إعادة تحميل البيانات (عند تغيير اللغة)
@@ -41,15 +39,13 @@ class MyRentsController extends GetxController {
     required String status,
     required int reservationId,
   }) {
-    currentStatus.value =
-        ReservationStatusExtension.fromString(status);
+    currentStatus.value = ReservationStatusExtension.fromString(status);
 
     highlightedReservationId.value = reservationId;
   }
 
   void scrollToReservation(int reservationId) {
-    final index = filteredReservations
-        .indexWhere((r) => r.id == reservationId);
+    final index = filteredReservations.indexWhere((r) => r.id == reservationId);
 
     if (index == -1) return;
 
@@ -117,16 +113,15 @@ class MyRentsController extends GetxController {
       final start = DateTime.parse(reservation.startDate);
       final end = DateTime.parse(reservation.endDate);
 
-      // 🟢 حجز حالي (accepted + ضمن المدة)
+      // 🟢 كل المقبولة
       if (currentStatus.value == ReservationStatus.accepted) {
-        return status == ReservationStatus.accepted &&
-            start.isBefore(now) &&
-            end.isAfter(now);
+        return status == ReservationStatus.accepted;
       }
 
-      // 🔵 حجز سابق (انتهى)
+      // 🔵 السابقة (مقبولة + انتهت)
       if (currentStatus.value == ReservationStatus.previous) {
-        return end.isBefore(now);
+        return status == ReservationStatus.previous ||
+            (status == ReservationStatus.accepted && end.isBefore(now));
       }
 
       // باقي الحالات
@@ -212,8 +207,5 @@ class MyRentsController extends GetxController {
         );
       },
     );
-
-
-
   }
 }

@@ -16,39 +16,98 @@ class RateApartmentPage extends StatelessWidget {
     controller.checkIfCanRate(houseId);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Rate Apartment")),
+      appBar: AppBar(
+        title: const Text("Rate Apartment"),
+        backgroundColor: const Color(0xFF274668),
+      ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (!controller.canRate.value) {
-          return Center(child: Text("You cannot rate this apartment"));
+          return const Center(
+            child: Text(
+              "You cannot rate this apartment",
+              style: TextStyle(fontSize: 16),
+            ),
+          );
         }
 
-        return Column(
-          children: [
-            Text("Your rating"),
-            Slider(
-              value: controller.rating.value.toDouble(),
-              min: 1,
-              max: 5,
-              divisions: 4,
-              label: controller.rating.value.toString(),
-              onChanged: (v) => controller.rating.value = v.toInt(),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final success = await controller.submitReview(houseId);
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Your Rating",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
 
-                if (success) {
-                  Get.back();
-                  Get.snackbar("Success", "Review added");
-                }
-              },
-              child: Text("Submit"),
-            ),
-          ],
+              // ⭐⭐⭐⭐ النجوم
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    final starIndex = index + 1;
+                    return IconButton(
+                      onPressed: () {
+                        controller.rating.value = starIndex;
+                      },
+                      icon: Icon(
+                        Icons.star,
+                        size: 40,
+                        color: controller.rating.value >= starIndex
+                            ? Colors.amber
+                            : Colors.grey[300],
+                      ),
+                    );
+                  }),
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // زر ارسال التقييم
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final success = await controller.submitReview(houseId);
+
+                    if (success) {
+                      Get.back();
+                      Get.snackbar(
+                        "Success",
+                        "Review added successfully",
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white,
+                      );
+                    } else {
+                      Get.snackbar(
+                        "Error",
+                        "Failed to add review",
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF274668),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       }),
     );

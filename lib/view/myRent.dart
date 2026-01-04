@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_project/view/rate_apartment_page.dart';
 import '../controller/my_rents_controller.dart';
 import '../core/enums/reservation_status.dart';
 import '../model/reservation_model.dart';
@@ -82,7 +83,8 @@ class _MyRentState extends State<MyRent> {
               if (reservations.isEmpty) {
                 return Center(
                   child: Text(
-                    'no ${controller.currentStatus.value.displayName} reservations'.tr,
+                    'no ${controller.currentStatus.value.displayName} reservations'
+                        .tr,
                   ),
                 );
               }
@@ -112,6 +114,47 @@ class _MyRentState extends State<MyRent> {
                             );
                           },
                         ),
+                        const SizedBox(height: 12),
+
+                        if (controller.currentStatus.value ==
+                            ReservationStatus.previous)
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Get.to(
+                                  () => RateApartmentPage(
+                                    houseId: reservation.apartment.id,
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 20,
+                              ),
+                              label: const Text(
+                                "Rate",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF274668),
+                                shadowColor: Colors.black.withOpacity(0.3),
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
 
                         // 🔽 نضيف أزرار التعديل والإلغاء للـ Pending فقط
                         if (controller.currentStatus.value ==
@@ -139,7 +182,7 @@ class _MyRentState extends State<MyRent> {
           ElevatedButton.icon(
             onPressed: () => controller.editReservation(reservation),
             icon: const Icon(Icons.edit, size: 16),
-            label:  Text("Edit".tr),
+            label: Text("Edit".tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF274668),
               foregroundColor: Colors.white,
@@ -153,7 +196,7 @@ class _MyRentState extends State<MyRent> {
           ElevatedButton.icon(
             onPressed: () => _showCancelDialog(reservation.id),
             icon: const Icon(Icons.close, size: 16),
-            label:  Text("CANCEL".tr),
+            label: Text("CANCEL".tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,

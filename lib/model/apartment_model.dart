@@ -22,7 +22,7 @@ class Apartment {
   final String? apartmentStatus;
 
   final List<String> houseImages;
-
+  bool get isPrevious => apartmentStatus == 'accepted';
   Apartment({
     required this.id,
     required this.title,
@@ -44,8 +44,7 @@ class Apartment {
   });
 
   factory Apartment.fromJson(Map<String, dynamic> json) {
-    int safeInt(dynamic v) =>
-        v == null ? 0 : int.tryParse(v.toString()) ?? 0;
+    int safeInt(dynamic v) => v == null ? 0 : int.tryParse(v.toString()) ?? 0;
 
     double safeDouble(dynamic v) =>
         v == null ? 0.0 : double.tryParse(v.toString()) ?? 0.0;
@@ -81,11 +80,15 @@ class Apartment {
       // استخدم الدالة المساعدة للتحويل
       if (statusValue != null) {
         final status = ApartmentStatusExtension.fromDynamic(statusValue);
-        return status.toString().split('.').last; // يحول 'ApartmentStatus.accepted' إلى 'accepted'
+        return status
+            .toString()
+            .split('.')
+            .last; // يحول 'ApartmentStatus.accepted' إلى 'accepted'
       }
 
       return 'pending';
     }
+
     final apartmentStatus = getApartmentStatus();
 
     return Apartment(
@@ -95,7 +98,7 @@ class Apartment {
       rentValue: safeDouble(json['rent_value']),
       rooms: safeInt(json['rooms']),
       space: safeDouble(json['space']),
-      notes: json['notes'] ,
+      notes: json['notes'],
 
       cityId: safeInt(city['id']),
       cityName: city['name'] ?? '',

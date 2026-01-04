@@ -217,7 +217,7 @@ class ApartmentCard extends StatelessWidget {
                             elevation: 0,
                           ),
                           onPressed: onTap,
-                          child:  Text(
+                          child: Text(
                             "View".tr,
                             style: TextStyle(
                               fontSize: 12,

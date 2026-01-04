@@ -16,6 +16,7 @@ import '../../service/ApartmentService.dart';
 import '../../service/UserLocalService.dart';
 import '../../service/booking_service.dart';
 import '../../service/notification_service.dart';
+import '../../service/review_service.dart';
 import '../../service/userService.dart';
 import '../api/dio_consumer.dart';
 import '../../controller/logincontroller.dart';
@@ -44,10 +45,9 @@ class AppBindings extends Bindings {
     Get.put<UserService>(UserService(dioConsumer), permanent: true);
     Get.put<UserLocalService>(UserLocalService(), permanent: true);
     Get.put<BookingService>(bookingService, permanent: true);
-    Get.put<NotificationService>(
-      notificationService,
-      permanent: true,
-    );
+    Get.put<NotificationService>(notificationService, permanent: true);
+    Get.put<ReviewService>(ReviewService(), permanent: true);
+
     //Controllers
     Get.put<HomeController>(HomeController(), permanent: true);
     Get.put<ApartmentController>(
@@ -107,13 +107,14 @@ class AppBindings extends Bindings {
       permanent: true,
     );
     Get.lazyPut<MyApartmentsController>(
-          () => MyApartmentsController(apartmentService: Get.find<ApartmentService>()),
+      () => MyApartmentsController(
+        apartmentService: Get.find<ApartmentService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<NotificationController>(
-          () => NotificationController(service: notificationService),
+      () => NotificationController(service: notificationService),
       fenix: true,
     );
-
   }
 }

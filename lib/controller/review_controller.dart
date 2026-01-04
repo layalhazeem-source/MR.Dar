@@ -8,7 +8,7 @@ class ReviewController extends GetxController {
 
   RxBool canRate = false.obs;
   RxBool isLoading = false.obs;
-  RxInt rating = 0.obs;
+  RxInt rating = 1.obs;
 
   Future<void> checkIfCanRate(int houseId) async {
     isLoading.value = true;
