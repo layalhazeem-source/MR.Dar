@@ -49,10 +49,15 @@ class _MyRentState extends State<MyRent> {
                     child: ChoiceChip(
                       label: Text(status.displayName),
                       selected: isSelected,
+                      selectedColor: Theme.of(context).colorScheme.primary,
+                      labelStyle: TextStyle(
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.onSurface,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          20,
-                        ), // غيّري الرقم حسب الدرجة اللي تحبيها
+                        borderRadius: BorderRadius.circular(20),
+
                       ),
                       onSelected: (_) => controller.changeStatus(status),
                     ),
@@ -145,8 +150,8 @@ class _MyRentState extends State<MyRent> {
                                   horizontal: 20,
                                   vertical: 12,
                                 ),
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF274668),
+                                backgroundColor: Theme.of(context).colorScheme.surface,
+                                foregroundColor: Theme.of(context).colorScheme.primary,
                                 shadowColor: Colors.black.withOpacity(0.3),
                                 elevation: 5,
                                 shape: RoundedRectangleBorder(
@@ -184,7 +189,7 @@ class _MyRentState extends State<MyRent> {
             icon: const Icon(Icons.edit, size: 16),
             label: Text("Edit".tr),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF274668),
+              backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             ),
@@ -198,7 +203,7 @@ class _MyRentState extends State<MyRent> {
             icon: const Icon(Icons.close, size: 16),
             label: Text("CANCEL".tr),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).colorScheme.error,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             ),
@@ -214,8 +219,8 @@ class _MyRentState extends State<MyRent> {
       middleText: "Are you sure you want to cancel this reservation?".tr,
       textConfirm: "Yes, Cancel".tr,
       textCancel: "No".tr,
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
+      buttonColor: Theme.of(context).colorScheme.error,
+      confirmTextColor: Theme.of(context).colorScheme.onError,
       onConfirm: () {
         Get.back();
         controller.cancelReservation(reservationId);

@@ -28,9 +28,9 @@ class Home extends StatelessWidget {
       final currentIndex = controller.currentIndex.value;
 
       return Scaffold(
-        appBar: _buildAppBar(currentIndex),
+        appBar: _buildAppBar(context,currentIndex),
         body: _buildIndexedStack(),
-        bottomNavigationBar: _buildBottomNavigationBar(),
+        bottomNavigationBar: _buildBottomNavigationBar(context),
 
         // ➕ زر إضافة شقة (Owner فقط)
         floatingActionButton: user.isOwner && controller.currentIndex.value == 0
@@ -49,7 +49,7 @@ class Home extends StatelessWidget {
   }
 
   // ========================= AppBar =========================
-  AppBar _buildAppBar(int index) {
+  AppBar _buildAppBar(BuildContext context, int index) {
     String title;
 
     if (index == 0) {
@@ -67,8 +67,6 @@ class Home extends StatelessWidget {
         title,
         style: const TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.white,
-      foregroundColor: const Color(0xFF274668),
       centerTitle: true,
       actions: index == 0
           ? [
@@ -131,7 +129,7 @@ class Home extends StatelessWidget {
   }
 
   // ========================= BottomNavigationBar =========================
-  Widget _buildBottomNavigationBar() {
+  Widget _buildBottomNavigationBar(BuildContext context) {
     return Obx(() {
       final isOwner = user.isOwner;
 
@@ -140,8 +138,9 @@ class Home extends StatelessWidget {
         currentIndex: controller.currentIndex.value,
         onTap: controller.changeTab,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF274668),
-        unselectedItemColor: Colors.black45,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor:
+        Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         items: isOwner ? _ownerItems() : _renterItems(),
       );
     });

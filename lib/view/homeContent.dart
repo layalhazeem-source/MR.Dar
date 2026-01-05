@@ -36,9 +36,14 @@ class HomeContent extends StatelessWidget {
                   child: TextField(
                     controller: controller.searchController,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      ),
                       hintText: "Search".tr,
-                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -64,7 +69,7 @@ class HomeContent extends StatelessWidget {
                       vertical: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: Color(0xFF274668),
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
@@ -87,13 +92,13 @@ class HomeContent extends StatelessWidget {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.blue[50],
+                    color:  Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.blue[100]!),
+                    border: Border.all( color: Theme.of(context).colorScheme.primary.withOpacity(0.3),),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.filter_alt, size: 18, color: Colors.blue[700]),
+                      Icon(Icons.filter_alt, size: 18, color: Theme.of(context).colorScheme.primary,),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
@@ -102,7 +107,7 @@ class HomeContent extends StatelessWidget {
                             Text(
                               "Active Filters".tr,
                               style: TextStyle(
-                                color: Colors.blue[700],
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -111,7 +116,7 @@ class HomeContent extends StatelessWidget {
                             Text(
                               "${controller.filteredApartments.length} apartments found".tr,
                               style: TextStyle(
-                                color: Colors.blue[600],
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 12,
                               ),
                             ),
@@ -132,7 +137,7 @@ class HomeContent extends StatelessWidget {
                         child: Text(
                           "Clear All".tr,
                           style: TextStyle(
-                            color: Colors.blue[700],
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -163,7 +168,7 @@ class HomeContent extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),if (controller.featuredApartments.length > 1)
                         TextButton(
@@ -177,7 +182,7 @@ class HomeContent extends StatelessWidget {
                           child:  Text(
                             "See All".tr,
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -233,7 +238,8 @@ class HomeContent extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
+
                         ),
                       ),
                       if (controller.topRatedApartments.length > 3)
@@ -242,7 +248,8 @@ class HomeContent extends StatelessWidget {
                           child:  Text(
                             "See All".tr,
                             style: TextStyle(
-                              color: Colors.blue,
+                              color: Theme.of(context).colorScheme.primary,
+
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -295,7 +302,8 @@ class HomeContent extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
+
                         ),
                       ),
                       if (controller.topRatedApartments.length > 3)
@@ -306,7 +314,8 @@ class HomeContent extends StatelessWidget {
                           child:  Text(
                             "See All".tr,
                             style: TextStyle(
-                              color: Colors.blue,
+                              color: Theme.of(context).colorScheme.primary,
+
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -349,7 +358,8 @@ class HomeContent extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: Theme.of(context).colorScheme.onSurface,
+
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -359,7 +369,8 @@ class HomeContent extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: Theme.of(context).colorScheme.primary,
+
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -383,14 +394,14 @@ class HomeContent extends StatelessWidget {
                             Icon(
                               Icons.search_off,
                               size: 70,
-                              color: Colors.grey[400],
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
                             ),
                             const SizedBox(height: 16),
                              Text(
                               "No apartments match your search".tr,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey,
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -399,7 +410,7 @@ class HomeContent extends StatelessWidget {
                               "Try adjusting your filters".tr,
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey,
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                               ),
                             ),
                             const SizedBox(height: 20),

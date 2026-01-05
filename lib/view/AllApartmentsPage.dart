@@ -21,8 +21,9 @@ class AllApartmentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title:  Text("All Apartments".tr),
-        backgroundColor: const Color(0xFF274668),
       ),
       body: Column(
         children: [
@@ -35,8 +36,12 @@ class AllApartmentsPage extends StatelessWidget {
                   child: TextField(
                     controller: controller.searchController,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                      prefixIcon: Icon(Icons.search,   color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      ),
                       hintText: "Search".tr,
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -56,10 +61,13 @@ class AllApartmentsPage extends StatelessWidget {
                     padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF274668),
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.tune, color: Colors.white, size: 28),
+                    child:  Icon(Icons.tune,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 28,
+                    ),
                   ),
                 ),
               ],
@@ -72,14 +80,19 @@ class AllApartmentsPage extends StatelessWidget {
               final apartments = controller.displayApartments;
 
               if (controller.isLoading.value && apartments.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
+                return  Center(child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                ));
               }
 
               if (apartments.isEmpty) {
                 return Center(
                   child: Text(
                     "No apartments found".tr,
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ),
                   ),
                 );
               }
@@ -112,9 +125,11 @@ class AllApartmentsPage extends StatelessWidget {
                     } else {
                       // Loader عند تحميل المزيد
                       return Obx(() => controller.isLoadingMore.value
-                          ? const Padding(
+                          ?  Padding(
                         padding: EdgeInsets.symmetric(vertical: 16),
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.primary,
+                        )),
                       )
                           : const SizedBox());
                     }

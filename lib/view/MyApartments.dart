@@ -28,6 +28,8 @@ class _MyApartmentsState extends State<MyApartments> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         title:  Text('My Apartments'.tr),
         actions: [
           IconButton(
@@ -85,12 +87,15 @@ class _MyApartmentsState extends State<MyApartments> {
                             ],
                           ),
                           selected: isSelected,
-                          selectedColor: Theme.of(context).primaryColor,
+                          selectedColor: Theme.of(context).colorScheme.primary,
                           labelStyle: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.onPrimary
+                                : Theme.of(context).colorScheme.onSurface,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
+
                           ),
                           onSelected: (_) => controller.changeStatus(status),
                         ),
@@ -119,16 +124,16 @@ class _MyApartmentsState extends State<MyApartments> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                       Icon(
                         Icons.error_outline,
                         size: 60,
-                        color: Colors.red,
+                          color: Theme.of(context).colorScheme.error
                       ),
                       const SizedBox(height: 16),
                       Text(
                         controller.errorMessage.value,
-                        style: const TextStyle(
-                          color: Colors.red,
+                        style:  TextStyle(
+                          color: Theme.of(context).colorScheme.error,
                           fontSize: 16,
                         ),
                         textAlign: TextAlign.center,
@@ -151,17 +156,17 @@ class _MyApartmentsState extends State<MyApartments> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                       Icon(
                         Icons.apartment,
                         size: 80,
-                        color: Colors.grey,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)
                       ),
                       const SizedBox(height: 16),
                       Text(
                         'No apartments in ${controller.currentStatus.value.displayName}'.tr,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 16,
-                          color: Colors.grey,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)
                         ),
                       ),
                       const SizedBox(height: 8),

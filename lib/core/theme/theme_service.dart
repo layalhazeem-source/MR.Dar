@@ -108,37 +108,69 @@ class ThemeService extends GetxService {
 
 
   ThemeData get darkTheme {
+    const primary = Color(0xFF6FA8DC); // أزرق هادئ ومريح
+    const bg = Color(0xFF0E1625);      // خلفية رئيسية
+    const surface = Color(0xFF162033); // كروت / عناصر
+    const textPrimary = Color(0xFFE6EDF5); // أبيض مكسور
+    const textSecondary = Color(0xFF9FB2C8);
+
     return ThemeData(
       brightness: Brightness.dark,
-      primaryColor: const Color(0xFF274668),
-      scaffoldBackgroundColor: const Color(0xFF0B1220),
+      primaryColor: primary,
+      scaffoldBackgroundColor: bg,
+
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF12233A),
+        backgroundColor: surface,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: textPrimary,
+        iconTheme: IconThemeData(color: textPrimary),
       ),
-      colorScheme: ColorScheme.dark(
-        primary: const Color(0xFF274668),
-        secondary: const Color(0xFF96C6E2),
-        background: const Color(0xFF0B1220),
-        surface: const Color(0xFF0F1724),
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onBackground: Colors.white,
-        onSurface: Colors.white,
+
+      colorScheme: const ColorScheme.dark(
+        primary: primary,
+        secondary: Color(0xFF9CC4E4),
+        background: bg,
+        surface: surface,
+        onPrimary: Colors.black,
+        onSecondary: Colors.black,
+        onBackground: textPrimary,
+        onSurface: textPrimary,
       ),
+
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(color: textPrimary),
+        bodyMedium: TextStyle(color: textPrimary),
+        titleLarge: TextStyle(
+          color: textPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+        labelMedium: TextStyle(color: textSecondary),
+      ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF1F2937),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        fillColor: surface,
+        hintStyle: const TextStyle(color: textSecondary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
       ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF274668),
+          backgroundColor: primary,
+          foregroundColor: Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
         ),
+      ),
+
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: surface,
+        selectedItemColor: primary,
+        unselectedItemColor: textSecondary,
       ),
     );
   }

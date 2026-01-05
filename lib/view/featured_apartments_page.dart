@@ -15,7 +15,10 @@ class FeaturedApartmentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         title:  Text("Featured Apartments".tr),
         centerTitle: true,
       ),

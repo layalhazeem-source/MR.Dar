@@ -52,6 +52,7 @@ class _FavouriteState extends State<Favourite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Obx(() {
         if (controller.isLoading.value &&
             controller.favoriteApartments.isEmpty) {
@@ -63,21 +64,25 @@ class _FavouriteState extends State<Favourite> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
+                Icon(Icons.favorite_border, size: 80,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                ),
                 const SizedBox(height: 16),
                 Text(
                   "No favorites yet".tr,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "Tap the heart icon on apartments to add them here".tr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: TextStyle(fontSize: 14,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 // ElevatedButton.icon(
@@ -87,8 +92,9 @@ class _FavouriteState extends State<Favourite> {
                 //   icon: const Icon(Icons.explore),
                 //   label: Text("Browse Apartments".tr),
                 //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: const Color(0xFF274668),
-                //   ),
+                //   backgroundColor: Theme.of(context).colorScheme.primary,
+                //   foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                // ),
                 // ),
               ],
             ),

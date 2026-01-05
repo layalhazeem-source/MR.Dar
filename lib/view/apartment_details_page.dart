@@ -21,7 +21,7 @@ class ApartmentDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 24),
         child: Column(
@@ -49,6 +49,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: _glassCircle(
+                        context: context,
                         icon: Icons.arrow_back_ios_new,
                         onTap: () => Get.back(),
                       ),
@@ -60,6 +61,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     left: 12,
                     top: 170,
                     child: _glassCircle(
+                      context: context,
                       icon: Icons.arrow_back_ios,
                       onTap: () => _pageController.previousPage(
                         duration: const Duration(milliseconds: 300),
@@ -75,6 +77,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     right: 12,
                     top: 170,
                     child: _glassCircle(
+                      context: context,
                       icon: Icons.arrow_forward_ios,
                       onTap: () => _pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
@@ -116,8 +119,8 @@ class ApartmentDetailsPage extends StatelessWidget {
             // ================= CONTENT =================
             Container(
               transform: Matrix4.translationValues(0, -24, 0),
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration:  BoxDecoration(
+                color:Theme.of(context).colorScheme.surface,
                 borderRadius:
                 BorderRadius.vertical(top: Radius.circular(28)),
               ),
@@ -132,9 +135,10 @@ class ApartmentDetailsPage extends StatelessWidget {
                       Expanded(
                         child: Text(
                           apartment.title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -146,7 +150,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                             isFav
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: isFav ? Colors.red : Colors.grey,
+                            color: isFav ? Colors.red : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                           ),
                           onPressed: () => apartmentController
                               .toggleFavorite(apartment.id),
@@ -159,15 +163,15 @@ class ApartmentDetailsPage extends StatelessWidget {
 
                   Row(
                     children: [
-                      const Icon(Icons.location_on,
-                          size: 18, color: kPrimary),
-                      const SizedBox(width: 6),
+                       Icon(Icons.location_on,
+                          size: 18, color: Theme.of(context).colorScheme.primary),
+                       SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           "${apartment.street}, ${apartment.cityName}, ${apartment.governorateName}",
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[700],
+                            color:  Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                       ),
@@ -185,12 +189,12 @@ class ApartmentDetailsPage extends StatelessWidget {
                     crossAxisSpacing: 14,
                     childAspectRatio: 2.6,
                     children: [
-                      _specItem(Icons.bed, "Rooms".tr,
+                      _specItem(context,Icons.bed, "Rooms".tr,
                           "${apartment.rooms}"),
-                      _specItem(Icons.square_foot, "Space".tr,
+                      _specItem(context,Icons.square_foot, "Space".tr,
                           "${apartment.space} m²".tr),
-                      _specItem(Icons.wifi, "Wi-Fi".tr, "Available".tr),
-                      _specItem(Icons.apartment, "Type".tr, "Apartment".tr),
+                      _specItem(context,Icons.wifi, "Wi-Fi".tr, "Available".tr),
+                      _specItem(context,Icons.apartment, "Type".tr, "Apartment".tr),
                     ],
                   ),
 
@@ -201,6 +205,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -209,7 +214,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15,
                       height: 1.6,
-                      color: Colors.grey[700],
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
 
@@ -220,6 +225,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -227,7 +233,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     apartment.flatNumber,
                     style: TextStyle(
                       fontSize: 15,
-                      color: Colors.grey[700],
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
 
@@ -237,11 +243,13 @@ class ApartmentDetailsPage extends StatelessWidget {
                       margin: const EdgeInsets.only(top: 32),
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
+                        color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                            color: Colors.grey.shade200),
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08),
+                        ),
                       ),
+
                       child: Column(
                         crossAxisAlignment:
                         CrossAxisAlignment.start,
@@ -256,10 +264,10 @@ class ApartmentDetailsPage extends StatelessWidget {
                           const SizedBox(height: 6),
                           Text(
                             "\$${apartment.rentValue}",
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: kPrimary,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -267,7 +275,8 @@ class ApartmentDetailsPage extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: kPrimary,
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                                 padding:
                                 const EdgeInsets.symmetric(
                                     vertical: 18),
@@ -310,13 +319,15 @@ class ApartmentDetailsPage extends StatelessWidget {
   // ================= HELPERS =================
 
   Widget _glassCircle(
-      {required IconData icon, required VoidCallback onTap}) {
+      {required BuildContext context, required IconData icon, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.45),
+          color: Colors.black.withOpacity(
+              Theme.of(context).brightness == Brightness.dark ? 0.5 : 0.45
+          ),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white, size: 18),
@@ -324,7 +335,7 @@ class ApartmentDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _specItem(IconData icon, String title, String value) {
+  Widget _specItem(BuildContext context, IconData icon, String title, String value) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -336,10 +347,11 @@ class ApartmentDetailsPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: kPrimary.withOpacity(0.12),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.12), // icon bg
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, size: 18, color: kPrimary),
+            child: Icon(icon, size: 18,color: Theme.of(context).colorScheme.primary, // icon color
+            ),
           ),
           const SizedBox(width: 10),
 
@@ -353,18 +365,19 @@ class ApartmentDetailsPage extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 12,
-                    color: Colors.grey,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
                 Text(
                   value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface
                   ),
                 ),
               ],

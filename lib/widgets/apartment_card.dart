@@ -16,6 +16,8 @@ class ApartmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ApartmentController>();
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
 
     return Material(
       color: Colors.transparent,
@@ -24,11 +26,13 @@ class ApartmentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colors.surface,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.06),
+                color: Colors.black.withOpacity(
+                  theme.brightness == Brightness.dark ? 0.3 : 0.06,
+                ),
                 blurRadius: 16,
                 offset: const Offset(0, 10),
               ),
@@ -54,12 +58,12 @@ class ApartmentCard extends StatelessWidget {
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           height: 160,
-                          color: Colors.grey[200],
-                          child: const Center(
+                          color: Theme.of(context).colorScheme.surface,
+                          child: Center(
                             child: Icon(
                               Icons.home,
                               size: 60,
-                              color: Colors.grey,
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
                             ),
                           ),
                         );
@@ -68,7 +72,7 @@ class ApartmentCard extends StatelessWidget {
                         if (loadingProgress == null) return child;
                         return Container(
                           height: 160,
-                          color: Colors.grey[200],
+                          color:colors.surface,
                           child: Center(
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
@@ -98,7 +102,7 @@ class ApartmentCard extends StatelessWidget {
                                   ? "Removing from favorites...".tr
                                   : "Adding to favorites...".tr,
                               duration: const Duration(seconds: 1),
-                              backgroundColor: Colors.blue,
+                              backgroundColor: colors.surface,
                             ),
                           );
 
@@ -128,7 +132,7 @@ class ApartmentCard extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
@@ -140,7 +144,7 @@ class ApartmentCard extends StatelessWidget {
                           child: Icon(
                             isFav ? Icons.favorite : Icons.favorite_border,
                             size: 20,
-                            color: isFav ? Colors.red : Colors.grey[800],
+                            color: isFav ? Colors.red : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                           ),
                         ),
                       );
@@ -171,10 +175,10 @@ class ApartmentCard extends StatelessWidget {
                     // Location (city + governorate)
                     Row(
                       children: [
-                        const Icon(
+                         Icon(
                           Icons.location_on_outlined,
                           size: 14,
-                          color: Colors.grey,
+                          color:Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -182,7 +186,7 @@ class ApartmentCard extends StatelessWidget {
                             "${apartment.cityName}, ${apartment.governorateName}",
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey[600],
+                              color:  Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -198,15 +202,15 @@ class ApartmentCard extends StatelessWidget {
                       children: [
                         Text(
                           "\$${apartment.rentValue} / month".tr,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF274668),
+                            color:  Theme.of(context).colorScheme.primary,
                           ),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF274668),
+                            backgroundColor:  Theme.of(context).colorScheme.primary,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 8,
