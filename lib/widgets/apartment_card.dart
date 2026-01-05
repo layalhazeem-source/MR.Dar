@@ -63,7 +63,9 @@ class ApartmentCard extends StatelessWidget {
                             child: Icon(
                               Icons.home,
                               size: 60,
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withOpacity(0.4),
                             ),
                           ),
                         );
@@ -72,7 +74,7 @@ class ApartmentCard extends StatelessWidget {
                         if (loadingProgress == null) return child;
                         return Container(
                           height: 160,
-                          color:colors.surface,
+                          color: colors.surface,
                           child: Center(
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
@@ -132,7 +134,9 @@ class ApartmentCard extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surface.withOpacity(0.9),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
@@ -144,12 +148,47 @@ class ApartmentCard extends StatelessWidget {
                           child: Icon(
                             isFav ? Icons.favorite : Icons.favorite_border,
                             size: 20,
-                            color: isFav ? Colors.red : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                            color: isFav
+                                ? Colors.red
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.7),
                           ),
                         ),
                       );
                     }),
                   ),
+                  // Rating Badge ====== ✅ إضافة تقييم هنا ======
+                  if (apartment.rating != null && apartment.rating! > 0)
+                    Positioned(
+                      top: 12,
+                      left: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.star, size: 14, color: Colors.amber),
+                            const SizedBox(width: 4),
+                            Text(
+                              apartment.rating!.toStringAsFixed(1),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                 ],
               ),
 
@@ -175,10 +214,12 @@ class ApartmentCard extends StatelessWidget {
                     // Location (city + governorate)
                     Row(
                       children: [
-                         Icon(
+                        Icon(
                           Icons.location_on_outlined,
                           size: 14,
-                          color:Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.6),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -186,7 +227,9 @@ class ApartmentCard extends StatelessWidget {
                             "${apartment.cityName}, ${apartment.governorateName}",
                             style: TextStyle(
                               fontSize: 12,
-                              color:  Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withOpacity(0.6),
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -205,12 +248,14 @@ class ApartmentCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color:  Theme.of(context).colorScheme.primary,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:  Theme.of(context).colorScheme.primary,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 8,

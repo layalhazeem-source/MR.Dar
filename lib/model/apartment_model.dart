@@ -8,6 +8,7 @@ class Apartment {
   final int rooms;
   final double space;
   final String? notes;
+  final double? rating; // ممكن يكون null إذا ما في تقييم
 
   final int cityId;
   final String cityName;
@@ -41,6 +42,7 @@ class Apartment {
     required this.latitude,
     required this.houseImages,
     required this.apartmentStatus,
+    this.rating,
   });
 
   factory Apartment.fromJson(Map<String, dynamic> json) {
@@ -117,6 +119,7 @@ class Apartment {
 
       houseImages: parseImages(json['images']),
       apartmentStatus: apartmentStatus, // ✅ هنا
+      rating: safeDouble(json['rating']),
     );
   }
 }

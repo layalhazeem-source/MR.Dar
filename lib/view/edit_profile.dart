@@ -13,7 +13,7 @@ class EditProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title:  Text(
+        title: Text(
           'Edit Profile'.tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -28,7 +28,10 @@ class EditProfileScreen extends StatelessWidget {
             children: [
               Obx(() => _buildProfileHeader(controller)),
               const SizedBox(height: 30),
-              _buildSectionTitle('Personal Information'.tr, Icons.person_outline),
+              _buildSectionTitle(
+                'Personal Information'.tr,
+                Icons.person_outline,
+              ),
               _buildInfoCard(context, controller),
               const SizedBox(height: 25),
               _buildSectionTitle('Security'.tr, Icons.lock_outline),
@@ -59,7 +62,7 @@ class EditProfileScreen extends StatelessWidget {
             },
             backgroundColor: const Color(0xFF274668),
             icon: const Icon(Icons.check, color: Colors.white, size: 24),
-            label:  Text(
+            label: Text(
               'SAVE CHANGES'.tr,
               style: TextStyle(
                 color: Colors.white,
@@ -294,7 +297,7 @@ class EditProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-             Text(
+            Text(
               'Only fill to change password'.tr,
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
@@ -385,14 +388,14 @@ class EditProfileScreen extends StatelessWidget {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title:  Text(
+        title: Text(
           'Confirm Your Identity'.tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-             Text(
+            Text(
               'Enter your current password to save changes:'.tr,
               style: TextStyle(color: Colors.grey),
             ),
@@ -440,7 +443,7 @@ class EditProfileScreen extends StatelessWidget {
               controller.clearDialogFields();
               Get.back();
             },
-            child:  Text(
+            child: Text(
               'CANCEL'.tr,
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             ),
@@ -472,18 +475,10 @@ class EditProfileScreen extends StatelessWidget {
                         currentPassword: password,
                       );
 
-                      // 🔽 التعديل المهم هنا
                       if (success) {
-                        // نجاح: نغلق الدايلوج أولاً
                         Get.back();
-
-                        // ننتظر قليلاً ثم نغلق صفحة التعديل
                         await Future.delayed(const Duration(milliseconds: 300));
-
-                        // نغلق صفحة EditProfileScreen
                         Get.back();
-
-                        // نظهر رسالة النجاح
                         Get.snackbar(
                           "Success".tr,
                           "Your profile has been updated successfully".tr,
@@ -496,19 +491,15 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                           snackPosition: SnackPosition.BOTTOM,
                         );
+                        Get.back(result: 'updated');
                       } else {
-                        // فشل: نظهر الخطأ في الدايلوج (الدائالوج يبقى مفتوح)
-                        // لا نعمل Get.back() هنا
-                        if (controller.dialogPasswordError.value == "Success".tr) {
+                        if (controller.dialogPasswordError.value ==
+                            "Success".tr) {
                           Get.back();
-
-                          // ننتظر قليلاً ثم نغلق صفحة التعديل
                           await Future.delayed(
                             const Duration(milliseconds: 300),
                           );
-
-                          // نغلق صفحة EditProfileScreen
-                          Get.back();
+                          Get.back(result: 'updated');
                         }
                       }
                     },
@@ -521,7 +512,7 @@ class EditProfileScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     )
-                  :  Text(
+                  : Text(
                       'SAVE CHANGES'.tr,
                       style: TextStyle(
                         color: Colors.white,

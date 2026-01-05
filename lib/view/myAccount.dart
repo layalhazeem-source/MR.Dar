@@ -259,7 +259,12 @@ class MyAccount extends StatelessWidget {
           title: "Edit Profile".tr,
           subtitle: "Update your personal information".tr,
           onTap: () async {
-            await Get.to(() => EditProfileScreen());
+            await Get.to(() => EditProfileScreen())?.then((value) {
+              // إذا كانت النتيجة 'updated' نحدث البيانات
+              if (value == 'updated') {
+                controller.loadProfile();
+              }
+            });
           },
         ),
         const SizedBox(height: 12),
@@ -387,5 +392,13 @@ class MyAccount extends StatelessWidget {
       default:
         return Colors.orange;
     }
+  }
+
+  void _handleEditProfileResult() async {
+    // ننتظر قليلاً للتأكد من اكتمال التحديث
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    // نجبر على تحديث البيانات
+    controller.loadProfile();
   }
 }

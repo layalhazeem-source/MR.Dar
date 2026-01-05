@@ -310,6 +310,11 @@ class MyAccountController extends GetxController {
     );
   }
 
+  static void refreshProfile() {
+    final controller = Get.find<MyAccountController>();
+    controller.loadProfile();
+  }
+
   @override
   void onClose() {
     deletePasswordController.dispose();

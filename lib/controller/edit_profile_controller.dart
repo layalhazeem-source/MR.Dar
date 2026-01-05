@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../service/userService.dart';
 import '../controller/my_account_controller.dart';
+import 'UserController.dart';
 
 class EditProfileController extends GetxController {
   final UserService userService;
@@ -96,7 +98,7 @@ class EditProfileController extends GetxController {
     try {
       isUpdating.value = true;
       errorMessage.value = '';
-      dialogPasswordError.value = null; // 🔽 نمسح أي أخطاء سابقة
+      dialogPasswordError.value = null;
 
       final formData = FormData();
 
@@ -136,46 +138,34 @@ class EditProfileController extends GetxController {
       // طلب التحديث
       final response = await userService.updateProfile(formData);
 
-      print('📡 API Response: ${response.toString()}'); // 🔽 أضف هذا للتصحيح
+      print('📡 API Response: ${response.toString()}');
 
       if (response['status'] == 'success') {
-        // 🔽 نمسح كل الرسائل عند النجاح
         errorMessage.value = '';
         dialogPasswordError.value = null;
 
-        // تحديث البيانات محلياً
-        final oldUser = myAccountController.user.value;
-        if (oldUser != null) {
-          myAccountController.user.value = oldUser.copyWith(
-            firstName: firstNameController.text.trim(),
-            lastName: lastNameController.text.trim(),
-            phone: phoneController.text.trim(),
-            dateOfBirth: dobController.text.trim(),
-            profileImage: selectedImage.value != null
-                ? selectedImage.value!.path
-                : oldUser.profileImage,
-          );
-        }
-
-        myAccountController.update();
+        // 🔥 التحديث المهم: تحديث البيانات مباشرة
+        MyAccountController.refreshProfile();
+        final userController = Get.find<UserController>();
+        userController.loadUserRole();
         _clearSensitiveData();
-        return true; // 🔽 نجاح
+
+        return true;
       } else {
-        // 🔽 فشل: نعرض رسالة الخطأ
         final errorMsg = response['message'] ?? 'Incorrect current password';
         errorMessage.value = errorMsg;
-        dialogPasswordError.value = errorMsg; // 🔽 هام: نضيف قيمة للخطأ
+        dialogPasswordError.value = errorMsg;
         return false;
       }
     } on DioException catch (e) {
       final errorMsg =
           e.response?.data['message'] ?? 'Validation Error: Check your data';
       errorMessage.value = errorMsg;
-      dialogPasswordError.value = errorMsg; // 🔽 هام: نضيف قيمة للخطأ
+      dialogPasswordError.value = errorMsg;
       return false;
     } catch (e) {
       errorMessage.value = 'Connection failed. Please try again.';
-      dialogPasswordError.value = errorMessage.value; // 🔽 هام: نضيف قيمة للخطأ
+      dialogPasswordError.value = errorMessage.value;
       return false;
     } finally {
       isUpdating.value = false;
@@ -196,6 +186,35 @@ class EditProfileController extends GetxController {
   void clearDialogFields() {
     confirmDialogPasswordController.clear();
     dialogPasswordError.value = null;
+  }
+
+  Future<void> _refreshProfileData() async {
+    try {
+      // تحديث بيانات MyAccountController
+      await myAccountController.loadProfile();
+
+      // تحديث UserController إذا كان موجود
+      final userController = Get.find<UserController>();
+      await userController.loadUserRole();
+
+      // تحديث SharedPreferences إذا كان مستخدم
+      await _updateLocalPreferences();
+    } catch (e) {
+      print('Error refreshing profile: $e');
+    }
+  }
+
+  Future<void> _updateLocalPreferences() async {
+    final user = myAccountController.user.value;
+    if (user != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('first_name', user.firstName);
+      await prefs.setString('last_name', user.lastName);
+      await prefs.setString('phone', user.phone);
+      if (user.profileImage != null) {
+        await prefs.setString('profile_image', user.profileImage!);
+      }
+    }
   }
 
   @override

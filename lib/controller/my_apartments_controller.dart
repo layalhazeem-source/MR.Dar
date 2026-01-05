@@ -13,8 +13,7 @@ class MyApartmentsController extends GetxController {
   final RxList<Apartment> allApartments = <Apartment>[].obs;
 
   /// الحالة الحالية المختارة
-  final Rx<ApartmentStatus> currentStatus =
-      ApartmentStatus.pending.obs;
+  final Rx<ApartmentStatus> currentStatus = ApartmentStatus.pending.obs;
 
   /// حالات الواجهة
   final RxBool isLoading = false.obs;
@@ -25,6 +24,7 @@ class MyApartmentsController extends GetxController {
     super.onInit();
     fetchMyApartments();
   }
+
   //تغيير الحالة المختارة
   void changeStatus(ApartmentStatus status) {
     currentStatus.value = status;
@@ -121,5 +121,4 @@ class MyApartmentsController extends GetxController {
   Future<void> reload() async {
     await fetchMyApartments();
   }
-
 }
