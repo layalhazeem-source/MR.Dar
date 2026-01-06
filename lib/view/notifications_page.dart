@@ -13,8 +13,10 @@ class NotificationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text("Notifications".tr),
+        title:  Text("Notifications".tr,
+          style: Theme.of(context).textTheme.titleLarge,),
       ),
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -50,11 +52,11 @@ class NotificationsPage extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Theme.of(context).shadowColor.withOpacity(0.05),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -92,10 +94,7 @@ class NotificationsPage extends StatelessWidget {
                               if (n.time != null)
                                 Text(
                                   n.time!,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodySmall,
                                 ),
                             ],
                           ),

@@ -11,18 +11,18 @@ class BookingConfirmPage extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Color(0xFF274668),
+        iconTheme:  IconThemeData(
+          color: Theme.of(context).colorScheme.primary,
         ),
         title:  Text(
           "Confirm BookingConfirm Booking".tr,
           style: TextStyle(
-            color: Color(0xFF274668),
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -37,6 +37,7 @@ class BookingConfirmPage extends StatelessWidget {
             _infoCard(
               title: "Location".tr,
               child: _row(
+                context,
                 Icons.location_on,
                 "${controller.apartment.cityName} - ${controller.apartment.governorateName}"
                 , // ⛔ مؤقت
@@ -52,18 +53,21 @@ class BookingConfirmPage extends StatelessWidget {
               child: Column(
                 children: [
                   _row(
+                    context,
                     Icons.login,
                     DateFormat('MMM dd, yyyy'.tr)
                         .format(controller.selectedStartDate.value!),
                   ),
                   const SizedBox(height: 12),
                   _row(
+                    context,
                     Icons.logout,
                     DateFormat('MMM dd, yyyy'.tr)
                         .format(controller.endDate!),
                   ),
                   const Divider(height: 30),
                   _row(
+                    context,
                     Icons.timelapse,
                     "${controller.duration.value} month(s)".tr,
                     bold: true,
@@ -80,11 +84,13 @@ class BookingConfirmPage extends StatelessWidget {
               child: Column(
                 children: [
                   _row(
+                    context,
                     Icons.payments,
                     "Cash".tr,
                   ),
                   const Divider(height: 30),
                   _row(
+                    context,
                     Icons.attach_money,
                     "\$${controller.totalPrice}",
                     bold: true,
@@ -102,7 +108,7 @@ class BookingConfirmPage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF274668),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -115,14 +121,14 @@ class BookingConfirmPage extends StatelessWidget {
 
                   },
                   child: controller.isLoading.value
-                      ? const SizedBox(
+                      ?  SizedBox(
                     height: 20,
                     width: 20,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary, strokeWidth: 2),
                   )
                       :  Text(
                     "Confirm Booking".tr,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 16),
                   ),
                 ),
               ),
@@ -157,11 +163,11 @@ class BookingConfirmPage extends StatelessWidget {
   }
 
   /// ===== Row =====
-  Widget _row(IconData icon, String value,
+  Widget _row(BuildContext context,IconData icon, String value,
       {bool bold = false, bool big = false}) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFF274668)),
+        Icon(icon, color:Theme.of(context).colorScheme.primary),
         const SizedBox(width: 12),
         Expanded(
           child: Text(

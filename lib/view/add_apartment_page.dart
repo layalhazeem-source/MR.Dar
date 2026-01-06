@@ -13,8 +13,6 @@ class AddApartmentPage extends StatelessWidget {
   final controller = Get.find<AddApartmentController>();
   final PageController pageController = PageController();
 
-  final Color navy = const Color(0xFF274668);
-  final Color softGrey = const Color(0xFFF5F7FA);
   final account = Get.find<MyAccountController>();
 
   @override
@@ -48,27 +46,27 @@ class AddApartmentPage extends StatelessWidget {
     }
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: navy,
+      backgroundColor:Theme.of(context).colorScheme.primary,
       appBar: AppBar(
-        backgroundColor: navy,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new, color: Theme.of(context).colorScheme.background, size: 20),
           onPressed: () => Get.back(),
         ),
         title: Text(
           "Add Apartment".tr,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
+          style: TextStyle(color:Theme.of(context).colorScheme.onPrimary , fontWeight: FontWeight.w600, fontSize: 18),
         ),
       ),
       body: Column(
         children: [
-          _stepIndicator(),
+          _stepIndicator(context,),
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration:  BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
@@ -78,9 +76,9 @@ class AddApartmentPage extends StatelessWidget {
                 controller: pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  _basicInfoStep(),
-                  _locationStep(),
-                  _imagesStep(),
+                  _basicInfoStep(context,),
+                  _locationStep(context,),
+                  _imagesStep(context,),
                 ],
               ),
             ),
@@ -92,7 +90,7 @@ class AddApartmentPage extends StatelessWidget {
   }
 
   // ========================= STEP INDICATOR =========================
-  Widget _stepIndicator() {
+  Widget _stepIndicator(BuildContext context,) {
     return Obx(
           () => Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -107,8 +105,8 @@ class AddApartmentPage extends StatelessWidget {
               height: 6,
               decoration: BoxDecoration(
                 color: controller.currentStep.value == index
-                    ? Colors.white
-                    : Colors.white.withOpacity(0.3),
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.primary.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -119,24 +117,24 @@ class AddApartmentPage extends StatelessWidget {
   }
 
   // ========================= STEP 1 =========================
-  Widget _basicInfoStep() {
+  Widget _basicInfoStep(BuildContext context,) {
     return _stepWrapper(
       Obx(() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle("General Information".tr),
-          _input("Apartment Title".tr, controller: controller.titleController, error: controller.titleError.value),
-          _input("Description".tr, controller: controller.descriptionController, maxLines: 3, error: controller.descriptionError.value),
+          _sectionTitle(context,"General Information".tr),
+          _input(context,"Apartment Title".tr, controller: controller.titleController, error: controller.titleError.value),
+          _input(context,"Description".tr, controller: controller.descriptionController, maxLines: 3, error: controller.descriptionError.value),
           Row(
             children: [
-              Expanded(child: _input("Price / Month".tr, controller: controller.rentController, keyboard: TextInputType.number, error: controller.rentError.value)),
+              Expanded(child: _input(context,"Price / Month".tr, controller: controller.rentController, keyboard: TextInputType.number, error: controller.rentError.value)),
               const SizedBox(width: 12),
-              Expanded(child: _input("Rooms".tr, controller: controller.roomsController, keyboard: TextInputType.number, error: controller.roomsError.value)),
+              Expanded(child: _input(context,"Rooms".tr, controller: controller.roomsController, keyboard: TextInputType.number, error: controller.roomsError.value)),
             ],
           ),
-          _input("Space (m²)".tr, controller: controller.spaceController, keyboard: TextInputType.number, error: controller.spaceError.value),
+          _input(context,"Space (m²)".tr, controller: controller.spaceController, keyboard: TextInputType.number, error: controller.spaceError.value),
           const SizedBox(height: 20),
-          _nextButton(() {
+          _nextButton(context,() {
             if (controller.validateStep1()) {
               controller.goToStep(1, pageController);
             }
@@ -148,13 +146,14 @@ class AddApartmentPage extends StatelessWidget {
 
   // ========================= STEP 2 =========================
   // ========================= STEP 2 (المعدلة لإعادة الإحداثيات) =========================
-  Widget _locationStep() {
+  Widget _locationStep(BuildContext context,) {
     return _stepWrapper(
       Obx(() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle("Location Details".tr),
+          _sectionTitle(context,"Location Details".tr),
           _dropdown(
+            context: context,
             hint: "Select Governorate".tr,
             value: controller.selectedGovernorateId.value,
             items: controller.governorates.map((g) => DropdownMenuItem(value: g.id, child: Text(g.name))).toList(),
@@ -162,20 +161,22 @@ class AddApartmentPage extends StatelessWidget {
             error: controller.governorateError.value,
           ),
           _dropdown(
+            context: context,
             hint: "Select City".tr,
             value: controller.selectedCityId.value,
             items: controller.cities.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
             onChanged: (v) => v != null ? controller.onCitySelected(v) : null,
             error: controller.cityError.value,
           ),
-          _input("Street Name".tr, controller: controller.streetController, error: controller.streetError.value),
-          _input("Flat Number".tr, controller: controller.flatNumberController, error: controller.flatError.value),
+          _input(context,"Street Name".tr, controller: controller.streetController, error: controller.streetError.value),
+          _input(context,"Flat Number".tr, controller: controller.flatNumberController, error: controller.flatError.value),
 
           // 📍 إضافة الإحداثيات هنا بجانب بعضهما
           Row(
             children: [
               Expanded(
                 child: _input(
+                    context,
                     "Longitude (opt)".tr,
                     controller: controller.longitudeController,
                     keyboard: TextInputType.number
@@ -184,6 +185,7 @@ class AddApartmentPage extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _input(
+                    context,
                     "Latitude (opt)".tr,
                     controller: controller.latitudeController,
                     keyboard: TextInputType.number
@@ -195,9 +197,9 @@ class AddApartmentPage extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              _backButton(() => controller.goBack(pageController)),
+              _backButton(context,() => controller.goBack(pageController)),
               const SizedBox(width: 12),
-              Expanded(child: _nextButton(() {
+              Expanded(child: _nextButton(context,() {
                 if (controller.validateStep2()) {
                   controller.goToStep(2, pageController);
                 }
@@ -210,13 +212,13 @@ class AddApartmentPage extends StatelessWidget {
   }
 
   // ========================= STEP 3 =========================
-  Widget _imagesStep() {
+  Widget _imagesStep(BuildContext context,) {
     return _stepWrapper(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle("Apartment Gallery".tr),
-           Text("Please select at least one clear image of the flat".tr, style: TextStyle(color: Colors.grey, fontSize: 13)),
+          _sectionTitle(context,"Apartment Gallery".tr),
+           Text("Please select at least one clear image of the flat".tr, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5), fontSize: 13)),
           const SizedBox(height: 20),
           Obx(
                 () => Column(
@@ -252,10 +254,10 @@ class AddApartmentPage extends StatelessWidget {
                         height: 90,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: navy.withOpacity(0.2), width: 2),
-                          color: softGrey,
+                          border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2),
+                          color: Theme.of(context).colorScheme.background.withOpacity(0.1),
                         ),
-                        child: Icon(Icons.add_photo_alternate_outlined, color: navy.withOpacity(0.5)),
+                        child: Icon(Icons.add_photo_alternate_outlined, color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                   ],
@@ -275,13 +277,13 @@ class AddApartmentPage extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
-              _backButton(() => controller.goBack(pageController)),
+              _backButton(context,() => controller.goBack(pageController)),
               const SizedBox(width: 12),
               Expanded(
                 child: Obx(
                       () => ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: navy,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: const Size(double.infinity, 54),
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -322,17 +324,17 @@ class AddApartmentPage extends StatelessWidget {
   }
 
 
-  Widget _sectionTitle(String title) {
+  Widget _sectionTitle(BuildContext context,String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
         title,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: navy),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
       ),
     );
   }
 
-  Widget _input(String hint, {required TextEditingController controller, String? error, int maxLines = 1, TextInputType keyboard = TextInputType.text}) {
+  Widget _input(BuildContext context,String hint, {required TextEditingController controller, String? error, int maxLines = 1, TextInputType keyboard = TextInputType.text}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
@@ -344,15 +346,15 @@ class AddApartmentPage extends StatelessWidget {
           alignLabelWithHint: true,
           errorText: error,
           filled: true,
-          fillColor: softGrey,
+          fillColor: Theme.of(context).colorScheme.background.withOpacity(0.1),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: navy.withOpacity(0.3))),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Theme.of(context).colorScheme.primary)),
         ),
       ),
     );
   }
 
-  Widget _dropdown({required String hint, required int? value, required List<DropdownMenuItem<int>> items, required Function(int?) onChanged, String? error}) {
+  Widget _dropdown({required BuildContext context,required String hint, required int? value, required List<DropdownMenuItem<int>> items, required Function(int?) onChanged, String? error}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: DropdownButtonFormField<int>(
@@ -363,17 +365,17 @@ class AddApartmentPage extends StatelessWidget {
           labelText: hint,
           errorText: error,
           filled: true,
-          fillColor: softGrey,
+          fillColor: Theme.of(context).colorScheme.background.withOpacity(0.1),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
         ),
       ),
     );
   }
 
-  Widget _nextButton(VoidCallback onTap) {
+  Widget _nextButton(BuildContext context,VoidCallback onTap) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: navy,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 54),
         elevation: 0,
@@ -384,11 +386,11 @@ class AddApartmentPage extends StatelessWidget {
     );
   }
 
-  Widget _backButton(VoidCallback onTap) {
+  Widget _backButton(BuildContext context,VoidCallback onTap) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        foregroundColor: navy,
-        side: BorderSide(color: navy.withOpacity(0.2)),
+        foregroundColor: Theme.of(context).colorScheme.primary,
+        side: BorderSide(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
         minimumSize: const Size(100, 54),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),

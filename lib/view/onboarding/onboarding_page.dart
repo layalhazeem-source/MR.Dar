@@ -28,17 +28,17 @@ class OnboardingPage extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF274668),
+              color:  Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(height: 16),
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, color: Colors.black54),
+            style: TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),),
           ),
           const SizedBox(height: 40),
           if (bottomWidget != null) bottomWidget!,

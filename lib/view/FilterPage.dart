@@ -40,15 +40,25 @@ class FilterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text("Apartment Filters".tr),
+        title:  Text(
+          "Apartment Filters".tr,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: Icon(Icons.close, color: Theme.of(context).iconTheme.color),
           onPressed: () => Get.back(),
         ),
         actions: [
           TextButton(
             onPressed: _resetFilters,
-            child:  Text("Clear All".tr),
+            child:  Text(
+              "Clear All".tr,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
           ),
         ],
       ),
@@ -137,15 +147,16 @@ class FilterPage extends StatelessWidget {
           controller: searchController,
           decoration: InputDecoration(
             labelText: "Search by name or description".tr,
-            border: const OutlineInputBorder(),
-            prefixIcon: const Icon(Icons.search),
+            prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
             suffixIcon: searchController.text.isNotEmpty
                 ? IconButton(
-              icon: const Icon(Icons.clear),
+              icon: Icon(Icons.clear, color: Theme.of(context).colorScheme.primary),
               onPressed: () => searchController.clear(),
             )
                 : null,
-          ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+          ),),
           onChanged: (value) {},
         ),
       ],
@@ -167,7 +178,7 @@ class FilterPage extends StatelessWidget {
         Obx(() => Column(
           children: sortOptions.entries.map((entry) {
             return RadioListTile<String>(
-              title: Text(entry.value),
+              title: Text(entry.value,style: Theme.of(context).textTheme.bodyMedium,),
               value: entry.key,
               groupValue: selectedSortBy.value,
               onChanged: (String? value) {
@@ -184,6 +195,7 @@ class FilterPage extends StatelessWidget {
               },
               contentPadding: EdgeInsets.zero,
               dense: true,
+              activeColor: Theme.of(context).colorScheme.primary,
             );
           }).toList(),
         )),
@@ -257,8 +269,8 @@ class FilterPage extends StatelessWidget {
               value: selectedGovernorateId.value == 0 ? null : selectedGovernorateId.value,
               decoration:  InputDecoration(
                 labelText: "Select Governorate".tr,
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.location_city),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12),),
+                prefixIcon: Icon(Icons.location_city, color: Theme.of(context).colorScheme.primary),
               ),
               items: [
                  DropdownMenuItem<int>(
@@ -297,8 +309,8 @@ class FilterPage extends StatelessWidget {
               value: selectedCityId.value == 0 ? null : selectedCityId.value,
               decoration:  InputDecoration(
                 labelText: "Select City".tr,
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.location_on),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12),),
+                prefixIcon: Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary),
               ),
               items: [
                  DropdownMenuItem<int>(
@@ -351,6 +363,8 @@ class FilterPage extends StatelessWidget {
                 '${range.value.start.round()} $unit',
                 '${range.value.end.round()} $unit',
               ),
+              activeColor: Theme.of(context).colorScheme.primary,
+              inactiveColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
               onChanged: (RangeValues values) => range.value = values,
             ),
             Padding(
@@ -361,6 +375,7 @@ class FilterPage extends StatelessWidget {
                   Chip(
                     label: Text('Min: ${range.value.start.round()} $unit'.tr),
                     backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
                   ),
                   Chip(
                     label: Text('Max: ${range.value.end.round()} $unit'.tr),
@@ -389,7 +404,11 @@ class FilterPage extends StatelessWidget {
             ),
             child:  Text(
               "Reset All".tr,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16,
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+
             ),
           ),
         ),
@@ -404,7 +423,11 @@ class FilterPage extends StatelessWidget {
             ),
             child:  Text(
               "Apply Filters".tr,
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

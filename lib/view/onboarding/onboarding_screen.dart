@@ -31,6 +31,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Stack(
           children: [
@@ -66,7 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Get.offAll(() => const WelcomePage());
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF274668),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 50,
                         vertical: 14,
@@ -77,7 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                     child:  Text(
                       "Get Started".tr,
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 18, color:  Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 ),
@@ -99,7 +100,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                   child:  Text(
                     "Skip".tr,
-                    style: TextStyle(fontSize: 16, color: Color(0xFF274668)),
+                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.primary
+                  ),
                   ),
                 ),
               ),
@@ -122,8 +124,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         height: 8,
                         decoration: BoxDecoration(
                           color: currentIndex == index
-                              ? const Color(0xFF274668)
-                              : Colors.grey.shade400,
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       );
@@ -137,7 +139,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ElevatedButton(
                       onPressed: nextPage,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF274668),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 50,
                           vertical: 14,
@@ -148,7 +150,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       child: Text(
                         "Next".tr,
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(fontSize: 18, color:  Theme.of(context).colorScheme.onPrimary),
                       ),
                     ),
                 ],

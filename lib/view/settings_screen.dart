@@ -19,14 +19,15 @@ class SettingsScreen extends StatelessWidget {
           "Settings".tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF274668),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        iconTheme: Theme.of(context).iconTheme,
       ),
       body: ListView(
         children: [
-          _sectionTitle("Preferences".tr),
+          _sectionTitle(context,"Preferences".tr),
 
           settingsCard(
+            context: context,
             icon: Icons.dark_mode,
             title: "Theme".tr,
             subtitle: "Light / Dark mode".tr,
@@ -34,6 +35,7 @@ class SettingsScreen extends StatelessWidget {
           ),
 
           settingsCard(
+            context: context,
             icon: Icons.language,
             title: "Language".tr,
             subtitle: "Change app language".tr,
@@ -45,6 +47,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget settingsCard({
+    required BuildContext context,
     required IconData icon,
     required String title,
     String? subtitle,
@@ -54,6 +57,7 @@ class SettingsScreen extends StatelessWidget {
     bool enabled = true,
   }) {
     return Card(
+      color: Theme.of(context).cardColor,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -67,7 +71,9 @@ class SettingsScreen extends StatelessWidget {
               Icon(
                 icon,
                 size: 28,
-                color: enabled ? iconColor ?? Colors.blueGrey : Colors.grey,
+                color: enabled
+                    ? iconColor ?? Theme.of(context).iconTheme.color
+                    : Theme.of(context).disabledColor,
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -80,17 +86,17 @@ class SettingsScreen extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: enabled
-                            ? textColor ?? Colors.black
-                            : Colors.grey,
+                            ? textColor ?? Theme.of(context).textTheme.bodyMedium?.color
+                            : Theme.of(context).disabledColor,
                       ),
                     ),
                     if (subtitle != null) ...[
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 13,
-                          color: Colors.grey,
+                          color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -105,15 +111,15 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _sectionTitle(String title) {
+  Widget _sectionTitle(BuildContext context,String title) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: Colors.grey,
+          color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
         ),
       ),
     );

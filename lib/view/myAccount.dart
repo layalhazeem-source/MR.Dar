@@ -17,9 +17,9 @@ class MyAccount extends StatelessWidget {
     return Obx(() {
       // Loading State
       if (controller.isLoading.value) {
-        return const Center(
+        return Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF274668)),
+            valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
           ),
         );
       }
@@ -32,17 +32,17 @@ class MyAccount extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.person_off, size: 80, color: Colors.grey),
-              const SizedBox(height: 20),
+               Icon(Icons.person_off, size: 80, color: Theme.of(context).disabledColor),
+               SizedBox(height: 20),
               Text(
                 "No Profile Data".tr,
-                style: TextStyle(fontSize: 20, color: Colors.grey),
+                style: TextStyle(fontSize: 20, color: Theme.of(context).disabledColor),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () => controller.loadProfile(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF274668),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 30,
                     vertical: 12,
@@ -89,12 +89,12 @@ class MyAccount extends StatelessWidget {
               ),
 
             // Profile Header
-            _buildProfileHeader(user),
+            _buildProfileHeader(context,user),
 
             const SizedBox(height: 30),
 
             // Options Section
-            _buildOptionsSection(),
+            _buildOptionsSection(context),
 
             const SizedBox(height: 40),
           ],
@@ -103,7 +103,7 @@ class MyAccount extends StatelessWidget {
     });
   }
 
-  Widget _buildProfileHeader(UserModel user) {
+  Widget _buildProfileHeader(BuildContext context,UserModel user) {
     return Column(
       children: [
         // Profile Image
@@ -144,11 +144,7 @@ class MyAccount extends StatelessWidget {
         // Name
         Text(
           "${user.firstName} ${user.lastName}",
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF274668),
-          ),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
 
@@ -156,13 +152,12 @@ class MyAccount extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.phone, size: 16, color: Colors.grey.shade600),
+            Icon(Icons.phone, size: 16, color: Theme.of(context).iconTheme.color?.withOpacity(0.7)),
             const SizedBox(width: 6),
             Text(
               user.phone,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey.shade700,
+              style:  Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -178,8 +173,8 @@ class MyAccount extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
                 color: user.role == 'owner'.tr
-                    ? Colors.blue.shade50
-                    : Colors.green.shade50,
+                    ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                    : Theme.of(context).colorScheme.secondary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: getAccountStatusColor(user.status),
@@ -192,8 +187,8 @@ class MyAccount extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: user.role == 'owner'.tr
-                      ? Colors.blue.shade700
-                      : Colors.green.shade700,
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ),
@@ -211,7 +206,7 @@ class MyAccount extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  side: const BorderSide(color: Color(0xFF274668), width: 2),
+                  side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
                 ),
               ),
             ),
@@ -251,10 +246,12 @@ class MyAccount extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionsSection() {
+  Widget _buildOptionsSection(BuildContext context,) {
+
     return Column(
       children: [
         _buildOptionCard(
+          context: context,
           icon: Icons.edit_outlined,
           title: "Edit Profile".tr,
           subtitle: "Update your personal information".tr,
@@ -270,6 +267,7 @@ class MyAccount extends StatelessWidget {
         const SizedBox(height: 12),
 
         _buildOptionCard(
+          context: context,
           icon: Icons.settings_outlined,
           title: "Settings".tr,
           subtitle: "App preferences and configurations".tr,
@@ -280,6 +278,7 @@ class MyAccount extends StatelessWidget {
 
         // ===== Logout =====
         _buildOptionCard(
+          context: context,
           icon: Icons.logout,
           title: "Logout".tr,
           subtitle: "Sign out from your account".tr,
@@ -296,12 +295,14 @@ class MyAccount extends StatelessWidget {
           iconColor: Colors.red,
           textColor: Colors.red,
           onTap: () => controller.showDeleteAccountFlow(Get.context!),
+          context: context,
         ),
       ],
     );
   }
 
   Widget _buildOptionCard({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String subtitle,
@@ -317,9 +318,9 @@ class MyAccount extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(color: Theme.of(context).dividerColor),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -333,7 +334,7 @@ class MyAccount extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF274668).withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, size: 22, color: iconColor),
@@ -348,7 +349,7 @@ class MyAccount extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: textColor ?? Colors.black,
+                        color: textColor ?? Theme.of(context).textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -356,13 +357,13 @@ class MyAccount extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.grey.shade600,
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                       ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF274668)),
+              Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.primary),
             ],
           ),
         ),

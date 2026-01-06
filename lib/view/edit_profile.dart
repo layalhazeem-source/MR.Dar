@@ -15,10 +15,8 @@ class EditProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Edit Profile'.tr,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF274668),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -29,13 +27,14 @@ class EditProfileScreen extends StatelessWidget {
               Obx(() => _buildProfileHeader(controller)),
               const SizedBox(height: 30),
               _buildSectionTitle(
+                context: context,
                 'Personal Information'.tr,
                 Icons.person_outline,
               ),
               _buildInfoCard(context, controller),
               const SizedBox(height: 25),
-              _buildSectionTitle('Security'.tr, Icons.lock_outline),
-              _buildPasswordCard(controller),
+              _buildSectionTitle(context: context,'Security'.tr, Icons.lock_outline),
+              _buildPasswordCard(context, controller),
               const SizedBox(height: 80),
             ],
           ),
@@ -60,12 +59,12 @@ class EditProfileScreen extends StatelessWidget {
                 );
               }
             },
-            backgroundColor: const Color(0xFF274668),
-            icon: const Icon(Icons.check, color: Colors.white, size: 24),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            icon:  Icon(Icons.check, color:Theme.of(context).colorScheme.onPrimary, size: 24),
             label: Text(
               'SAVE CHANGES'.tr,
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 letterSpacing: 0.5,
@@ -166,13 +165,17 @@ class EditProfileScreen extends StatelessWidget {
     EditProfileController controller,
   ) {
     return Card(
+      color: Theme.of(context).colorScheme.surface,
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             _buildTextField(
+              context: context,
               controller: controller.firstNameController,
               label: 'First Name'.tr,
               icon: Icons.person,
@@ -181,6 +184,7 @@ class EditProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             _buildTextField(
+              context: context,
               controller: controller.lastNameController,
               label: 'Last Name'.tr,
               icon: Icons.person_outline,
@@ -189,6 +193,7 @@ class EditProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             _buildTextField(
+              context: context,
               controller: controller.phoneController,
               label: 'Phone Number'.tr,
               icon: Icons.phone,
@@ -207,13 +212,13 @@ class EditProfileScreen extends StatelessWidget {
                   controller: ctrl.dobController,
                   decoration: InputDecoration(
                     labelText: "Date of Birth (Optional)".tr,
-                    prefixIcon: const Icon(
+                    prefixIcon:  Icon(
                       Icons.cake_outlined,
-                      color: Color(0xFF274668),
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                    suffixIcon: const Icon(
+                    suffixIcon:  Icon(
                       Icons.calendar_today,
-                      color: Color(0xFF274668),
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -238,11 +243,7 @@ class EditProfileScreen extends StatelessWidget {
                       builder: (context, child) {
                         return Theme(
                           data: Theme.of(context).copyWith(
-                            colorScheme: const ColorScheme.light(
-                              primary: Color(0xFF274668),
-                              onPrimary: Colors.white,
-                              onSurface: Colors.black,
-                            ),
+                            colorScheme: Theme.of(context).colorScheme,
                           ),
                           child: child!,
                         );
@@ -266,6 +267,7 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   Widget _buildTextField({
+    required BuildContext context,
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -281,7 +283,7 @@ class EditProfileScreen extends StatelessWidget {
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: const Color(0xFF274668)),
+        prefixIcon: Icon(icon, color: Theme.of(context).colorScheme.primary,),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         counterText: maxLength != null ? "" : null,
       ),
@@ -289,7 +291,7 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordCard(EditProfileController controller) {
+  Widget _buildPasswordCard(BuildContext context, EditProfileController controller) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -304,6 +306,7 @@ class EditProfileScreen extends StatelessWidget {
             const SizedBox(height: 15),
             Obx(
               () => _passwordTextField(
+                context: context,
                 controller: controller.newPasswordController,
                 label: 'New Password'.tr,
                 showPassword: controller.showNewPassword.value,
@@ -313,6 +316,7 @@ class EditProfileScreen extends StatelessWidget {
             const SizedBox(height: 15),
             Obx(
               () => _passwordTextField(
+                context: context,
                 controller: controller.confirmPasswordController,
                 label: 'Confirm Password'.tr,
                 showPassword: controller.showConfirmPassword.value,
@@ -336,6 +340,7 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   Widget _passwordTextField({
+    required BuildContext context,
     required TextEditingController controller,
     required String label,
     required bool showPassword,
@@ -348,7 +353,7 @@ class EditProfileScreen extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF274668)),
+        prefixIcon: Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.primary,),
         suffixIcon: IconButton(
           icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
           onPressed: onToggleVisibility,
@@ -358,19 +363,17 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, IconData icon) {
+  Widget _buildSectionTitle(String title, IconData icon, {required BuildContext context}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: const Color(0xFF274668)),
+          Icon(icon, size: 22, color: Theme.of(context).colorScheme.primary,),
           const SizedBox(width: 10),
           Text(
             title,
-            style: const TextStyle(
+            style:  Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Color(0xFF274668),
             ),
           ),
         ],

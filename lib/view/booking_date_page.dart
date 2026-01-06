@@ -45,13 +45,13 @@ class BookingDatePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Color(0xFF274668)),
+        iconTheme:  IconThemeData(color:Theme.of(context).colorScheme.onPrimary),
         title:  Text(
           "Select Booking Date".tr,
           style: TextStyle(
-            color: Color(0xFF274668),
+            color: Theme.of(context).colorScheme.onPrimary,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -105,7 +105,7 @@ class BookingDatePage extends StatelessWidget {
                                 return _circleDay(
                                   day,
                                   Colors.red.shade400,
-                                  Colors.white,
+                                  Theme.of(context).colorScheme.surface,
                                 );
                               }
 
@@ -113,8 +113,8 @@ class BookingDatePage extends StatelessWidget {
                               if (controller.isStartDay(day)) {
                                 return _circleDay(
                                   day,
-                                  const Color(0xFF274668),
-                                  Colors.white,
+                                  Theme.of(context).colorScheme.onPrimary,
+                                  Theme.of(context).colorScheme.surface,
                                 );
                               }
 
@@ -122,8 +122,8 @@ class BookingDatePage extends StatelessWidget {
                               if (controller.isEndDay(day)) {
                                 return _circleDay(
                                   day,
-                                  const Color(0xFF274668),
-                                  Colors.white,
+                                  Theme.of(context).colorScheme.onPrimary,
+                                  Theme.of(context).colorScheme.surface,
                                 );
                               }
 
@@ -131,7 +131,7 @@ class BookingDatePage extends StatelessWidget {
                               if (controller.isInSelectedRange(day)) {
                                 return _circleDay(
                                   day,
-                                  const Color(0xFF274668).withOpacity(0.25),
+                                  Theme.of(context).colorScheme.onPrimary,
                                   Colors.black,
                                 );
                               }
@@ -160,12 +160,14 @@ class BookingDatePage extends StatelessWidget {
                           child: Row(
                             children: [
                               _dateInfo(
+                                context: context,
                                 Icons.login,
                                 "CHECK IN".tr,
                                 controller.selectedStartDate.value,
                               ),
                               const Spacer(),
                               _dateInfo(
+                                context: context,
                                 Icons.logout,
                                 "CHECK OUT".tr,
                                 controller.endDate,
@@ -205,10 +207,10 @@ class BookingDatePage extends StatelessWidget {
                                   return ChoiceChip(
                                     label: Text("$m"),
                                     selected: controller.duration.value == m,
-                                    selectedColor: const Color(0xFF274668),
+                                    selectedColor: Theme.of(context).colorScheme.onPrimary,
                                     labelStyle: TextStyle(
                                       color: controller.duration.value == m
-                                          ? Colors.white
+                                          ? Theme.of(context).colorScheme.surface
                                           : Colors.black,
                                     ),
                                     onSelected: (_) =>
@@ -233,7 +235,7 @@ class BookingDatePage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF274668),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -252,13 +254,13 @@ class BookingDatePage extends StatelessWidget {
                         "Unavailable".tr,
                         "Selected period conflicts with existing bookings".tr,
                         backgroundColor: Colors.red,
-                        colorText: Colors.white,
+                        colorText: Theme.of(context).colorScheme.surface,
                       );
                     }
                   },
                   child:  Text(
                     "Next".tr,
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: TextStyle(fontSize: 16, color:Theme.of(context).colorScheme.surface),
                   ),
                 ),
               ),
@@ -269,11 +271,11 @@ class BookingDatePage extends StatelessWidget {
     );
   }
 
-  Widget _dateInfo(IconData icon, String title, DateTime? date) {
+  Widget _dateInfo(IconData icon, String title, DateTime? date ,{required BuildContext context,}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: const Color(0xFF274668)),
+        Icon(icon, color: Theme.of(context).colorScheme.onPrimary),
         const SizedBox(height: 6),
         Text(title, style: const TextStyle(fontSize: 12)),
         const SizedBox(height: 4),

@@ -42,7 +42,7 @@ class _MyApartmentsState extends State<MyApartments> {
         children: [
           // -------- Status Tabs --------
           Container(
-            color: Colors.grey[50],
+            color: Theme.of(context).colorScheme.surfaceVariant, // أو dividerColor مع opacity خفيفة
             child: Obx(
                   () {
                 // 🔴 **استخدام الدالة الجديدة لحساب العدد**
@@ -79,7 +79,9 @@ class _MyApartmentsState extends State<MyApartments> {
                                     count.toString(),
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: isSelected ? Colors.white : Colors.grey[700],
+                                      color: isSelected
+                                          ? Theme.of(context).colorScheme.onPrimary
+                                          : Theme.of(context).colorScheme.onSurface,
                                     ),
                                   ),
                                 ),
@@ -112,8 +114,10 @@ class _MyApartmentsState extends State<MyApartments> {
             child: Obx(() {
               // 1️⃣ Loading
               if (controller.isLoading.value && controller.allApartments.isEmpty) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return  Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
+                  ),
                 );
               }
 
