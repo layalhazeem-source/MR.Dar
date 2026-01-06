@@ -33,14 +33,14 @@ class Login extends StatelessWidget {
                   width: 320,
 
                   child: Image.asset(
-                    "images/Gemini_Generated_Image_4nnjfd4nnjfd4nnj.png",
+                    "images/ChatGPT Image Jan 6, 2026, 09_51_23 PM.png",
                     fit: BoxFit.cover,
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
-                 Text(
+                Text(
                   "Welcome Back".tr,
                   style: TextStyle(
                     fontSize: 40,
@@ -129,7 +129,9 @@ class Login extends StatelessWidget {
                               height: 55,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
@@ -146,10 +148,12 @@ class Login extends StatelessWidget {
                                           strokeWidth: 3,
                                         ),
                                       )
-                                    :  Text(
+                                    : Text(
                                         "Log In".tr,
                                         style: TextStyle(
-                                          color: Theme.of(context).colorScheme.onPrimary,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary,
                                           fontSize: 20,
                                         ),
                                       ),
@@ -164,10 +168,10 @@ class Login extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                             Text("Don’t have an account?".tr),
+                            Text("Don’t have an account?".tr),
                             GestureDetector(
                               onTap: () => Get.to(Signup()),
-                              child:  Text(
+                              child: Text(
                                 "Sign Up".tr,
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.primary,
@@ -210,7 +214,7 @@ class Login extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
-      BuildContext context,
+    BuildContext context,
     String label, {
     IconData? suffix,
     Widget? suffixWidget,
@@ -229,11 +233,17 @@ class Login extends StatelessWidget {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide:  BorderSide(color: Theme.of(context).colorScheme.primary, width: 3),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.primary,
+          width: 3,
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide:  BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4), width: 1.5),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+          width: 1.5,
+        ),
       ),
     );
   }

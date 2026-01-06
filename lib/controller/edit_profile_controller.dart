@@ -97,7 +97,6 @@ class EditProfileController extends GetxController {
   Future<bool> updateProfile({required String currentPassword}) async {
     try {
       isUpdating.value = true;
-      errorMessage.value = '';
       dialogPasswordError.value = null;
 
       final formData = FormData();
@@ -135,17 +134,13 @@ class EditProfileController extends GetxController {
 
       final response = await userService.updateProfile(formData);
 
-      print('📡 API Response: ${response.toString()}');
-
       if (response['status'] == 'success') {
-        errorMessage.value = '';
-        dialogPasswordError.value = null;
-
         MyAccountController.refreshProfile();
-        final userController = Get.find<UserController>();
-        userController.loadUserRole();
-        _clearSensitiveData();
 
+        final userController = Get.find<UserController>();
+        await userController.loadUserRole();
+
+        _clearSensitiveData();
         return true;
       } else {
         final errorMsg = response['message'] ?? 'Incorrect current password';
@@ -154,14 +149,11 @@ class EditProfileController extends GetxController {
         return false;
       }
     } on DioException catch (e) {
-      final errorMsg =
-          e.response?.data['message'] ?? 'Validation Error: Check your data';
-      errorMessage.value = errorMsg;
-      dialogPasswordError.value = errorMsg;
+      dialogPasswordError.value =
+          e.response?.data['message'] ?? 'Invalid password';
       return false;
-    } catch (e) {
-      errorMessage.value = 'Connection failed. Please try again.';
-      dialogPasswordError.value = errorMessage.value;
+    } catch (_) {
+      dialogPasswordError.value = 'Connection error';
       return false;
     } finally {
       isUpdating.value = false;

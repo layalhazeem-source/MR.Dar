@@ -6,9 +6,7 @@ import '../../controller/booking_controller.dart';
 class BookingConfirmPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<BookingController>(
-      tag: Get.arguments,
-    );
+    final controller = Get.find<BookingController>(tag: Get.arguments);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -16,11 +14,9 @@ class BookingConfirmPage extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
-        iconTheme:  IconThemeData(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        title:  Text(
-          "Confirm BookingConfirm Booking".tr,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+        title: Text(
+          "Confirm Booking".tr,
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -39,8 +35,7 @@ class BookingConfirmPage extends StatelessWidget {
               child: _row(
                 context,
                 Icons.location_on,
-                "${controller.apartment.cityName} - ${controller.apartment.governorateName}"
-                , // ⛔ مؤقت
+                "${controller.apartment.cityName} - ${controller.apartment.governorateName}", // ⛔ مؤقت
                 bold: true,
               ),
             ),
@@ -55,15 +50,15 @@ class BookingConfirmPage extends StatelessWidget {
                   _row(
                     context,
                     Icons.login,
-                    DateFormat('MMM dd, yyyy'.tr)
-                        .format(controller.selectedStartDate.value!),
+                    DateFormat(
+                      'MMM dd, yyyy'.tr,
+                    ).format(controller.selectedStartDate.value!),
                   ),
                   const SizedBox(height: 12),
                   _row(
                     context,
                     Icons.logout,
-                    DateFormat('MMM dd, yyyy'.tr)
-                        .format(controller.endDate!),
+                    DateFormat('MMM dd, yyyy'.tr).format(controller.endDate!),
                   ),
                   const Divider(height: 30),
                   _row(
@@ -83,11 +78,7 @@ class BookingConfirmPage extends StatelessWidget {
               title: "Payment".tr,
               child: Column(
                 children: [
-                  _row(
-                    context,
-                    Icons.payments,
-                    "Cash".tr,
-                  ),
+                  _row(context, Icons.payments, "Cash".tr),
                   const Divider(height: 30),
                   _row(
                     context,
@@ -104,7 +95,7 @@ class BookingConfirmPage extends StatelessWidget {
 
             /// ✅ Confirm Button
             Obx(
-                  () => SizedBox(
+              () => SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -117,19 +108,24 @@ class BookingConfirmPage extends StatelessWidget {
                   onPressed: controller.isLoading.value
                       ? null
                       : () async {
-                    await controller.confirmBooking();
-
-                  },
+                          await controller.confirmBooking();
+                        },
                   child: controller.isLoading.value
-                      ?  SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary, strokeWidth: 2),
-                  )
-                      :  Text(
-                    "Confirm Booking".tr,
-                    style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 16),
-                  ),
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          "Confirm Booking".tr,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 16,
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -142,18 +138,17 @@ class BookingConfirmPage extends StatelessWidget {
   /// ===== Card Wrapper =====
   Widget _infoCard({required String title, required Widget child}) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style:
-                const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             child,
           ],
@@ -163,11 +158,16 @@ class BookingConfirmPage extends StatelessWidget {
   }
 
   /// ===== Row =====
-  Widget _row(BuildContext context,IconData icon, String value,
-      {bool bold = false, bool big = false}) {
+  Widget _row(
+    BuildContext context,
+    IconData icon,
+    String value, {
+    bool bold = false,
+    bool big = false,
+  }) {
     return Row(
       children: [
-        Icon(icon, color:Theme.of(context).colorScheme.primary),
+        Icon(icon, color: Theme.of(context).colorScheme.primary),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
