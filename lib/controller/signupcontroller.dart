@@ -7,6 +7,7 @@ import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 import 'UserController.dart';
+import 'homecontroller.dart';
 import 'my_account_controller.dart';
 
 class SignupController extends GetxController {
@@ -228,7 +229,12 @@ class SignupController extends GetxController {
         print("Could not load profile immediately: $e");
       }
 
-      Get.offAll(() => Home());
+      Get.offAll(
+        () => Home(),
+        binding: BindingsBuilder(() {
+          Get.put(HomeController());
+        }),
+      );
     } on ServerException catch (e) {
       isLoading = false;
       update();

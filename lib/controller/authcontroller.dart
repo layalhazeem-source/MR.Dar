@@ -8,6 +8,10 @@ import '../service/userService.dart';
 import '../view/WelcomePage.dart';
 import '../view/home.dart';
 import '../view/onboarding/onboarding_screen.dart';
+import 'ApartmentController.dart';
+import 'UserController.dart';
+import 'homecontroller.dart';
+import 'notification_controller.dart';
 
 class AuthController extends GetxController {
   final AuthService authService;
@@ -45,7 +49,10 @@ class AuthController extends GetxController {
         duration: const Duration(seconds: 2),
       );
       await Future.delayed(const Duration(milliseconds: 500));
-
+      Get.delete<HomeController>();
+      Get.delete<UserController>();
+      Get.delete<ApartmentController>();
+      Get.delete<NotificationController>();
       Get.offAll(() => const OnboardingScreen());
     } catch (e) {
       print('🔴 Logout error: $e');

@@ -50,7 +50,7 @@ class AppBindings extends Bindings {
     Get.put<ReviewService>(ReviewService(), permanent: true);
 
     //Controllers
-    Get.put<HomeController>(HomeController(), permanent: true);
+    Get.lazyPut<HomeController>(() => HomeController(), fenix: false);
     Get.put<ApartmentController>(
       ApartmentController(service: Get.find()),
       permanent: true,
@@ -118,13 +118,8 @@ class AppBindings extends Bindings {
       fenix: true,
     );
     Get.lazyPut<OwnerReservationsController>(
-          () => OwnerReservationsController(
-        service: Get.find<BookingService>(),
-      ),
+      () => OwnerReservationsController(service: Get.find<BookingService>()),
       fenix: true,
     );
-
   }
-
-
 }

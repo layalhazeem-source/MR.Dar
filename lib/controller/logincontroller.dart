@@ -5,6 +5,7 @@ import '../fcm_test.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 import 'UserController.dart';
+import 'homecontroller.dart';
 import 'my_account_controller.dart';
 
 class LoginController extends GetxController {
@@ -62,9 +63,14 @@ class LoginController extends GetxController {
         );
         return;
       }
-      await initFcm();  // ← هون
+      await initFcm(); // ← هون
 
-      Get.offAll(() => Home());
+      Get.offAll(
+        () => Home(),
+        binding: BindingsBuilder(() {
+          Get.put(HomeController());
+        }),
+      );
     } on ServerException catch (e) {
       isLoading = false;
       phoneError = e.errModel.errorMessage;

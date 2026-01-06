@@ -3,184 +3,191 @@ import 'package:get/get.dart';
 import 'language_selector_dialog.dart';
 import 'login.dart';
 import 'signup.dart';
+import 'dart:ui';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       body: Stack(
         children: [
-          SizedBox(
-            height: screenHeight,
-            width: double.infinity,
+          // Background image
+          Positioned.fill(
             child: Image.asset(
-              "images/photo_2025-11-30_12-36-36.jpg",
+              "images/photo_2026-01-06_19-19-56.jpg",
               fit: BoxFit.cover,
+            ),
+          ),
+
+          // Dark gradient overlay for drama
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.2),
+                    Colors.black.withOpacity(0.7),
+                  ],
+                ),
+              ),
             ),
           ),
 
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 300,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .shadow
-                        .withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: Offset(0, -3),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 25,
-                ),
-                child:Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "Welcome to MR.Dar".tr,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                  child: Container(
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white.withOpacity(0.10),
+                          Colors.white.withOpacity(0.06),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.25),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          blurRadius: 30,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context).colorScheme.primary,
-                                Theme.of(context).colorScheme.primaryContainer,
+                        // Title with elegant style
+                        Text(
+                          "Welcome to MR.Dar".tr,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 12,
+                                color: Colors.black.withOpacity(0.6),
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 26),
+
+                        // FANCY Login Button
+                        GestureDetector(
+                          onTap: () => Get.to(Login()),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 350),
+                            curve: Curves.easeOutCubic,
+                            height: 60,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF12355B),
+                              borderRadius: BorderRadius.circular(18),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF0A2540,
+                                  ).withOpacity(0.55),
+                                  blurRadius: 22,
+                                  offset: const Offset(0, 10),
+                                ),
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () => Get.to(Login()),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                            child: Text(
-                              "Login".tr,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+
+                            child: Center(
+                              child: Text(
+                                "Login".tr,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 0.8,
+                                ),
                               ),
                             ),
                           ),
                         ),
 
+                        const SizedBox(height: 18),
 
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context).colorScheme.surfaceVariant,
-                                Theme.of(context).colorScheme.surface,
-                              ],
+                        // Elegant Sign Up Button
+                        GestureDetector(
+                          onTap: () => Get.to(Signup()),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 350),
+                            curve: Curves.easeOutCubic,
+                            height: 60,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.15),
+                                  Colors.white.withOpacity(0.08),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.35),
+                                width: 1.5,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(25),
+                            child: Center(
+                              child: Text(
+                                "Sign Up".tr,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
-                          child: ElevatedButton(
-                            onPressed: () => Get.to(Signup()),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                            child: Text(
-                              "Sign Up".tr,
-                              style: TextStyle(
-                                color:  Theme.of(context).colorScheme.onSurface,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Language (fancy text)
+                        TextButton.icon(
+                          onPressed: showLanguageSelector,
+                          icon: const Icon(Icons.language, color: Colors.white),
+                          label: Text(
+                            "Language".tr,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    // زر اللغة تحت الأزرار
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Theme.of(context).colorScheme.primary,
-                            Theme.of(context).colorScheme.primaryContainer,
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: ElevatedButton.icon(
-                        onPressed: showLanguageSelector,
-                        icon: Icon(Icons.language, color: Theme.of(context).colorScheme.onPrimary,),
-                        label: Text(
-                          "Language".tr,
-                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 18),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        ),
-                      ),
-                    ),
-
-
-                  ],
+                  ),
                 ),
-
-                // const SizedBox(height: 20),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     const Text(
-                    //       " or Continue as a",
-                    //       style: TextStyle(fontSize: 20, color: Colors.black54),
-                    //     ),
-                    //     TextButton(
-                    //       onPressed: () {},
-                    //       child: const Text(
-                    //         "Guest",
-                    //         style: TextStyle(
-                    //           fontSize: 19,
-                    //           fontWeight: FontWeight.bold,
-                    //           color: Color(0xFF274668),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
               ),
             ),
           ),
