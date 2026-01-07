@@ -50,7 +50,7 @@ class AppBindings extends Bindings {
     Get.put<ReviewService>(ReviewService(), permanent: true);
 
     //Controllers
-    Get.lazyPut<HomeController>(() => HomeController(), fenix: false);
+    Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.put<ApartmentController>(
       ApartmentController(service: Get.find()),
       permanent: true,
