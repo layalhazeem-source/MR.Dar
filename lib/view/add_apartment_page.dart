@@ -17,76 +17,90 @@ class AddApartmentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🔒 فحص حالة الحساب (نفس منطق المستأجر)
-    if (!account.isAccountActive) {
-      Future.microtask(() {
-        Get.dialog(
-          AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: const Text("Account Not Activated"),
-            content: const Text(
-              "Your account is not activated yet.\nPlease wait for admin approval.",
-              textAlign: TextAlign.center,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.back(); // سكّر الدايلوج
-                  Get.back(); // ارجع من الصفحة
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-          barrierDismissible: false,
+    return Obx(() {
+      // 🔄 لسا عم يحمل البروفايل
+      if (account.isLoading.value) {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
         );
-      });
+      }
 
-      return const Scaffold(); // ⛔ امنع بناء الصفحة
-    }
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor:Theme.of(context).colorScheme.primary,
-      appBar: AppBar(
+      // 🔒 الحساب غير مفعل
+      if (!account.isAccountActive) {
+        return Scaffold(
+          body: Center(
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: const Text("Account Not Activated"),
+              content: const Text(
+                "Your account is not activated yet.\nPlease wait for admin approval.",
+                textAlign: TextAlign.center,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: const Text("OK"),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      // ✅ الحساب مفعل → اعرض صفحة الإضافة
+      return Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Theme.of(context).colorScheme.background, size: 20),
-          onPressed: () => Get.back(),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios_new,
+              color: Theme.of(context).colorScheme.background,
+              size: 20,
+            ),
+            onPressed: () => Get.back(),
+          ),
+          title: Text(
+            "Add Apartment".tr,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
         ),
-        title: Text(
-          "Add Apartment".tr,
-          style: TextStyle(color:Theme.of(context).colorScheme.onPrimary , fontWeight: FontWeight.w600, fontSize: 18),
-        ),
-      ),
-      body: Column(
-        children: [
-          _stepIndicator(context,),
-          Expanded(
-            child: Container(
-              decoration:  BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+        body: Column(
+          children: [
+            _stepIndicator(context),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: PageView(
+                  controller: pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    _basicInfoStep(context),
+                    _locationStep(context),
+                    _imagesStep(context),
+                  ],
                 ),
               ),
-              child: PageView(
-                controller: pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  _basicInfoStep(context,),
-                  _locationStep(context,),
-                  _imagesStep(context,),
-                ],
-              ),
             ),
-          ),
-        ],
-      ),
-    );
-
+          ],
+        ),
+      );
+    });
   }
 
   // ========================= STEP INDICATOR =========================
@@ -406,4 +420,5 @@ class AddApartmentPage extends StatelessWidget {
       controller.images.addAll(imgs);
     }
   }
+
 }

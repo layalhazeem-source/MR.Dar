@@ -44,7 +44,7 @@ class Home extends StatelessWidget {
               )
             : null,
 
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       );
     });
   }

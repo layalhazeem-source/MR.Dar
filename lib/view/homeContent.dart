@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/ApartmentController.dart';
+import '../controller/my_account_controller.dart';
 import '../widgets/apartment_card.dart';
 import 'AllApartmentsPage.dart';
 import 'FilterPage.dart';
@@ -11,6 +12,7 @@ class HomeContent extends StatelessWidget {
   HomeContent({super.key});
 
   final ApartmentController controller = Get.find();
+  final MyAccountController account = Get.find(); // 👈 هون
 
   void _openFilterPage() async {
     final result = await Get.to(() => FilterPage());
