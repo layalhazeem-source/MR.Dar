@@ -34,7 +34,10 @@ class Signup extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: controller.formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+
             child: Column(
+
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: 20.h),

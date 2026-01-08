@@ -136,7 +136,10 @@ class SignupController extends GetxController {
   }
 
   void setRole(String type) {
-    role.value = type; // 'owner' أو 'renter'
+    role.value = type; // owner | renter
+
+    Get.closeAllSnackbars();
+
     update();
   }
 
@@ -146,6 +149,7 @@ class SignupController extends GetxController {
     update();
   }
 
+
   bool validateAllFields() {
     bool isValid = true;
 
@@ -153,32 +157,18 @@ class SignupController extends GetxController {
       isValid = false;
     }
 
-    if (profileImage.value == null) {
-      profileImageError.value = "Profile image is required!";
-      isValid = false;
-    } else {
-      profileImageError.value = "";
-    }
+    profileImageError.value =
+    profileImage.value == null ? "Profile image is required!" : "";
 
-    if (idImage.value == null) {
-      idImageError.value = "ID image is required!";
-      isValid = false;
-    } else {
-      idImageError.value = "";
-    }
+    idImageError.value =
+    idImage.value == null ? "ID image is required!" : "";
 
     if (birthDate.value.isEmpty) {
-      birthDateController.text = "";
       isValid = false;
     }
 
     if (role.value.isEmpty) {
       Get.snackbar('Error', 'Please select a role');
-      isValid = false;
-    }
-
-    if (passwordController.text != confirmPasswordController.text) {
-      Get.snackbar('Error', 'Passwords do not match');
       isValid = false;
     }
 
@@ -222,7 +212,7 @@ class SignupController extends GetxController {
       await userCtrl.loadUserRole();
       await Future.delayed(Duration(milliseconds: 300));
 
-      // ✅ تحميل الملف الشخصي مباشرة
+      // load profile immediately
       try {
         await Get.find<MyAccountController>().loadProfile();
       } catch (e) {

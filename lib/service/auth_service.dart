@@ -60,7 +60,7 @@ class AuthService {
             userData["date_of_birth"] ?? "",
           );
 
-          // تخزين روابط الصور
+          // save images
           if (userData["profile_image"] != null) {
             await prefs.setString(
               "profile_image",

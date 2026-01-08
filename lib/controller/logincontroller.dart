@@ -63,7 +63,7 @@ class LoginController extends GetxController {
         );
         return;
       }
-      await initFcm(); // ← هون
+      await initFcm(); //  fcm
 
       Get.offAll(
         () => Home(),

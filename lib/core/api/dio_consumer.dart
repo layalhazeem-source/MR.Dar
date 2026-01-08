@@ -36,7 +36,7 @@ class DioConsumer extends ApiConsumer {
         responseHeader: true,
         error: true,
       ),
-    ); //يراقب ال request وال response ويطبعهم بال console
+    ); //مراقبة ال request وال response
   }
 
   @override
@@ -114,7 +114,7 @@ class DioConsumer extends ApiConsumer {
         options: options,
       );
 
-      // رجّع response كامل لو حبيت أو response.data حسب تصميمك.
+      // print(response.data)
       return response.data;
     } on DioException catch (e) {
       handleDioException(e);

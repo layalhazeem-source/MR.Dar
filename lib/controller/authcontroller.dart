@@ -19,7 +19,7 @@ class AuthController extends GetxController {
 
   AuthController({required this.authService, required this.userService});
 
-  /// بعد Login أو Signup
+  /// After Login or Signup
   Future<void> handleAuthSuccess() async {
     await Get.find<MyAccountController>().loadProfile();
     await initFcm();
@@ -29,17 +29,17 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     try {
-      print('🔐 Starting logout process...');
+      print('Starting logout process...');
 
       try {
         await userService.logout();
-        print('✅ Server logout successful');
+        print(' Server logout successful');
       } catch (e) {
-        print('⚠️ Server logout failed: $e');
+        print(' Server logout failed: $e');
       }
 
       await authService.signOut();
-      print('✅ Local data cleared');
+      print('Local data cleared');
 
       Get.snackbar(
         "Logged Out",
@@ -55,7 +55,7 @@ class AuthController extends GetxController {
       Get.delete<NotificationController>();
       Get.offAll(() => const OnboardingScreen());
     } catch (e) {
-      print('🔴 Logout error: $e');
+      print(' Logout error: $e');
       Get.snackbar(
         "Error",
         "Failed to logout: ${e.toString()}",
